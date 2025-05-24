@@ -1,5 +1,6 @@
 "use client";
 import "prismjs/themes/prism.css";
+import "prismjs";
 import Prism from "prismjs";
 
 
@@ -369,6 +370,7 @@ export default function OpenAPIMCPLanding() {
                   </div>
                 </Form>
 
+
                 {/* Features */}
                 <div className="grid md:grid-cols-3 gap-6 text-center">
                   <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
@@ -507,7 +509,7 @@ export default function OpenAPIMCPLanding() {
                         null,
                         2,
                       )}
-                      language="json"
+                      language="js"
                     />
                     {actionData.requiresApiToken && (
                       <div className="mt-4 text-sm text-blue-700">
