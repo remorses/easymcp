@@ -19,3 +19,21 @@ Also add the env variable API_TOKEN for APIs that need one, then add it to Claud
   }
 }
 ```
+
+
+to try locally
+
+
+```json
+{
+  "mcpServers": {
+    "trymodelcontext": {
+      "command": "npx",
+      "args": ["-y", "tsx", "/Users/morse/Documents/GitHub/modelcontext/modelcontextutils/scripts/try-mcp-server.ts"],
+      "env": {
+        "API_TOKEN": ""
+      }
+    }
+  }
+}
+```

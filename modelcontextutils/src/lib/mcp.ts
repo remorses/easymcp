@@ -1,6 +1,7 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import deref  from "dereference-json-schema";
+import deref from "dereference-json-schema";
 
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListResourcesRequestSchema,
@@ -8,7 +9,6 @@ import {
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { OpenAPIV3 } from "openapi-types";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 function getOperationRequestBody(
   operation: OpenAPIV3.OperationObject,
@@ -23,13 +23,19 @@ function getOperationRequestBody(
 function getOperationParameters(operation: OpenAPIV3.OperationObject): {
   queryParams?: OpenAPIV3.SchemaObject;
   pathParams?: OpenAPIV3.SchemaObject;
+  headerParams?: OpenAPIV3.SchemaObject;
+  cookieParams?: OpenAPIV3.SchemaObject;
 } {
   if (!operation.parameters) return {};
 
   const queryProperties: Record<string, OpenAPIV3.SchemaObject> = {};
   const pathProperties: Record<string, OpenAPIV3.SchemaObject> = {};
+  const headerProperties: Record<string, OpenAPIV3.SchemaObject> = {};
+  const cookieProperties: Record<string, OpenAPIV3.SchemaObject> = {};
   const queryRequired: string[] = [];
   const pathRequired: string[] = [];
+  const headerRequired: string[] = [];
+  const cookieRequired: string[] = [];
 
   operation.parameters.forEach((param) => {
     const paramObj = param as OpenAPIV3.ParameterObject;
@@ -40,12 +46,22 @@ function getOperationParameters(operation: OpenAPIV3.OperationObject): {
     } else if (paramObj.in === "path") {
       pathProperties[paramObj.name] = paramObj.schema as OpenAPIV3.SchemaObject;
       if (paramObj.required) pathRequired.push(paramObj.name);
+    } else if (paramObj.in === "header") {
+      headerProperties[paramObj.name] =
+        paramObj.schema as OpenAPIV3.SchemaObject;
+      if (paramObj.required) headerRequired.push(paramObj.name);
+    } else if (paramObj.in === "cookie") {
+      cookieProperties[paramObj.name] =
+        paramObj.schema as OpenAPIV3.SchemaObject;
+      if (paramObj.required) cookieRequired.push(paramObj.name);
     }
   });
 
   const result: {
     queryParams?: OpenAPIV3.SchemaObject;
     pathParams?: OpenAPIV3.SchemaObject;
+    headerParams?: OpenAPIV3.SchemaObject;
+    cookieParams?: OpenAPIV3.SchemaObject;
   } = {};
 
   if (Object.keys(queryProperties).length > 0) {
@@ -61,6 +77,22 @@ function getOperationParameters(operation: OpenAPIV3.OperationObject): {
       type: "object",
       properties: pathProperties,
       required: pathRequired.length > 0 ? pathRequired : undefined,
+    };
+  }
+
+  if (Object.keys(headerProperties).length > 0) {
+    result.headerParams = {
+      type: "object",
+      properties: headerProperties,
+      required: headerRequired.length > 0 ? headerRequired : undefined,
+    };
+  }
+
+  if (Object.keys(cookieProperties).length > 0) {
+    result.cookieParams = {
+      type: "object",
+      properties: cookieProperties,
+      required: cookieRequired.length > 0 ? cookieRequired : undefined,
     };
   }
 
@@ -173,14 +205,39 @@ export function createMCPServer({
     u: string,
     options: RequestInit,
     operation?: OpenAPIV3.OperationObject,
+    userHeaders?: Record<string, string>,
+    userCookies?: Record<string, string>,
   ) {
     const authHeaders = getAuthHeaders(openapi, operation);
+
+    // Build cookie string from userCookies
+    let cookieHeader = "";
+    if (userCookies && Object.keys(userCookies).length > 0) {
+      cookieHeader = Object.entries(userCookies)
+        .map(
+          ([key, value]) =>
+            `${encodeURIComponent(key)}=${encodeURIComponent(value)}`,
+        )
+        .join("; ");
+    }
+
+    const finalHeaders: Record<string, string> = {
+      ...(userHeaders || {}),
+      ...authHeaders,
+      ...((options?.headers as Record<string, string>) || {}),
+    };
+
+    if (cookieHeader) {
+      // Merge with existing Cookie header if present
+      const existingCookie = finalHeaders["Cookie"] || finalHeaders["cookie"];
+      finalHeaders["Cookie"] = existingCookie
+        ? `${existingCookie}; ${cookieHeader}`
+        : cookieHeader;
+    }
+
     return await fetch!(new URL(u, baseUrl), {
       ...options,
-      headers: {
-        ...authHeaders,
-        ...options?.headers,
-      },
+      headers: finalHeaders,
     });
   }
 
@@ -211,14 +268,19 @@ export function createMCPServer({
             required.push("body");
           }
 
-          const { queryParams, pathParams } = getOperationParameters(
-            operation as OpenAPIV3.OperationObject,
-          );
+          const { queryParams, pathParams, headerParams, cookieParams } =
+            getOperationParameters(operation as OpenAPIV3.OperationObject);
           if (queryParams) {
             properties.query = queryParams;
           }
           if (pathParams) {
             properties.params = pathParams;
+          }
+          if (headerParams) {
+            properties.headers = headerParams;
+          }
+          if (cookieParams) {
+            properties.cookies = cookieParams;
           }
 
           return {
@@ -252,7 +314,10 @@ export function createMCPServer({
     }
 
     try {
-      const { body, query, params } = request.params.arguments || {};
+      const args = request.params.arguments || {};
+      const { body, query, params } = args;
+      const userHeaders = args.headers as Record<string, string> | undefined;
+      const userCookies = args.cookies as Record<string, string> | undefined;
       const operation = pathObj[
         method.toLowerCase()
       ] as OpenAPIV3.OperationObject;
@@ -279,9 +344,15 @@ export function createMCPServer({
           headers: {
             "content-type": "application/json",
           },
-          body: body ? JSON.stringify(body) : undefined,
+          body: body
+            ? typeof body === "string"
+              ? body
+              : JSON.stringify(body)
+            : undefined,
         },
         operation,
+        userHeaders,
+        userCookies,
       );
 
       const isError = !response.ok;
@@ -316,11 +387,16 @@ export function createMCPServer({
       }
       const getOperation = pathObj?.get as OpenAPIV3.OperationObject;
       if (getOperation && !path.includes("{")) {
-        const { queryParams } = getOperationParameters(getOperation);
+        const { queryParams, headerParams, cookieParams } =
+          getOperationParameters(getOperation);
         const hasRequiredQuery =
           queryParams?.required && queryParams.required.length > 0;
+        const hasRequiredHeaders =
+          headerParams?.required && headerParams.required.length > 0;
+        const hasRequiredCookies =
+          cookieParams?.required && cookieParams.required.length > 0;
 
-        if (!hasRequiredQuery) {
+        if (!hasRequiredQuery && !hasRequiredHeaders && !hasRequiredCookies) {
           resources.push({
             uri: path,
             mimeType: "application/json",
@@ -332,9 +408,9 @@ export function createMCPServer({
     return { resources: [] };
   });
 
-  // server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  //   throw new Error("Resources are not supported - use tools instead");
-  // });
+  server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+    throw new Error("Resources are not supported - use tools instead");
+  });
 
   return { server };
 }
@@ -407,11 +483,13 @@ function formatToolName(
     existingEntry &&
     (existingEntry.method !== method || existingEntry.path !== pathForMap)
   ) {
-    throw new Error(
-      `Duplicate tool name generated: '${formatted}'. ` +
-        `This name was generated for original: '${nameToFormat}' (method: '${method}', path: '${pathForMap}'). ` +
-        `It conflicts with an existing tool that also maps to '${formatted}', originally from (method: '${existingEntry.method}', path: '${existingEntry.path}'). ` +
-        `Ensure operationIds or path/method combinations in your OpenAPI spec are sufficiently unique to avoid naming collisions after formatting.`,
+    console.error(
+      new Error(
+        `Duplicate tool name generated: '${formatted}'. ` +
+          `This name was generated for original: '${nameToFormat}' (method: '${method}', path: '${pathForMap}'). ` +
+          `It conflicts with an existing tool that also maps to '${formatted}', originally from (method: '${existingEntry.method}', path: '${existingEntry.path}'). ` +
+          `Ensure operationIds or path/method combinations in your OpenAPI spec are sufficiently unique to avoid naming collisions after formatting.`,
+      ),
     );
   }
 

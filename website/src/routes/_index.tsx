@@ -390,10 +390,10 @@ export default function OpenAPIMCPLanding() {
                       </svg>
                     </div>
                     <h3 className="font-medium mb-2 text-gray-900">
-                      Lightning Fast
+                      Always in Sync
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Convert schemas in seconds with our optimized parser
+                      No separate MCP code repository to maintain—auto-generates features directly from your OpenAPI specs.
                     </p>
                   </div>
                   <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
@@ -413,10 +413,10 @@ export default function OpenAPIMCPLanding() {
                       </svg>
                     </div>
                     <h3 className="font-medium mb-2 text-gray-900">
-                      Fully Compatible
+                      Effortless Integration
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Works with Claude, Cursor, and all MCP-enabled tools
+                      Integrates with thousands of tools, including Claude, OpenAI Agents, and other APIs that support MCP.
                     </p>
                   </div>
                   <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
@@ -436,10 +436,10 @@ export default function OpenAPIMCPLanding() {
                       </svg>
                     </div>
                     <h3 className="font-medium mb-2 text-gray-900">
-                      Open Source
+                      Secure by Default
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Free, open-source, and community-driven
+                      Your token never passes through any middle servers, ensuring end-to-end security.
                     </p>
                   </div>
                 </div>

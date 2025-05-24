@@ -12186,7 +12186,12 @@
       "contact": {}
     },
     "tags": [],
-    "servers": [],
+    "servers": [
+      {
+        "url": "https://api.cal.com",
+        "description": "Cal.com API server"
+      }
+    ],
     "components": {
       "schemas": {
         "ManagedUserOutput": {
@@ -23263,4 +23268,3 @@
       }
     }
   }
-  

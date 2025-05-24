@@ -18,7 +18,7 @@ async function main() {
   // const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
   const openapi = JSON.parse(
     fs.readFileSync(
-      path.resolve(__dirname, "../../openapis/results/cal.json"),
+      path.resolve(__dirname, "../../openapis/results/bey_dev.json"),
       "utf8",
     ),
   ) as any;
