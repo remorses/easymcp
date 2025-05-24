@@ -32,14 +32,13 @@ function getOperationParameters(operation: OpenAPIV3.OperationObject): {
   const pathRequired: string[] = [];
 
   operation.parameters.forEach((param) => {
-    if ("$ref" in param) return; // TODO referenced parameters
-
-    if (param.in === "query") {
-      queryProperties[param.name] = param.schema as OpenAPIV3.SchemaObject;
-      if (param.required) queryRequired.push(param.name);
-    } else if (param.in === "path") {
-      pathProperties[param.name] = param.schema as OpenAPIV3.SchemaObject;
-      if (param.required) pathRequired.push(param.name);
+    const paramObj = param as OpenAPIV3.ParameterObject;
+    if (paramObj.in === "query") {
+      queryProperties[paramObj.name] = paramObj.schema as OpenAPIV3.SchemaObject;
+      if (paramObj.required) queryRequired.push(paramObj.name);
+    } else if (paramObj.in === "path") {
+      pathProperties[paramObj.name] = paramObj.schema as OpenAPIV3.SchemaObject;
+      if (paramObj.required) pathRequired.push(paramObj.name);
     }
   });
 
@@ -82,64 +81,27 @@ function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.Opera
   }
 
   const securitySchemes = openapi.components.securitySchemes;
+  let selectedScheme: OpenAPIV3.SecuritySchemeObject | null = null;
 
   // Check for operation-specific security requirements first
-  let operationSecuritySchemes: string[] = [];
   if (operation?.security && operation.security.length > 0) {
-    // Get the first security requirement from the operation
     const firstSecurityReq = operation.security[0];
-    operationSecuritySchemes = Object.keys(firstSecurityReq);
-  }
-
-  // Find the preferred security scheme based on priority
-  let selectedScheme: OpenAPIV3.SecuritySchemeObject | null = null;
-  let selectedSchemeName = "";
-
-  // Priority order: Bearer > OAuth2 > API Key > Basic
-  const priorityOrder = ["bearer", "oauth2", "apiKey", "basic"];
-
-  // First try to match operation-specific security schemes
-  if (operationSecuritySchemes.length > 0) {
-    for (const schemeName of operationSecuritySchemes) {
+    const operationSchemeNames = Object.keys(firstSecurityReq);
+    
+    for (const schemeName of operationSchemeNames) {
       const scheme = securitySchemes[schemeName];
-      if (!scheme || "$ref" in scheme) continue;
-
-      selectedScheme = scheme as OpenAPIV3.SecuritySchemeObject;
-      selectedSchemeName = schemeName;
-      break;
-    }
-  }
-
-  // If no operation-specific scheme found, use priority-based selection
-  if (!selectedScheme) {
-    for (const priority of priorityOrder) {
-      for (const [schemeName, scheme] of Object.entries(securitySchemes)) {
-        if ("$ref" in scheme) continue;
-
-        if (
-          (priority === "bearer" && scheme.type === "http" && scheme.scheme === "bearer") ||
-          (priority === "oauth2" && scheme.type === "oauth2") ||
-          (priority === "apiKey" && scheme.type === "apiKey" && scheme.in === "header") ||
-          (priority === "basic" && scheme.type === "http" && scheme.scheme === "basic")
-        ) {
-          selectedScheme = scheme as OpenAPIV3.SecuritySchemeObject;
-          selectedSchemeName = schemeName;
-          break;
-        }
-      }
-      if (selectedScheme) break;
-    }
-  }
-
-  // If no preferred scheme found, use the first available one
-  if (!selectedScheme) {
-    const entries = Object.entries(securitySchemes);
-    if (entries.length > 0) {
-      const [schemeName, scheme] = entries[0];
-      if (!("$ref" in scheme)) {
+      if (scheme) {
         selectedScheme = scheme as OpenAPIV3.SecuritySchemeObject;
-        selectedSchemeName = schemeName;
+        break;
       }
+    }
+  }
+
+  // If no operation-specific scheme found, use the first available scheme
+  if (!selectedScheme) {
+    const schemes = Object.values(securitySchemes);
+    if (schemes.length > 0) {
+      selectedScheme = schemes[0] as OpenAPIV3.SecuritySchemeObject;
     }
   }
 
@@ -147,6 +109,7 @@ function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.Opera
     return headers;
   }
 
+  // Set headers based on scheme type
   switch (selectedScheme.type) {
     case "http":
       if (selectedScheme.scheme === "bearer") {
