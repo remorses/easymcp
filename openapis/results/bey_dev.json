@@ -1,85 +1,12 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Bey Dev Avatar API",
-    "version": "1.0.0",
-    "description": "Beyond Presence Avatar API for managing virtual avatars and real-time sessions. This API enables developers to create and manage avatar-based interactions with LiveKit integration for real-time communication.",
-    "contact": {
-      "name": "Bey Dev Support",
-      "url": "https://bey.dev/support"
-    },
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    }
+    "title": "Bey Dev Docs",
+    "version": "1.0.0"
   },
-  "servers": [
-    {
-      "url": "https://api.bey.dev",
-      "description": "Production API Server"
-    },
-    {
-      "url": "https://staging-api.bey.dev",
-      "description": "Staging API Server"
-    }
-  ],
-  "security": [
-    {
-      "APIKeyHeader": []
-    }
-  ],
-  "tags": [
-    {
-      "name": "avatars",
-      "description": "Avatar management operations for virtual presence"
-    },
-    {
-      "name": "sessions",
-      "description": "Real-time session management with LiveKit integration"
-    }
-  ],
   "paths": {
     "/v1/avatar": {
       "get": {
-        "tags": ["avatars"],
-        "operationId": "listAvatars",
-        "summary": "List all available avatars",
-        "description": "Retrieves a paginated list of all avatars available to the authenticated user. Avatars represent virtual personas that can be used in real-time sessions for interactive experiences.",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of avatars to return (1-100)",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Number of avatars to skip for pagination",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "default": 0
-            }
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "description": "Filter avatars by name (case-insensitive partial match)",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "maxLength": 100
-            }
-          }
-        ],
         "security": [
           {
             "APIKeyHeader": []
@@ -87,94 +14,47 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved list of avatars",
-            "headers": {
-              "X-Total-Count": {
-                "description": "Total number of avatars available",
-                "schema": {
-                  "type": "integer"
-                }
-              },
-              "X-Rate-Limit-Remaining": {
-                "description": "Number of requests remaining in current rate limit window",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AvatarListResponse"
+                  "type": "array",
+                  "title": "Response List Avatars V1 Avatar Get",
+                  "items": {
+                    "$ref": "#/components/schemas/AvatarResponseModel"
+                  }
                 },
                 "examples": {
-                  "success": {
-                    "summary": "Successful avatar list retrieval",
-                    "value": {
-                      "data": [
-                        {
-                          "id": "01234567-89ab-cdef-0123-456789abcdef",
-                          "name": "John Doe",
-                          "created_at": "2024-01-01T00:00:00Z",
-                          "status": "active"
-                        },
-                        {
-                          "id": "98765432-10fe-dcba-9876-543210fedcba",
-                          "name": "Jane Smith",
-                          "created_at": "2024-01-02T00:00:00Z",
-                          "status": "active"
-                        }
-                      ],
-                      "pagination": {
-                        "limit": 20,
-                        "offset": 0,
-                        "total": 2
+                  "example": {
+                    "value": [
+                      {
+                        "id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "name": "John Doe"
                       }
-                    }
+                    ]
                   }
                 }
               }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/Forbidden"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimited"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            },
+            "description": "Successful Response"
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/session": {
       "post": {
-        "tags": ["sessions"],
-        "operationId": "createSession",
-        "summary": "Create a new real-time session",
-        "description": "Creates a new real-time session with an avatar and LiveKit room connection. The session enables real-time interaction with the specified avatar through WebRTC communication. Requires valid LiveKit credentials and an active avatar ID.",
         "requestBody": {
-          "required": true,
-          "description": "Session creation parameters including avatar ID and LiveKit configuration",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SessionRequestModel"
               },
               "examples": {
-                "basic": {
-                  "summary": "Basic session creation",
+                "example": {
                   "value": {
                     "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
-                    "livekit_url": "wss://myproject.livekit.cloud",
-                    "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    "livekit_url": "wss://<your-domain>.livekit.cloud",
+                    "livekit_token": "<your-livekit-token>"
                   }
                 }
               }
@@ -188,132 +68,55 @@
         ],
         "responses": {
           "201": {
-            "description": "Session successfully created",
-            "headers": {
-              "Location": {
-                "description": "URL of the created session resource",
-                "schema": {
-                  "type": "string",
-                  "format": "uri"
-                }
-              }
-            },
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SessionResponseModel"
                 },
                 "examples": {
-                  "success": {
-                    "summary": "Successful session creation",
+                  "example": {
                     "value": {
                       "id": "01234567-89ab-cdef-0123-456789abcdef",
-                      "created_at": "2024-01-01T12:00:00Z",
+                      "created_at": "2022-01-01T00:00:00Z",
                       "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
-                      "livekit_url": "wss://myproject.livekit.cloud",
-                      "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                      "status": "active",
-                      "expires_at": "2024-01-01T13:00:00Z"
+                      "livekit_url": "wss://<your-domain>.livekit.cloud",
+                      "livekit_token": "<your-livekit-token>"
                     }
                   }
                 }
               }
-            }
+            },
+            "description": "Successful Response"
           },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/Forbidden"
-          },
-          "404": {
-            "description": "Avatar not found",
+          "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 },
                 "examples": {
-                  "avatar_not_found": {
-                    "summary": "Avatar does not exist",
+                  "example": {
                     "value": {
-                      "error": {
-                        "code": "AVATAR_NOT_FOUND",
-                        "message": "The specified avatar ID does not exist or is not accessible",
-                        "details": {
-                          "avatar_id": "01234567-89ab-cdef-0123-456789abcdef"
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
                         }
-                      }
+                      ]
                     }
                   }
                 }
               }
-            }
-          },
-          "422": {
-            "$ref": "#/components/responses/ValidationError"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimited"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            },
+            "description": "Validation Error"
           }
-        }
+        },
+        "deprecated": false
       },
       "get": {
-        "tags": ["sessions"],
-        "operationId": "listSessions",
-        "summary": "List user's sessions",
-        "description": "Retrieves a paginated list of all sessions created by the authenticated user. Sessions can be filtered by status and ordered by creation date.",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of sessions to return (1-100)",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100,
-              "default": 20
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Number of sessions to skip for pagination",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "default": 0
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "description": "Filter sessions by status",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": ["active", "inactive", "expired", "error"]
-            }
-          },
-          {
-            "name": "avatar_id",
-            "in": "query",
-            "description": "Filter sessions by avatar ID",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
         "security": [
           {
             "APIKeyHeader": []
@@ -321,76 +124,47 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved list of sessions",
-            "headers": {
-              "X-Total-Count": {
-                "description": "Total number of sessions available",
-                "schema": {
-                  "type": "integer"
-                }
-              }
-            },
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SessionListResponse"
+                  "type": "array",
+                  "title": "Response List Session V1 Session Get",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionResponseModel"
+                  }
                 },
                 "examples": {
-                  "success": {
-                    "summary": "Successful session list retrieval",
-                    "value": {
-                      "data": [
-                        {
-                          "id": "01234567-89ab-cdef-0123-456789abcdef",
-                          "created_at": "2024-01-01T12:00:00Z",
-                          "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
-                          "status": "active",
-                          "expires_at": "2024-01-01T13:00:00Z"
-                        }
-                      ],
-                      "pagination": {
-                        "limit": 20,
-                        "offset": 0,
-                        "total": 1
+                  "example": {
+                    "value": [
+                      {
+                        "id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "created_at": "2022-01-01T00:00:00Z",
+                        "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "livekit_url": "wss://<your-domain>.livekit.cloud",
+                        "livekit_token": "<your-livekit-token>"
                       }
-                    }
+                    ]
                   }
                 }
               }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimited"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            },
+            "description": "Successful Response"
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/session/{id}": {
       "get": {
-        "tags": ["sessions"],
-        "operationId": "getSession",
-        "summary": "Get session details",
-        "description": "Retrieves detailed information about a specific session including its current status, avatar information, and LiveKit connection details. Use this endpoint to check session health and get reconnection parameters.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "Unique identifier of the session to retrieve",
             "schema": {
               "type": "string",
-              "format": "uuid"
-            },
-            "example": "01234567-89ab-cdef-0123-456789abcdef"
+              "title": "Id"
+            }
           }
         ],
         "security": [
@@ -400,488 +174,192 @@
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved session details",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SessionResponseModel"
                 },
                 "examples": {
-                  "active_session": {
-                    "summary": "Active session details",
+                  "example": {
                     "value": {
                       "id": "01234567-89ab-cdef-0123-456789abcdef",
-                      "created_at": "2024-01-01T12:00:00Z",
+                      "created_at": "2022-01-01T00:00:00Z",
                       "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
-                      "livekit_url": "wss://myproject.livekit.cloud",
-                      "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                      "status": "active",
-                      "expires_at": "2024-01-01T13:00:00Z"
+                      "livekit_url": "wss://<your-domain>.livekit.cloud",
+                      "livekit_token": "<your-livekit-token>"
                     }
                   }
                 }
               }
-            }
+            },
+            "description": "Successful Response"
           },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/Forbidden"
-          },
-          "404": {
-            "description": "Session not found",
+          "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/HTTPValidationError"
                 },
                 "examples": {
-                  "session_not_found": {
-                    "summary": "Session does not exist",
+                  "example": {
                     "value": {
-                      "error": {
-                        "code": "SESSION_NOT_FOUND",
-                        "message": "The specified session ID does not exist or is not accessible",
-                        "details": {
-                          "session_id": "01234567-89ab-cdef-0123-456789abcdef"
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
                         }
-                      }
+                      ]
                     }
                   }
                 }
               }
-            }
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimited"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
+            },
+            "description": "Validation Error"
           }
-        }
-      },
-      "delete": {
-        "tags": ["sessions"],
-        "operationId": "deleteSession",
-        "summary": "Terminate a session",
-        "description": "Terminates an active session and cleans up associated resources. This will disconnect all participants from the LiveKit room and mark the session as inactive.",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Unique identifier of the session to terminate",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Session successfully terminated"
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequest"
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/Forbidden"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFound"
-          },
-          "429": {
-            "$ref": "#/components/responses/RateLimited"
-          },
-          "500": {
-            "$ref": "#/components/responses/InternalServerError"
-          }
-        }
+        },
+        "deprecated": false
       }
     }
   },
+  "servers": [
+    {
+      "url": "https://api.bey.dev",
+      "description": "API Server"
+    }
+  ],
   "components": {
     "schemas": {
       "AvatarResponseModel": {
-        "type": "object",
-        "required": ["id", "name", "created_at", "status"],
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid",
-            "title": "Avatar ID",
-            "description": "The unique identifier (UUID) of the avatar",
-            "example": "01234567-89ab-cdef-0123-456789abcdef"
+            "title": "Id",
+            "description": "The unique identifier (ID) of the avatar.",
+            "examples": [
+              "01234567-89ab-cdef-0123-456789abcdef"
+            ]
           },
           "name": {
             "type": "string",
-            "title": "Avatar Name",
-            "description": "The display name of the avatar",
-            "minLength": 1,
-            "maxLength": 100,
-            "example": "John Doe"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Creation Date",
-            "description": "ISO 8601 timestamp when the avatar was created",
-            "example": "2024-01-01T00:00:00Z"
-          },
-          "status": {
-            "type": "string",
-            "enum": ["active", "inactive", "processing"],
-            "title": "Avatar Status",
-            "description": "Current status of the avatar",
-            "example": "active"
+            "title": "Name",
+            "description": "The name of the avatar.",
+            "examples": [
+              "John Doe"
+            ]
           }
         },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
         "title": "AvatarResponseModel",
-        "description": "Represents a Beyond Presence Avatar with full details"
-      },
-      "AvatarListResponse": {
-        "type": "object",
-        "required": ["data", "pagination"],
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AvatarResponseModel"
-            },
-            "description": "Array of avatar objects"
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationInfo"
-          }
-        },
-        "title": "AvatarListResponse",
-        "description": "Paginated list of avatars"
-      },
-      "SessionRequestModel": {
-        "type": "object",
-        "required": ["avatar_id", "livekit_url", "livekit_token"],
-        "properties": {
-          "avatar_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Avatar ID",
-            "description": "The unique identifier of the avatar to use in this session",
-            "example": "01234567-89ab-cdef-0123-456789abcdef"
-          },
-          "livekit_url": {
-            "type": "string",
-            "format": "uri",
-            "title": "LiveKit URL",
-            "description": "The WebSocket URL of your LiveKit server instance",
-            "pattern": "^wss?://.*",
-            "example": "wss://myproject.livekit.cloud"
-          },
-          "livekit_token": {
-            "type": "string",
-            "title": "LiveKit Token",
-            "description": "JWT token for authenticating with the LiveKit room",
-            "minLength": 10,
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          },
-          "session_duration": {
-            "type": "integer",
-            "title": "Session Duration",
-            "description": "Maximum session duration in seconds (default: 3600, max: 7200)",
-            "minimum": 60,
-            "maximum": 7200,
-            "default": 3600,
-            "example": 3600
-          }
-        },
-        "title": "SessionRequestModel",
-        "description": "Request payload for creating a new session"
-      },
-      "SessionResponseModel": {
-        "type": "object",
-        "required": ["id", "created_at", "avatar_id", "livekit_url", "livekit_token", "status"],
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Session ID",
-            "description": "The unique identifier of the session",
-            "example": "01234567-89ab-cdef-0123-456789abcdef"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Creation Date",
-            "description": "ISO 8601 timestamp when the session was created",
-            "example": "2024-01-01T12:00:00Z"
-          },
-          "avatar_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Avatar ID",
-            "description": "The ID of the avatar used in this session",
-            "example": "01234567-89ab-cdef-0123-456789abcdef"
-          },
-          "livekit_url": {
-            "type": "string",
-            "format": "uri",
-            "title": "LiveKit URL",
-            "description": "The WebSocket URL for connecting to the LiveKit room",
-            "example": "wss://myproject.livekit.cloud"
-          },
-          "livekit_token": {
-            "type": "string",
-            "title": "LiveKit Token",
-            "description": "JWT token for authenticating with the LiveKit room",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          },
-          "status": {
-            "type": "string",
-            "enum": ["active", "inactive", "expired", "error"],
-            "title": "Session Status",
-            "description": "Current status of the session",
-            "example": "active"
-          },
-          "expires_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Expiration Date",
-            "description": "ISO 8601 timestamp when the session will expire",
-            "example": "2024-01-01T13:00:00Z"
-          }
-        },
-        "title": "SessionResponseModel",
-        "description": "Represents a Beyond Presence Real-Time API session with full details"
-      },
-      "SessionListResponse": {
-        "type": "object",
-        "required": ["data", "pagination"],
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SessionResponseModel"
-            },
-            "description": "Array of session objects"
-          },
-          "pagination": {
-            "$ref": "#/components/schemas/PaginationInfo"
-          }
-        },
-        "title": "SessionListResponse",
-        "description": "Paginated list of sessions"
-      },
-      "PaginationInfo": {
-        "type": "object",
-        "required": ["limit", "offset", "total"],
-        "properties": {
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100,
-            "description": "Number of items requested per page"
-          },
-          "offset": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of items skipped"
-          },
-          "total": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Total number of items available"
-          }
-        },
-        "title": "PaginationInfo",
-        "description": "Pagination metadata"
-      },
-      "ErrorResponse": {
-        "type": "object",
-        "required": ["error"],
-        "properties": {
-          "error": {
-            "type": "object",
-            "required": ["code", "message"],
-            "properties": {
-              "code": {
-                "type": "string",
-                "description": "Machine-readable error code",
-                "example": "VALIDATION_ERROR"
-              },
-              "message": {
-                "type": "string",
-                "description": "Human-readable error message",
-                "example": "The request contains invalid parameters"
-              },
-              "details": {
-                "type": "object",
-                "description": "Additional error context and details",
-                "additionalProperties": true
-              }
-            }
-          }
-        },
-        "title": "ErrorResponse",
-        "description": "Standard error response format"
+        "description": "Represents a Beyond Presence Avatar."
       },
       "ValidationError": {
-        "type": "object",
-        "required": ["loc", "msg", "type"],
         "properties": {
           "loc": {
-            "type": "array",
             "items": {
               "anyOf": [
-                {"type": "string"},
-                {"type": "integer"}
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
               ]
             },
-            "title": "Location",
-            "description": "Path to the field that caused the validation error"
+            "type": "array",
+            "title": "Location"
           },
           "msg": {
             "type": "string",
-            "title": "Message",
-            "description": "Human-readable validation error message"
+            "title": "Message"
           },
           "type": {
             "type": "string",
-            "title": "Error Type",
-            "description": "Type of validation error"
+            "title": "Error Type"
           }
         },
-        "title": "ValidationError",
-        "description": "Individual validation error details"
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "SessionRequestModel": {
+        "$ref": "#/components/schemas/SessionRequestModel"
+      },
+      "SessionResponseModel": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier (ID) of the session.",
+            "examples": [
+              "01234567-89ab-cdef-0123-456789abcdef"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "The timestamp of when the session was created.",
+            "examples": [
+              "2022-01-01T00:00:00Z"
+            ]
+          },
+          "avatar_id": {
+            "type": "string",
+            "title": "Avatar Id",
+            "description": "The ID of the avatar used in the session.",
+            "examples": [
+              "01234567-89ab-cdef-0123-456789abcdef"
+            ]
+          },
+          "livekit_url": {
+            "type": "string",
+            "title": "Livekit Url",
+            "description": "The LiveKit URL you chose when creating your LiveKit project.",
+            "examples": [
+              "wss://<your-domain>.livekit.cloud"
+            ]
+          },
+          "livekit_token": {
+            "type": "string",
+            "title": "Livekit Token",
+            "description": "The LiveKit token used to join your LiveKit room.",
+            "examples": [
+              "<your-livekit-token>"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "avatar_id",
+          "livekit_url",
+          "livekit_token"
+        ],
+        "title": "SessionResponseModel",
+        "description": "Represents a Beyond Presence Real-Time API session."
       },
       "HTTPValidationError": {
-        "type": "object",
-        "properties": {
-          "detail": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
-            "title": "Validation Errors",
-            "description": "List of validation errors"
-          }
-        },
-        "title": "HTTPValidationError",
-        "description": "HTTP validation error response"
-      }
-    },
-    "responses": {
-      "BadRequest": {
-        "description": "Bad request - invalid parameters or malformed request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            }
-          }
-        }
-      },
-      "Unauthorized": {
-        "description": "Authentication required - missing or invalid API key",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            }
-          }
-        }
-      },
-      "Forbidden": {
-        "description": "Access denied - insufficient permissions",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            }
-          }
-        }
-      },
-      "NotFound": {
-        "description": "Resource not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            }
-          }
-        }
-      },
-      "ValidationError": {
-        "description": "Validation error - request body contains invalid data",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/HTTPValidationError"
-            }
-          }
-        }
-      },
-      "RateLimited": {
-        "description": "Rate limit exceeded - too many requests",
-        "headers": {
-          "X-Rate-Limit-Reset": {
-            "description": "Unix timestamp when rate limit resets",
-            "schema": {
-              "type": "integer"
-            }
-          }
-        },
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            }
-          }
-        }
-      },
-      "InternalServerError": {
-        "description": "Internal server error - unexpected server condition",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/ErrorResponse"
-            }
-          }
-        }
+        "$ref": "#/components/schemas/HTTPValidationError"
       }
     },
     "securitySchemes": {
       "APIKeyHeader": {
         "type": "apiKey",
         "in": "header",
-        "name": "X-API-KEY",
-        "description": "API key for authentication. Include your API key in the X-API-KEY header."
+        "name": "X-API-KEY"
       }
-    }
-  },
-  "x-ratelimit": {
-    "requests": 1000,
-    "period": "hour",
-    "description": "Rate limiting is applied per API key with a limit of 1000 requests per hour"
-  },
-  "x-cache": {
-    "avatar-list": {
-      "ttl": 300,
-      "description": "Avatar list responses are cached for 5 minutes"
-    },
-    "session-details": {
-      "ttl": 60,
-      "description": "Session details are cached for 1 minute"
     }
   }
 }
