@@ -8,6 +8,10 @@ const testCases = [
     id: "bey_dev",
     url: "https://docs.bey.dev/sitemap.xml",
   },
+  {
+    id: "aci_dev",
+    url: "https://www.aci.dev/docs/sitemap.xml",
+  },
 ];
 
 describe(

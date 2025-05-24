@@ -1,38 +1,102 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "title": "API Documentation",
-    "description": "API documentation extracted from https://www.aci.dev/docs/sitemap.xml",
-    "version": "1.0.0",
-    "contact": {
-      "url": "https://www.aci.dev/docs/"
-    }
-  },
-  "servers": [
-    {
-      "url": "https://api.aci.dev",
-      "description": "Production server"
-    }
-  ],
   "paths": {
     "/v1/app-configurations": {
       "post": {
-        "operationId": "post_v1_app_configurations",
-        "tags": [
-          "app-configurations"
-        ],
+        "requestBody": {
+          "application/json": {
+            "schemaArray": [
+              {
+                "type": "object",
+                "properties": {
+                  "app_name": {
+                    "allOf": [
+                      {
+                        "type": "string",
+                        "title": "App Name"
+                      }
+                    ]
+                  },
+                  "security_scheme": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/SecurityScheme"
+                      }
+                    ]
+                  },
+                  "security_scheme_overrides": {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "title": "Security Scheme Overrides"
+                      }
+                    ]
+                  },
+                  "all_functions_enabled": {
+                    "allOf": [
+                      {
+                        "type": "boolean",
+                        "title": "All Functions Enabled",
+                        "default": true
+                      }
+                    ]
+                  },
+                  "enabled_functions": {
+                    "allOf": [
+                      {
+                        "items": {
+                          "type": "string"
+                        },
+                        "type": "array",
+                        "title": "Enabled Functions"
+                      }
+                    ]
+                  }
+                },
+                "required": true,
+                "title": "AppConfigurationCreate",
+                "description": "Create a new app configuration\n“all_functions_enabled=True” → ignore enabled_functions.\n“all_functions_enabled=False” AND non-empty enabled_functions → selectively enable that list.\n“all_functions_enabled=False” AND empty enabled_functions → all functions disabled.",
+                "refIdentifier": "#/components/schemas/AppConfigurationCreate",
+                "requiredProperties": [
+                  "app_name",
+                  "security_scheme"
+                ]
+              }
+            ],
+            "examples": {
+              "example": {
+                "value": {
+                  "app_name": "<string>",
+                  "security_scheme": "no_auth",
+                  "security_scheme_overrides": {},
+                  "all_functions_enabled": true,
+                  "enabled_functions": [
+                    "<string>"
+                  ]
+                }
+              }
+            }
+          }
+        },
         "security": [
           {
-            "APIKeyHeader": []
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
-        "parameters": [],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -136,33 +200,33 @@
                     "created_at",
                     "updated_at"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "app_name": "<string>",
-                      "security_scheme": "no_auth",
-                      "security_scheme_overrides": {},
-                      "enabled": true,
-                      "all_functions_enabled": true,
-                      "enabled_functions": [
-                        "<string>"
-                      ],
-                      "created_at": "2023-11-07T05:31:56Z",
-                      "updated_at": "2023-11-07T05:31:56Z"
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "app_name": "<string>",
+                    "security_scheme": "no_auth",
+                    "security_scheme_overrides": {},
+                    "enabled": true,
+                    "all_functions_enabled": true,
+                    "enabled_functions": [
+                      "<string>"
+                    ],
+                    "created_at": "2023-11-07T05:31:56Z",
+                    "updated_at": "2023-11-07T05:31:56Z"
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -179,69 +243,109 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       },
       "get": {
-        "operationId": "get_v1_app_configurations",
-        "tags": [
-          "app-configurations"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_names",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "required": false,
+                "title": "App Names",
+                "description": "Filter by app names."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "App Names",
+                "description": "Filter by app names."
+              }
+            ]
           },
           {
             "name": "limit",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Limit",
+                "description": "Maximum number of results per response.",
+                "maximum": 1000,
+                "minimum": 1,
+                "default": 100
+              }
+            ]
           },
           {
             "name": "offset",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Offset",
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "default": 0
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "array",
                   "items": {
                     "allOf": [
@@ -251,116 +355,123 @@
                     ]
                   },
                   "title": "Response App-Configurations-List App Configurations"
-                },
-                "examples": {
-                  "example": {
-                    "value": [
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": [
+                    {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  ]
+                }
+              },
+              "description": "Successful Response"
+            }
+          },
+          "422": {
+            "application/json": {
+              "schemaArray": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
                       {
-                        "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                        "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                        "app_name": "<string>",
-                        "security_scheme": "no_auth",
-                        "security_scheme_overrides": {},
-                        "enabled": true,
-                        "all_functions_enabled": true,
-                        "enabled_functions": [
+                        "loc": [
                           "<string>"
                         ],
-                        "created_at": "2023-11-07T05:31:56Z",
-                        "updated_at": "2023-11-07T05:31:56Z"
+                        "msg": "<string>",
+                        "type": "<string>"
                       }
                     ]
                   }
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "detail": {
-                      "allOf": [
-                        {
-                          "items": {
-                            "$ref": "#/components/schemas/ValidationError"
-                          },
-                          "type": "array",
-                          "title": "Detail"
-                        }
-                      ]
-                    }
-                  },
-                  "title": "HTTPValidationError",
-                  "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/app-configurations/{app_name}": {
       "delete": {
-        "operationId": "delete_v1_app_configurations_{app_name}",
-        "tags": [
-          "app-configurations"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "any"
-                },
-                "examples": {
-                  "example": {
-                    "value": "<any>"
-                  }
                 }
-              }
+              ],
+              "examples": {
+                "example": {
+                  "value": "<any>"
+                }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -377,54 +488,61 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       },
       "get": {
-        "operationId": "get_v1_app_configurations_{app_name}",
-        "tags": [
-          "app-configurations"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -528,33 +646,33 @@
                     "created_at",
                     "updated_at"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "app_name": "<string>",
-                      "security_scheme": "no_auth",
-                      "security_scheme_overrides": {},
-                      "enabled": true,
-                      "all_functions_enabled": true,
-                      "enabled_functions": [
-                        "<string>"
-                      ],
-                      "created_at": "2023-11-07T05:31:56Z",
-                      "updated_at": "2023-11-07T05:31:56Z"
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "app_name": "<string>",
+                    "security_scheme": "no_auth",
+                    "security_scheme_overrides": {},
+                    "enabled": true,
+                    "all_functions_enabled": true,
+                    "enabled_functions": [
+                      "<string>"
+                    ],
+                    "created_at": "2023-11-07T05:31:56Z",
+                    "updated_at": "2023-11-07T05:31:56Z"
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -571,54 +689,165 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       },
       "patch": {
-        "operationId": "patch_v1_app_configurations_{app_name}",
-        "tags": [
-          "app-configurations"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "application/json": {
+            "schemaArray": [
+              {
+                "type": "object",
+                "properties": {
+                  "security_scheme": {
+                    "allOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "$ref": "#/components/schemas/SecurityScheme"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "security_scheme_overrides": {
+                    "allOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "type": "object"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Security Scheme Overrides"
+                      }
+                    ]
+                  },
+                  "enabled": {
+                    "allOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Enabled"
+                      }
+                    ]
+                  },
+                  "all_functions_enabled": {
+                    "allOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "All Functions Enabled"
+                      }
+                    ]
+                  },
+                  "enabled_functions": {
+                    "allOf": [
+                      {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "title": "Enabled Functions"
+                      }
+                    ]
+                  }
+                },
+                "required": true,
+                "title": "AppConfigurationUpdate",
+                "refIdentifier": "#/components/schemas/AppConfigurationUpdate"
+              }
+            ],
+            "examples": {
+              "example": {
+                "value": {
+                  "security_scheme": "no_auth",
+                  "security_scheme_overrides": {},
+                  "enabled": true,
+                  "all_functions_enabled": true,
+                  "enabled_functions": [
+                    "<string>"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -722,33 +951,33 @@
                     "created_at",
                     "updated_at"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "app_name": "<string>",
-                      "security_scheme": "no_auth",
-                      "security_scheme_overrides": {},
-                      "enabled": true,
-                      "all_functions_enabled": true,
-                      "enabled_functions": [
-                        "<string>"
-                      ],
-                      "created_at": "2023-11-07T05:31:56Z",
-                      "updated_at": "2023-11-07T05:31:56Z"
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "app_name": "<string>",
+                    "security_scheme": "no_auth",
+                    "security_scheme_overrides": {},
+                    "enabled": true,
+                    "all_functions_enabled": true,
+                    "enabled_functions": [
+                      "<string>"
+                    ],
+                    "created_at": "2023-11-07T05:31:56Z",
+                    "updated_at": "2023-11-07T05:31:56Z"
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -765,56 +994,63 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/apps/{app_name}": {
       "get": {
-        "operationId": "get_v1_apps_{app_name}",
-        "tags": [
-          "apps"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "name": {
@@ -852,29 +1088,29 @@
                     "description",
                     "functions"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "name": "<string>",
-                      "description": "<string>",
-                      "functions": [
-                        {
-                          "name": "<string>",
-                          "description": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "name": "<string>",
+                    "description": "<string>",
+                    "functions": [
+                      {
+                        "name": "<string>",
+                        "description": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -891,87 +1127,144 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/apps/search": {
       "get": {
-        "operationId": "get_v1_apps_search",
-        "tags": [
-          "apps"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "intent",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              }
+            ]
           },
           {
             "name": "configured_only",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "boolean",
+                "required": false,
+                "title": "Configured Only",
+                "description": "If true, only return apps that have been configured.",
+                "default": false
+              }
+            ]
           },
           {
             "name": "categories",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "required": false,
+                "title": "Categories",
+                "description": "List of categories for filtering."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Categories",
+                "description": "List of categories for filtering."
+              }
+            ]
           },
           {
             "name": "limit",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Limit",
+                "description": "Maximum number of Apps per response.",
+                "maximum": 1000,
+                "minimum": 1,
+                "default": 100
+              }
+            ]
           },
           {
             "name": "offset",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Offset",
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "default": 0
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "array",
                   "items": {
                     "allOf": [
@@ -981,25 +1274,25 @@
                     ]
                   },
                   "title": "Response Apps-Search Apps"
-                },
-                "examples": {
-                  "example": {
-                    "value": [
-                      {
-                        "name": "<string>",
-                        "description": "<string>"
-                      }
-                    ]
-                  }
                 }
-              }
+              ],
+              "examples": {
+                "example": {
+                  "value": [
+                    {
+                      "name": "<string>",
+                      "description": "<string>"
+                    }
+                  ]
+                }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1016,56 +1309,107 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/functions/{function_name}/execute": {
       "post": {
-        "operationId": "post_v1_functions_{function_name}_execute",
-        "tags": [
-          "functions"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "function_name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "Function Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "application/json": {
+            "schemaArray": [
+              {
+                "type": "object",
+                "properties": {
+                  "function_input": {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "title": "Function Input",
+                        "description": "The input parameters for the function."
+                      }
+                    ]
+                  },
+                  "linked_account_owner_id": {
+                    "allOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 255,
+                        "title": "Linked Account Owner Id",
+                        "description": "The owner id of the linked account. This is the id of the linked account owner in the linked account provider."
+                      }
+                    ]
+                  }
+                },
+                "required": true,
+                "title": "FunctionExecute",
+                "refIdentifier": "#/components/schemas/FunctionExecute",
+                "requiredProperties": [
+                  "linked_account_owner_id"
+                ]
+              }
+            ],
+            "examples": {
+              "example": {
+                "value": {
+                  "function_input": {},
+                  "linked_account_owner_id": "<string>"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "success": {
@@ -1110,24 +1454,24 @@
                   "requiredProperties": [
                     "success"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "success": true,
-                      "data": "<any>",
-                      "error": "<string>"
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "success": true,
+                    "data": "<any>",
+                    "error": "<string>"
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1144,64 +1488,80 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/functions/{function_name}/definition": {
       "get": {
-        "operationId": "get_v1_functions_{function_name}_definition",
-        "tags": [
-          "functions"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
-          {
-            "name": "inference_provider",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
-          },
           {
             "name": "function_name",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "Function Name"
+            }
+          },
+          {
+            "name": "inference_provider",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "enum<string>",
+                "enum": [
+                  "openai",
+                  "anthropic"
+                ],
+                "required": false,
+                "title": "InferenceProvider",
+                "description": "The inference provider, which determines the format of the function definition."
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "type": {
@@ -1231,27 +1591,63 @@
                     "function"
                   ]
                 },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "type": "function",
-                      "function": {
-                        "name": "<string>",
-                        "strict": true,
-                        "description": "<string>",
-                        "parameters": {}
-                      }
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "Name"
+                        }
+                      ]
+                    },
+                    "description": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "Description"
+                        }
+                      ]
+                    },
+                    "input_schema": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "title": "Input Schema"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "AnthropicFunctionDefinition",
+                  "refIdentifier": "#/components/schemas/AnthropicFunctionDefinition",
+                  "requiredProperties": [
+                    "name",
+                    "description",
+                    "input_schema"
+                  ]
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "type": "function",
+                    "function": {
+                      "name": "<string>",
+                      "strict": true,
+                      "description": "<string>",
+                      "parameters": {}
                     }
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1268,87 +1664,144 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/functions/search": {
       "get": {
-        "operationId": "get_v1_functions_search",
-        "tags": [
-          "functions"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_names",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "required": false,
+                "title": "App Names",
+                "description": "List of app names for filtering functions."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "App Names",
+                "description": "List of app names for filtering functions."
+              }
+            ]
           },
           {
             "name": "intent",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              }
+            ]
           },
           {
             "name": "configured_only",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "boolean",
+                "required": false,
+                "title": "Configured Only",
+                "description": "If true, only returns functions of apps that are configured.",
+                "default": false
+              }
+            ]
           },
           {
             "name": "limit",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Limit",
+                "description": "Maximum number of Apps per response.",
+                "maximum": 1000,
+                "minimum": 1,
+                "default": 100
+              }
+            ]
           },
           {
             "name": "offset",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Offset",
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "default": 0
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "array",
                   "items": {
                     "allOf": [
@@ -1358,94 +1811,110 @@
                     ]
                   },
                   "title": "Response Functions-Search Functions"
-                },
-                "examples": {
-                  "example": {
-                    "value": [
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": [
+                    {
+                      "name": "<string>",
+                      "description": "<string>"
+                    }
+                  ]
+                }
+              },
+              "description": "Successful Response"
+            }
+          },
+          "422": {
+            "application/json": {
+              "schemaArray": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
                       {
-                        "name": "<string>",
-                        "description": "<string>"
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
                       }
                     ]
                   }
                 }
-              }
-            }
-          },
-          "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "detail": {
-                      "allOf": [
-                        {
-                          "items": {
-                            "$ref": "#/components/schemas/ValidationError"
-                          },
-                          "type": "array",
-                          "title": "Detail"
-                        }
-                      ]
-                    }
-                  },
-                  "title": "HTTPValidationError",
-                  "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/linked-accounts/{linked_account_id}": {
       "delete": {
-        "operationId": "delete_v1_linked_accounts_{linked_account_id}",
-        "tags": [
-          "linked-accounts"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "linked_account_id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "Linked Account Id"
+            }
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "_mintlify/placeholder": {
+              "schemaArray": [
+                {
+                  "type": "any",
+                  "description": "Successful Response"
+                }
+              ],
+              "examples": {},
+              "description": "Successful Response"
+            }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1462,54 +1931,61 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       },
       "get": {
-        "operationId": "get_v1_linked_accounts_{linked_account_id}",
-        "tags": [
-          "linked-accounts"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "linked_account_id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
-            },
-            "description": ""
+              "type": "string",
+              "title": "Linked Account Id"
+            }
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -1592,29 +2068,29 @@
                     "created_at",
                     "updated_at"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "app_name": "<string>",
-                      "linked_account_owner_id": "<string>",
-                      "security_scheme": "no_auth",
-                      "enabled": true,
-                      "created_at": "2023-11-07T05:31:56Z",
-                      "updated_at": "2023-11-07T05:31:56Z"
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "app_name": "<string>",
+                    "linked_account_owner_id": "<string>",
+                    "security_scheme": "no_auth",
+                    "enabled": true,
+                    "created_at": "2023-11-07T05:31:56Z",
+                    "updated_at": "2023-11-07T05:31:56Z"
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1631,88 +2107,112 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/linked-accounts/oauth2": {
       "get": {
-        "operationId": "get_v1_linked_accounts_oauth2",
-        "tags": [
-          "linked-accounts"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_name",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": true,
+                "title": "App Name"
+              }
+            ]
           },
           {
             "name": "linked_account_owner_id",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": true,
+                "title": "Linked Account Owner Id"
+              }
+            ]
           },
           {
             "name": "after_oauth2_link_redirect_url",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "After Oauth2 Link Redirect Url"
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "After Oauth2 Link Redirect Url"
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {},
                   "title": "Response Linked-Accounts-Link Oauth2 Account"
-                },
-                "examples": {
-                  "example": {
-                    "value": {}
-                  }
                 }
-              }
+              ],
+              "examples": {
+                "example": {
+                  "value": {}
+                }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1729,46 +2229,38 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/linked-accounts/oauth2/callback": {
       "get": {
-        "operationId": "get_v1_linked_accounts_oauth2_callback",
-        "tags": [
-          "linked-accounts"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
-        "parameters": [],
+        "security": [],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "id": {
@@ -1851,62 +2343,87 @@
                     "created_at",
                     "updated_at"
                   ]
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                      "app_name": "<string>",
-                      "linked_account_owner_id": "<string>",
-                      "security_scheme": "no_auth",
-                      "enabled": true,
-                      "created_at": "2023-11-07T05:31:56Z",
-                      "updated_at": "2023-11-07T05:31:56Z"
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                    "app_name": "<string>",
+                    "linked_account_owner_id": "<string>",
+                    "security_scheme": "no_auth",
+                    "enabled": true,
+                    "created_at": "2023-11-07T05:31:56Z",
+                    "updated_at": "2023-11-07T05:31:56Z"
                   }
                 }
-              }
+              },
+              "description": "Successful Response"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     },
     "/v1/linked-accounts": {
       "get": {
-        "operationId": "get_v1_linked_accounts",
-        "tags": [
-          "linked-accounts"
-        ],
-        "security": [
-          {
-            "APIKeyHeader": []
-          }
-        ],
         "parameters": [
           {
             "name": "app_name",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "App Name"
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "App Name"
+              }
+            ]
           },
           {
             "name": "linked_account_owner_id",
             "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": ""
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "Linked Account Owner Id"
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Linked Account Owner Id"
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "title": "APIKeyHeader",
+            "parameters": {
+              "query": {},
+              "header": {
+                "X-API-KEY": {
+                  "type": "apiKey",
+                  "description": "API key for authentication"
+                }
+              },
+              "cookie": {}
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "array",
                   "items": {
                     "allOf": [
@@ -1916,31 +2433,31 @@
                     ]
                   },
                   "title": "Response Linked-Accounts-List Linked Accounts"
-                },
-                "examples": {
-                  "example": {
-                    "value": [
-                      {
-                        "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                        "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
-                        "app_name": "<string>",
-                        "linked_account_owner_id": "<string>",
-                        "security_scheme": "no_auth",
-                        "enabled": true,
-                        "created_at": "2023-11-07T05:31:56Z",
-                        "updated_at": "2023-11-07T05:31:56Z"
-                      }
-                    ]
-                  }
                 }
-              }
+              ],
+              "examples": {
+                "example": {
+                  "value": [
+                    {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "linked_account_owner_id": "<string>",
+                      "security_scheme": "no_auth",
+                      "enabled": true,
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  ]
+                }
+              },
+              "description": "Successful Response"
             }
           },
           "422": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
+            "application/json": {
+              "schemaArray": [
+                {
                   "type": "object",
                   "properties": {
                     "detail": {
@@ -1957,26 +2474,28 @@
                   },
                   "title": "HTTPValidationError",
                   "refIdentifier": "#/components/schemas/HTTPValidationError"
-                },
-                "examples": {
-                  "example": {
-                    "value": {
-                      "detail": [
-                        {
-                          "loc": [
-                            "<string>"
-                          ],
-                          "msg": "<string>",
-                          "type": "<string>"
-                        }
-                      ]
-                    }
+                }
+              ],
+              "examples": {
+                "example": {
+                  "value": {
+                    "detail": [
+                      {
+                        "loc": [
+                          "<string>"
+                        ],
+                        "msg": "<string>",
+                        "type": "<string>"
+                      }
+                    ]
                   }
                 }
-              }
+              },
+              "description": "Validation Error"
             }
           }
-        }
+        },
+        "deprecated": false
       }
     }
   },
@@ -2211,14 +2730,6 @@
           "updated_at"
         ],
         "title": "LinkedAccountPublic"
-      }
-    },
-    "securitySchemes": {
-      "APIKeyHeader": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "x-api-key",
-        "description": "API Key for authentication"
       }
     }
   }
