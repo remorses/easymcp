@@ -1,4 +1,6 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { dereferenceSync } from 'dereference-json-schema';
+
 
 import {
   CallToolRequestSchema,
@@ -71,6 +73,101 @@ function extractApiFromBaseUrl(openapi: OpenAPIV3.Document): string {
   throw new Error("No servers defined in OpenAPI document");
 }
 
+function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.OperationObject): Record<string, string> {
+  const headers: Record<string, string> = {};
+  const token = process.env.API_TOKEN;
+
+  if (!token || !openapi.components?.securitySchemes) {
+    return headers;
+  }
+
+  const securitySchemes = openapi.components.securitySchemes;
+
+  // Check for operation-specific security requirements first
+  let operationSecuritySchemes: string[] = [];
+  if (operation?.security && operation.security.length > 0) {
+    // Get the first security requirement from the operation
+    const firstSecurityReq = operation.security[0];
+    operationSecuritySchemes = Object.keys(firstSecurityReq);
+  }
+
+  // Find the preferred security scheme based on priority
+  let selectedScheme: OpenAPIV3.SecuritySchemeObject | null = null;
+  let selectedSchemeName = "";
+
+  // Priority order: Bearer > OAuth2 > API Key > Basic
+  const priorityOrder = ["bearer", "oauth2", "apiKey", "basic"];
+
+  // First try to match operation-specific security schemes
+  if (operationSecuritySchemes.length > 0) {
+    for (const schemeName of operationSecuritySchemes) {
+      const scheme = securitySchemes[schemeName];
+      if (!scheme || "$ref" in scheme) continue;
+
+      selectedScheme = scheme as OpenAPIV3.SecuritySchemeObject;
+      selectedSchemeName = schemeName;
+      break;
+    }
+  }
+
+  // If no operation-specific scheme found, use priority-based selection
+  if (!selectedScheme) {
+    for (const priority of priorityOrder) {
+      for (const [schemeName, scheme] of Object.entries(securitySchemes)) {
+        if ("$ref" in scheme) continue;
+
+        if (
+          (priority === "bearer" && scheme.type === "http" && scheme.scheme === "bearer") ||
+          (priority === "oauth2" && scheme.type === "oauth2") ||
+          (priority === "apiKey" && scheme.type === "apiKey" && scheme.in === "header") ||
+          (priority === "basic" && scheme.type === "http" && scheme.scheme === "basic")
+        ) {
+          selectedScheme = scheme as OpenAPIV3.SecuritySchemeObject;
+          selectedSchemeName = schemeName;
+          break;
+        }
+      }
+      if (selectedScheme) break;
+    }
+  }
+
+  // If no preferred scheme found, use the first available one
+  if (!selectedScheme) {
+    const entries = Object.entries(securitySchemes);
+    if (entries.length > 0) {
+      const [schemeName, scheme] = entries[0];
+      if (!("$ref" in scheme)) {
+        selectedScheme = scheme as OpenAPIV3.SecuritySchemeObject;
+        selectedSchemeName = schemeName;
+      }
+    }
+  }
+
+  if (!selectedScheme) {
+    return headers;
+  }
+
+  switch (selectedScheme.type) {
+    case "http":
+      if (selectedScheme.scheme === "bearer") {
+        headers["Authorization"] = `Bearer ${token}`;
+      } else if (selectedScheme.scheme === "basic") {
+        headers["Authorization"] = `Basic ${token}`;
+      }
+      break;
+    case "apiKey":
+      if (selectedScheme.in === "header") {
+        headers[selectedScheme.name] = token;
+      }
+      break;
+    case "oauth2":
+      headers["Authorization"] = `Bearer ${token}`;
+      break;
+  }
+
+  return headers;
+}
+
 type Fetch = typeof fetch;
 
 export function createMCPServer({
@@ -102,10 +199,17 @@ export function createMCPServer({
   if (!baseUrl) {
     baseUrl = extractApiFromBaseUrl(openapi);
   }
+  openapi = dereferenceSync(openapi)
 
-  async function fetchWithBaseServerAndAuth(u, options) {
-    return await fetch(new URL(u, baseUrl), {
+
+  async function fetchWithBaseServerAndAuth(u: string, options: RequestInit, operation?: OpenAPIV3.OperationObject) {
+    const authHeaders = getAuthHeaders(openapi, operation);
+    return await fetch!(new URL(u, baseUrl), {
       ...options,
+      headers: {
+        ...authHeaders,
+        ...options?.headers,
+      },
     });
   }
 
@@ -178,6 +282,7 @@ export function createMCPServer({
 
     try {
       const { body, query, params } = request.params.arguments || {};
+      const operation = pathObj[method.toLowerCase()] as OpenAPIV3.OperationObject;
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -200,7 +305,7 @@ export function createMCPServer({
           "content-type": "application/json",
         },
         body: body ? JSON.stringify(body) : undefined,
-      });
+      }, operation);
 
       const isError = !response.ok;
       const contentType = response.headers.get("content-type");
