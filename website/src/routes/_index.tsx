@@ -1,4 +1,7 @@
 "use client";
+import "prismjs/themes/prism.css";
+import Prism from "prismjs";
+
 
 import { useEffect, useState, useRef } from "react";
 import { Form, useActionData, useNavigation } from "react-router";
@@ -46,13 +49,18 @@ export async function action({ request }: { request: Request }) {
   if (!schema?.trim()) {
     return { error: "Schema required" };
   }
+  const parsed = safeJsonParse(schema);
+  if (!parsed) {
+    throw new Error("Invalid JSON");
+  }
+  const packageName = generatePackageName(parsed);
   const res = await publishNpmPackage({
     openapiSchema: schema,
-    packageName: "test",
+    packageName,
   });
 
   return {
-    packageName: generatePackageName(safeJsonParse(schema)),
+    packageName,
     schemaTitle: schema.slice(0, 30) + (schema.length > 30 ? "..." : ""),
     requiresApiToken: true,
     timestamp: Date.now(),
@@ -130,39 +138,56 @@ export default function OpenAPIMCPLanding() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData?.packageName]);
 
+
+
   const CodeBlock = ({
     code,
     language,
   }: {
     code: string;
     language: string;
-  }) => (
-    <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto border border-gray-200">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-gray-500 text-xs font-medium uppercase tracking-wide">
-          {language}
-        </span>
-        <button
-          onClick={() => navigator.clipboard.writeText(code)}
-          className="text-gray-500 hover:text-gray-900 text-xs px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors flex items-center gap-1.5"
-        >
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+  }) => {
+    const codeRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+      if (codeRef.current) {
+        Prism.highlightElement(codeRef.current);
+      }
+    }, [code, language]);
+
+    return (
+      <div className="bg-gray-50 rounded-lg p-4 overflow-x-auto border border-gray-200">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-gray-500 text-xs font-medium uppercase tracking-wide">
+            {language}
+          </span>
+          <button
+            onClick={() => navigator.clipboard.writeText(code)}
+            className="text-gray-500 hover:text-gray-900 text-xs px-3 py-1.5 rounded-md hover:bg-gray-100 transition-colors flex items-center gap-1.5"
           >
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-          Copy
-        </button>
+            <svg
+              className="w-3.5 h-3.5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy
+          </button>
+        </div>
+        <pre className={`language-${language} text-gray-900 text-sm leading-relaxed`}>
+          <code
+            ref={codeRef}
+            className={`language-${language}`}
+          >
+            {code}
+          </code>
+        </pre>
       </div>
-      <pre className="text-gray-900 text-sm leading-relaxed">
-        <code>{code}</code>
-      </pre>
-    </div>
-  );
+    );
+  };
 
   const formatTime = (date: Date) => {
     const now = new Date();
