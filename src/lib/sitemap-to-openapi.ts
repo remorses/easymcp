@@ -2,6 +2,7 @@ import { parseStringPromise } from "xml2js";
 import { remark } from "remark";
 import { visit } from "unist-util-visit";
 import * as yaml from "js-yaml";
+import { OpenAPIV3 } from "openapi-types";
 
 interface SitemapUrl {
   loc: string[];
@@ -13,33 +14,9 @@ interface Sitemap {
   };
 }
 
-interface OpenAPIPath {
-  [method: string]: any;
-}
-
 interface GenerateOpenAPIOptions {
   serverUrl?: string;
   name?: string;
-}
-
-interface OpenAPISchema {
-  openapi?: string;
-  info?: {
-    title: string;
-    version: string;
-  };
-  servers?: Array<{
-    url: string;
-    description?: string;
-  }>;
-  paths: {
-    [path: string]: OpenAPIPath;
-  };
-  components?: {
-    schemas?: {
-      [key: string]: any;
-    };
-  };
 }
 
 async function fetchSitemap(url: string): Promise<string[]> {
@@ -75,34 +52,30 @@ async function fetchMarkdown(url: string): Promise<string> {
   }
 }
 
-function extractYamlCodeBlocks(markdownContent: string): Array<{ content: string; method?: string; path?: string }> {
-  const yamlBlocks: Array<{ content: string; method?: string; path?: string }> = [];
+function extractYamlCodeBlocks(markdownContent: string): Array<{ content: string; method: string; path: string }> {
+  const yamlBlocks: Array<{ content: string; method: string; path: string }> = [];
 
   const tree = remark().parse(markdownContent);
 
   visit(tree, "code", (node: any) => {
-    // Look for YAML blocks, including those that might be in fenced code blocks with method info
+    // Look for YAML blocks with method and path info like "yaml GET /v1/session/{id}"
     if (
       (node.lang === "yaml" || (node.lang && node.lang.includes("yaml"))) &&
-      node.value
+      node.value &&
+      node.lang &&
+      node.lang.includes(" ")
     ) {
-      // Check if the lang contains method and path info like "yaml GET /v1/session/{id}"
-      let method: string | undefined;
-      let path: string | undefined;
-      
-      if (node.lang && node.lang.includes(" ")) {
-        const parts = node.lang.split(" ");
-        if (parts.length >= 3 && parts[0] === "yaml") {
-          method = parts[1].toLowerCase();
-          path = parts[2];
-        }
+      const parts = node.lang.split(" ");
+      if (parts.length >= 3 && parts[0] === "yaml") {
+        const method = parts[1].toLowerCase();
+        const path = parts[2];
+        
+        yamlBlocks.push({
+          content: node.value,
+          method,
+          path
+        });
       }
-      
-      yamlBlocks.push({
-        content: node.value,
-        method,
-        path
-      });
     }
   });
 
@@ -111,37 +84,19 @@ function extractYamlCodeBlocks(markdownContent: string): Array<{ content: string
 
 function parseOpenAPIFromYaml(
   yamlContent: string,
-  headerMethod?: string,
-  headerPath?: string,
-): { path: string; method: string; spec: any; components?: any } | null {
+  headerMethod: string,
+  headerPath: string,
+): { path: string; method: string; spec: OpenAPIV3.OperationObject; components?: OpenAPIV3.ComponentsObject } | null {
   try {
     const parsed = yaml.load(yamlContent) as any;
 
-    // If we have method and path from header, treat the YAML as direct OpenAPI spec
-    if (headerMethod && headerPath && parsed) {
-      const components = parsed.components || undefined;
-      // Remove components from the main spec to avoid duplication
-      const { components: _, ...spec } = parsed;
-      
-      return { 
-        path: headerPath, 
-        method: headerMethod, 
-        spec, 
-        components 
-      };
-    }
-
-    // Fallback to old format parsing
-    if (parsed && parsed.paths && parsed.paths.path && parsed.paths.method) {
-      const path = parsed.paths.path;
-      const method = parsed.paths.method.toLowerCase();
-
-      // Build OpenAPI operation specification
+    if (parsed) {
+      // Build OpenAPI operation specification from custom format
       const spec: any = {};
 
       // Handle parameters from request
-      if (parsed.paths.request) {
-        const request = parsed.paths.request;
+      if (parsed.request) {
+        const request = parsed.request;
 
         // Add parameters (path, query, header, cookie)
         const parameters: any[] = [];
@@ -216,19 +171,38 @@ function parseOpenAPIFromYaml(
       }
 
       // Handle responses
-      if (parsed.paths.response) {
-        spec.responses = parsed.paths.response;
+      if (parsed.response) {
+        spec.responses = parsed.response;
+      }
+
+      // Handle summary and description
+      if (parsed.summary) {
+        spec.summary = parsed.summary;
+      }
+
+      if (parsed.description) {
+        spec.description = parsed.description;
       }
 
       // Add deprecated flag if present
-      if (parsed.paths.deprecated !== undefined) {
-        spec.deprecated = parsed.paths.deprecated;
+      if (parsed.deprecated !== undefined) {
+        spec.deprecated = parsed.deprecated;
+      }
+
+      // Handle tags
+      if (parsed.tags) {
+        spec.tags = parsed.tags;
       }
 
       // Extract components
       const components = parsed.components || undefined;
 
-      return { path, method, spec, components };
+      return { 
+        path: headerPath, 
+        method: headerMethod, 
+        spec: spec as OpenAPIV3.OperationObject, 
+        components 
+      };
     }
 
     return null;
@@ -238,17 +212,14 @@ function parseOpenAPIFromYaml(
   }
 }
 
-async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOptions): Promise<OpenAPISchema> {
-  const openApiSchema: OpenAPISchema = {
+async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOptions): Promise<OpenAPIV3.Document> {
+  const openApiSchema: OpenAPIV3.Document = {
     openapi: "3.0.3",
     info: {
       title: options?.name || "Generated API",
       version: "1.0.0",
     },
     paths: {},
-    components: {
-      schemas: {},
-    },
   };
 
   if (options?.serverUrl) {
@@ -277,21 +248,24 @@ async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOpt
             openApiSchema.paths[path] = {};
           }
 
-          openApiSchema.paths[path][method] = spec;
+          (openApiSchema.paths[path] as any)[method] = spec;
 
           // Merge components if they exist
-          if (components && components.schemas) {
+          if (components) {
             if (!openApiSchema.components) {
-              openApiSchema.components = { schemas: {} };
-            }
-            if (!openApiSchema.components.schemas) {
-              openApiSchema.components.schemas = {};
+              openApiSchema.components = {};
             }
 
-            openApiSchema.components.schemas = {
-              ...openApiSchema.components.schemas,
-              ...components.schemas,
-            };
+            // Merge all component types
+            Object.keys(components).forEach(componentType => {
+              if (!openApiSchema.components![componentType as keyof OpenAPIV3.ComponentsObject]) {
+                (openApiSchema.components as any)[componentType] = {};
+              }
+              (openApiSchema.components as any)[componentType] = {
+                ...(openApiSchema.components as any)[componentType],
+                ...components[componentType as keyof OpenAPIV3.ComponentsObject],
+              };
+            });
           }
         }
       }
@@ -306,7 +280,7 @@ async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOpt
 export async function generateOpenAPIFromSitemap(
   sitemapUrl: string,
   options?: GenerateOpenAPIOptions,
-): Promise<OpenAPISchema> {
+): Promise<OpenAPIV3.Document> {
   try {
     console.log("Fetching sitemap...");
     const urls = await fetchSitemap(sitemapUrl);

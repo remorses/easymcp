@@ -7,11 +7,14 @@ const testCases = [
   {
     id: "bey_dev",
     url: "https://docs.bey.dev/sitemap.xml",
+    name: "Bey Dev Docs",
+    serverUrl: "https://api.bey.dev",
   },
   {
     id: "aci_dev",
     url: "https://www.aci.dev/docs/sitemap.xml",
-
+    name: "ACI Dev Docs",
+    serverUrl: "https://www.aci.dev",
   },
 ];
 
@@ -20,8 +23,8 @@ describe(
   () => {
     it.each(testCases)(
       "should generate OpenAPI schema for $id",
-      async ({ id, url }) => {
-        const schema = await generateOpenAPIFromSitemap(url);
+      async ({ id, url, name, serverUrl }) => {
+        const schema = await generateOpenAPIFromSitemap(url, {name, serverUrl});
 
         expect(schema).toBeDefined();
         expect(schema.paths).toBeDefined();
