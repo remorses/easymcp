@@ -1,0 +1,2225 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "description": "API documentation extracted from https://www.aci.dev/docs/sitemap.xml",
+    "version": "1.0.0",
+    "contact": {
+      "url": "https://www.aci.dev/docs/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.aci.dev",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/v1/app-configurations": {
+      "post": {
+        "operationId": "post_v1_app_configurations",
+        "tags": [
+          "app-configurations"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Id"
+                        }
+                      ]
+                    },
+                    "project_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Project Id"
+                        }
+                      ]
+                    },
+                    "app_name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "App Name"
+                        }
+                      ]
+                    },
+                    "security_scheme": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/SecurityScheme"
+                        }
+                      ]
+                    },
+                    "security_scheme_overrides": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "title": "Security Scheme Overrides"
+                        }
+                      ]
+                    },
+                    "enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "Enabled"
+                        }
+                      ]
+                    },
+                    "all_functions_enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "All Functions Enabled"
+                        }
+                      ]
+                    },
+                    "enabled_functions": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array",
+                          "title": "Enabled Functions"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Created At"
+                        }
+                      ]
+                    },
+                    "updated_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Updated At"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "AppConfigurationPublic",
+                  "refIdentifier": "#/components/schemas/AppConfigurationPublic",
+                  "requiredProperties": [
+                    "id",
+                    "project_id",
+                    "app_name",
+                    "security_scheme",
+                    "security_scheme_overrides",
+                    "enabled",
+                    "all_functions_enabled",
+                    "enabled_functions",
+                    "created_at",
+                    "updated_at"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "get_v1_app_configurations",
+        "tags": [
+          "app-configurations"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_names",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/AppConfigurationPublic"
+                      }
+                    ]
+                  },
+                  "title": "Response App-Configurations-List App Configurations"
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "app_name": "<string>",
+                        "security_scheme": "no_auth",
+                        "security_scheme_overrides": {},
+                        "enabled": true,
+                        "all_functions_enabled": true,
+                        "enabled_functions": [
+                          "<string>"
+                        ],
+                        "created_at": "2023-11-07T05:31:56Z",
+                        "updated_at": "2023-11-07T05:31:56Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/app-configurations/{app_name}": {
+      "delete": {
+        "operationId": "delete_v1_app_configurations_{app_name}",
+        "tags": [
+          "app-configurations"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "any"
+                },
+                "examples": {
+                  "example": {
+                    "value": "<any>"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "get_v1_app_configurations_{app_name}",
+        "tags": [
+          "app-configurations"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Id"
+                        }
+                      ]
+                    },
+                    "project_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Project Id"
+                        }
+                      ]
+                    },
+                    "app_name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "App Name"
+                        }
+                      ]
+                    },
+                    "security_scheme": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/SecurityScheme"
+                        }
+                      ]
+                    },
+                    "security_scheme_overrides": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "title": "Security Scheme Overrides"
+                        }
+                      ]
+                    },
+                    "enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "Enabled"
+                        }
+                      ]
+                    },
+                    "all_functions_enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "All Functions Enabled"
+                        }
+                      ]
+                    },
+                    "enabled_functions": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array",
+                          "title": "Enabled Functions"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Created At"
+                        }
+                      ]
+                    },
+                    "updated_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Updated At"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "AppConfigurationPublic",
+                  "refIdentifier": "#/components/schemas/AppConfigurationPublic",
+                  "requiredProperties": [
+                    "id",
+                    "project_id",
+                    "app_name",
+                    "security_scheme",
+                    "security_scheme_overrides",
+                    "enabled",
+                    "all_functions_enabled",
+                    "enabled_functions",
+                    "created_at",
+                    "updated_at"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patch_v1_app_configurations_{app_name}",
+        "tags": [
+          "app-configurations"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Id"
+                        }
+                      ]
+                    },
+                    "project_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Project Id"
+                        }
+                      ]
+                    },
+                    "app_name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "App Name"
+                        }
+                      ]
+                    },
+                    "security_scheme": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/SecurityScheme"
+                        }
+                      ]
+                    },
+                    "security_scheme_overrides": {
+                      "allOf": [
+                        {
+                          "type": "object",
+                          "title": "Security Scheme Overrides"
+                        }
+                      ]
+                    },
+                    "enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "Enabled"
+                        }
+                      ]
+                    },
+                    "all_functions_enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "All Functions Enabled"
+                        }
+                      ]
+                    },
+                    "enabled_functions": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "type": "string"
+                          },
+                          "type": "array",
+                          "title": "Enabled Functions"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Created At"
+                        }
+                      ]
+                    },
+                    "updated_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Updated At"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "AppConfigurationPublic",
+                  "refIdentifier": "#/components/schemas/AppConfigurationPublic",
+                  "requiredProperties": [
+                    "id",
+                    "project_id",
+                    "app_name",
+                    "security_scheme",
+                    "security_scheme_overrides",
+                    "enabled",
+                    "all_functions_enabled",
+                    "enabled_functions",
+                    "created_at",
+                    "updated_at"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/apps/{app_name}": {
+      "get": {
+        "operationId": "get_v1_apps_{app_name}",
+        "tags": [
+          "apps"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "Name"
+                        }
+                      ]
+                    },
+                    "description": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "Description"
+                        }
+                      ]
+                    },
+                    "functions": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/FunctionBasic"
+                          },
+                          "type": "array",
+                          "title": "Functions"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "AppBasicWithFunctions",
+                  "refIdentifier": "#/components/schemas/AppBasicWithFunctions",
+                  "requiredProperties": [
+                    "name",
+                    "description",
+                    "functions"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "name": "<string>",
+                      "description": "<string>",
+                      "functions": [
+                        {
+                          "name": "<string>",
+                          "description": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/apps/search": {
+      "get": {
+        "operationId": "get_v1_apps_search",
+        "tags": [
+          "apps"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "intent",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "configured_only",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/AppBasic"
+                      }
+                    ]
+                  },
+                  "title": "Response Apps-Search Apps"
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "name": "<string>",
+                        "description": "<string>"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/functions/{function_name}/execute": {
+      "post": {
+        "operationId": "post_v1_functions_{function_name}_execute",
+        "tags": [
+          "functions"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "function_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "Success"
+                        }
+                      ]
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "anyOf": [
+                            {},
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "title": "Data"
+                        }
+                      ]
+                    },
+                    "error": {
+                      "allOf": [
+                        {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "title": "Error"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "FunctionExecutionResult",
+                  "refIdentifier": "#/components/schemas/FunctionExecutionResult",
+                  "requiredProperties": [
+                    "success"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": true,
+                      "data": "<any>",
+                      "error": "<string>"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/functions/{function_name}/definition": {
+      "get": {
+        "operationId": "get_v1_functions_{function_name}_definition",
+        "tags": [
+          "functions"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "inference_provider",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "function_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "function"
+                          ],
+                          "const": "function",
+                          "title": "Type",
+                          "default": "function"
+                        }
+                      ]
+                    },
+                    "function": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/OpenAIFunction"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "OpenAIFunctionDefinition",
+                  "refIdentifier": "#/components/schemas/OpenAIFunctionDefinition",
+                  "requiredProperties": [
+                    "function"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "type": "function",
+                      "function": {
+                        "name": "<string>",
+                        "strict": true,
+                        "description": "<string>",
+                        "parameters": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/functions/search": {
+      "get": {
+        "operationId": "get_v1_functions_search",
+        "tags": [
+          "functions"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_names",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "intent",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "configured_only",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/FunctionBasic"
+                      }
+                    ]
+                  },
+                  "title": "Response Functions-Search Functions"
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "name": "<string>",
+                        "description": "<string>"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/linked-accounts/{linked_account_id}": {
+      "delete": {
+        "operationId": "delete_v1_linked_accounts_{linked_account_id}",
+        "tags": [
+          "linked-accounts"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "linked_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "get_v1_linked_accounts_{linked_account_id}",
+        "tags": [
+          "linked-accounts"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "linked_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Id"
+                        }
+                      ]
+                    },
+                    "project_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Project Id"
+                        }
+                      ]
+                    },
+                    "app_name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "App Name"
+                        }
+                      ]
+                    },
+                    "linked_account_owner_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "Linked Account Owner Id"
+                        }
+                      ]
+                    },
+                    "security_scheme": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/SecurityScheme"
+                        }
+                      ]
+                    },
+                    "enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "Enabled"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Created At"
+                        }
+                      ]
+                    },
+                    "updated_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Updated At"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "LinkedAccountPublic",
+                  "refIdentifier": "#/components/schemas/LinkedAccountPublic",
+                  "requiredProperties": [
+                    "id",
+                    "project_id",
+                    "app_name",
+                    "linked_account_owner_id",
+                    "security_scheme",
+                    "enabled",
+                    "created_at",
+                    "updated_at"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "linked_account_owner_id": "<string>",
+                      "security_scheme": "no_auth",
+                      "enabled": true,
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/linked-accounts/oauth2": {
+      "get": {
+        "operationId": "get_v1_linked_accounts_oauth2",
+        "tags": [
+          "linked-accounts"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "linked_account_owner_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "after_oauth2_link_redirect_url",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {},
+                  "title": "Response Linked-Accounts-Link Oauth2 Account"
+                },
+                "examples": {
+                  "example": {
+                    "value": {}
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/linked-accounts/oauth2/callback": {
+      "get": {
+        "operationId": "get_v1_linked_accounts_oauth2_callback",
+        "tags": [
+          "linked-accounts"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Id"
+                        }
+                      ]
+                    },
+                    "project_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "uuid",
+                          "title": "Project Id"
+                        }
+                      ]
+                    },
+                    "app_name": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "App Name"
+                        }
+                      ]
+                    },
+                    "linked_account_owner_id": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "title": "Linked Account Owner Id"
+                        }
+                      ]
+                    },
+                    "security_scheme": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/SecurityScheme"
+                        }
+                      ]
+                    },
+                    "enabled": {
+                      "allOf": [
+                        {
+                          "type": "boolean",
+                          "title": "Enabled"
+                        }
+                      ]
+                    },
+                    "created_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Created At"
+                        }
+                      ]
+                    },
+                    "updated_at": {
+                      "allOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "title": "Updated At"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "LinkedAccountPublic",
+                  "refIdentifier": "#/components/schemas/LinkedAccountPublic",
+                  "requiredProperties": [
+                    "id",
+                    "project_id",
+                    "app_name",
+                    "linked_account_owner_id",
+                    "security_scheme",
+                    "enabled",
+                    "created_at",
+                    "updated_at"
+                  ]
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "linked_account_owner_id": "<string>",
+                      "security_scheme": "no_auth",
+                      "enabled": true,
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/linked-accounts": {
+      "get": {
+        "operationId": "get_v1_linked_accounts",
+        "tags": [
+          "linked-accounts"
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          },
+          {
+            "name": "linked_account_owner_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/LinkedAccountPublic"
+                      }
+                    ]
+                  },
+                  "title": "Response Linked-Accounts-List Linked Accounts"
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "app_name": "<string>",
+                        "linked_account_owner_id": "<string>",
+                        "security_scheme": "no_auth",
+                        "enabled": true,
+                        "created_at": "2023-11-07T05:31:56Z",
+                        "updated_at": "2023-11-07T05:31:56Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "detail": {
+                      "allOf": [
+                        {
+                          "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                          },
+                          "type": "array",
+                          "title": "Detail"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "HTTPValidationError",
+                  "refIdentifier": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SecurityScheme": {
+        "type": "string",
+        "enum": [
+          "no_auth",
+          "api_key",
+          "http_basic",
+          "http_bearer",
+          "oauth2"
+        ],
+        "title": "SecurityScheme",
+        "description": "security scheme type for an app (or function if support override)"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "AppConfigurationPublic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          },
+          "app_name": {
+            "type": "string",
+            "title": "App Name"
+          },
+          "security_scheme": {
+            "$ref": "#/components/schemas/SecurityScheme"
+          },
+          "security_scheme_overrides": {
+            "type": "object",
+            "title": "Security Scheme Overrides"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "all_functions_enabled": {
+            "type": "boolean",
+            "title": "All Functions Enabled"
+          },
+          "enabled_functions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Enabled Functions"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "project_id",
+          "app_name",
+          "security_scheme",
+          "security_scheme_overrides",
+          "enabled",
+          "all_functions_enabled",
+          "enabled_functions",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AppConfigurationPublic"
+      },
+      "FunctionBasic": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "FunctionBasic"
+      },
+      "AppBasic": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "AppBasic"
+      },
+      "OpenAIFunction": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "parameters": {
+            "type": "object",
+            "title": "Parameters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "parameters"
+        ],
+        "title": "OpenAIFunction"
+      },
+      "LinkedAccountPublic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          },
+          "app_name": {
+            "type": "string",
+            "title": "App Name"
+          },
+          "linked_account_owner_id": {
+            "type": "string",
+            "title": "Linked Account Owner Id"
+          },
+          "security_scheme": {
+            "$ref": "#/components/schemas/SecurityScheme"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "project_id",
+          "app_name",
+          "linked_account_owner_id",
+          "security_scheme",
+          "enabled",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "LinkedAccountPublic"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API Key for authentication"
+      }
+    }
+  }
+}
