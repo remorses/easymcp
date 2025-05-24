@@ -7,7 +7,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { createMCPServer } from "./mcp.ts";
 
 // Utility function to connect client and server
-async function connectClientServer(
+export async function connectClientServer(
   server: Server,
   clientName = "test-client",
   clientVersion = "1.0.0",
@@ -278,7 +278,7 @@ describe("MCP Plugin", () => {
  * Simplifies tool call results for inline snapshots by taking only the first content item's text
  * and truncating it to a maximum of 10 lines
  */
-function simplifyToolCallSnapshot(toolCallResult: any) {
+export function simplifyToolCallSnapshot(toolCallResult: any) {
   if (!toolCallResult?.content?.[0]?.text) {
     return toolCallResult;
   }
