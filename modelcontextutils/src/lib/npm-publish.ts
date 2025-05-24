@@ -1,5 +1,8 @@
 // modelcontext/src/lib/npm-publish.ts
 
+const NPM_ORG_SCOPE = "@modelcontext";
+const NPM_ORG_SCOPE_NO_AT = "modelcontext";
+
 import { spawn } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
@@ -83,7 +86,7 @@ export async function publishNpmPackage({
   });
 
   // 4. Print the published npm package URL
-  const fullPackageName = `@modelcontext/${packageName}`; // must match used above
+  const fullPackageName = `${NPM_ORG_SCOPE}/${packageName}`; // must match used above
   // Encode for npm web url: scoped @ -> %40
   const scopedEncoded = fullPackageName.replace("@", "%40");
   const pkgUrl = `https://www.npmjs.com/package/${scopedEncoded}`;
@@ -103,7 +106,7 @@ export function generateNpmPackageFiles(
   openapiSchema: string,
   version: string,
 ): NpmFile[] {
-  const fullPackageName = `@modelcontext/${packageName}`;
+  const fullPackageName = `${NPM_ORG_SCOPE}/${packageName}`;
 
   // Helper function to escape strings for use as content within JavaScript single-quoted literals
   const escapeForJsSingleQuotedStringContent = (str: string): string => {
@@ -202,25 +205,25 @@ main();
  * Throws if package not found.
  */
 async function getNextNpmVersionOrThrow(packageName: string): Promise<string> {
-  const registryUrl = `https://registry.npmjs.org/@modelcontext/${packageName}`;
+  const registryUrl = `https://registry.npmjs.org/${NPM_ORG_SCOPE}/${packageName}`;
   let resp: Response;
   try {
     // @ts-ignore: global fetch for node >= 18, you may polyfill if needed
     resp = await fetch(registryUrl);
   } catch (err) {
     throw new Error(
-      `Could not fetch npm registry info for @modelcontext/${packageName}: ${(err as Error).message}`,
+      `Could not fetch npm registry info for ${NPM_ORG_SCOPE}/${packageName}: ${(err as Error).message}`,
     );
   }
   if (!resp.ok) {
     throw new Error(
-      `Could not find npm package @modelcontext/${packageName} in registry (status ${resp.status}) and no version specified.`,
+      `Could not find npm package ${NPM_ORG_SCOPE}/${packageName} in registry (status ${resp.status}) and no version specified.`,
     );
   }
   const pkgData = await resp.json();
   if (!pkgData["dist-tags"] || !pkgData["dist-tags"].latest) {
     throw new Error(
-      `No latest version found for @modelcontext/${packageName} in registry response.`,
+      `No latest version found for ${NPM_ORG_SCOPE}/${packageName} in registry response.`,
     );
   }
   const currentVersion = pkgData["dist-tags"].latest;
