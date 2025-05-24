@@ -1,509 +1,1350 @@
 [
-  "https://github.com/browser-use/browser-use",
-  "https://github.com/calcom/cal.com",
-  "https://github.com/mem0ai/mem0",
-  "https://github.com/Campaign-Cleaner/docs",
-  "https://github.com/agentic-labs/demo-docs",
-  "https://github.com/Llumo-AI/llumo-docs",
-  "https://github.com/SkilledStars/mintlify",
-  "https://github.com/juspay/hyperswitch",
-  "https://github.com/baptisteArno/typebot.io",
-  "https://github.com/tonderio/tonder-docs-v3",
-  "https://github.com/supermemoryai/supermemory",
-  "https://github.com/midday-ai/midday",
-  "https://github.com/Infisical/infisical",
-  "https://github.com/OpenPipe/OpenPipe",
-  "https://github.com/campsite/campsite",
-  "https://github.com/chroxify/feedbase",
-  "https://github.com/Argus-Labs/world-engine",
-  "https://github.com/Helicone/helicone",
-  "https://github.com/pezzolabs/pezzo",
-  "https://github.com/useVenice/venice",
-  "https://github.com/plastic-labs/honcho",
-  "https://github.com/NeumTry/NeumAI",
-  "https://github.com/tegonhq/tegon",
-  "https://github.com/fixie-ai/ultradox",
-  "https://github.com/superagentxai/superagentx",
-  "https://github.com/panoratech/Panora",
-  "https://github.com/cording12/next-fast-turbo",
-  "https://github.com/cuse-dev/cuse",
-  "https://github.com/formbricks/formbricks",
-  "https://github.com/formizee/formizee",
-  "https://github.com/tegonhq/sigma",
-  "https://github.com/cachethq/docs",
-  "https://github.com/uselotus/lotus",
-  "https://github.com/gladiaio/docs",
-  "https://github.com/afftester/affeasy",
-  "https://github.com/OnedocLabs/documentation",
-  "https://github.com/ARC-Solutions/IntelliQ-V2",
-  "https://github.com/HazelHook/Hazel",
-  "https://github.com/Eigen-DB/eigen-db",
-  "https://github.com/govtechmy/go-gov-my",
-  "https://github.com/homanp/superagent-docs",
-  "https://github.com/chainpatrol/docs",
-  "https://github.com/flatironsdevelopment/fuse-docs",
-  "https://github.com/egoist/licensebase-docs",
-  "https://github.com/synchronicity-labs/docs",
-  "https://github.com/mixpeek/docs",
-  "https://github.com/firstquadrant-ai/docs",
-  "https://github.com/flowglad/flowglad",
-  "https://github.com/qreater/Tartarus",
-  "https://github.com/Elite1015/cal.com",
-  "https://github.com/CerebriumAI/documentation",
-  "https://github.com/Chakra-Network/docs",
-  "https://github.com/rabbitholegg/docs",
-  "https://github.com/ShovelsAI/shovels-docs",
-  "https://github.com/paulnestcoin/onboard-docs",
-  "https://github.com/Databraid-Repos/docs",
-  "https://github.com/AquilaX-AI/Blog",
-  "https://github.com/Derek2Tu/docs",
-  "https://github.com/fintdevla/docs",
-  "https://github.com/devflowinc/docs",
-  "https://github.com/blaxel-ai/docs",
-  "https://github.com/potpie-ai/mintlify-docs",
-  "https://github.com/brig-pinkfish/docs",
-  "https://github.com/suhailkakar/lp-docs",
-  "https://github.com/Primitives-xyz/docs",
-  "https://github.com/iarthstar/documentation",
-  "https://github.com/Sales-Journey/docs",
-  "https://github.com/ELProfessor67/workflow-bulder",
-  "https://github.com/bigfluffycookie/activepieces",
-  "https://github.com/RantirAI/computircloud",
-  "https://github.com/mark-goody/api-docs",
-  "https://github.com/apitally/docs",
-  "https://github.com/jeffrey-clarion/docs",
-  "https://github.com/Project-Scholar-AI/public-docs",
-  "https://github.com/flexprice/flexprice-docs",
-  "https://github.com/dasomx/docs",
-  "https://github.com/Replay-Sales/docs",
-  "https://github.com/Lumpin-askui/docs",
-  "https://github.com/Prosper-Technologies/prosper-documentation",
-  "https://github.com/TogaiHQ/togai-mintlify-docs",
-  "https://github.com/generect/generect-docs",
-  "https://github.com/circlemind-ai/docs",
-  "https://github.com/fixadev/docs",
-  "https://github.com/ethicalhackingplayground/docs",
-  "https://github.com/ragkit/docs",
-  "https://github.com/mothership/mintlify-docs",
-  "https://github.com/LukeHagar/plex-mintlify-docs",
-  "https://github.com/dejpav/Mintifly_demo",
-  "https://github.com/planetadeleste/gw-doc",
-  "https://github.com/yann-yvan/docs",
-  "https://github.com/ethansayre/mintlify-docs",
-  "https://github.com/nowodev/mintlify-docs",
-  "https://github.com/dubverse-ai/tts-api-docs",
-  "https://github.com/Descriptor-ai/docs",
-  "https://github.com/maalbar/docs",
-  "https://github.com/Ipriyankrajai/mintlify-docs",
-  "https://github.com/St0neWan9/reportify-doc",
-  "https://github.com/DsChauhan08/linkit",
-  "https://github.com/xyzhub/cal.employ.bh",
-  "https://github.com/ZCDu/mem0-NOTE",
-  "https://github.com/morethan987/moremem0",
-  "https://github.com/alirajwa5/mem1",
-  "https://github.com/dtecho/musical-happiness",
-  "https://github.com/SolomonAIEngineering/core-smb",
-  "https://github.com/deco31416/Landing--midday",
-  "https://github.com/manfromexistence-friday/friday",
-  "https://github.com/manfromexistence-friday/doraemon",
-  "https://github.com/gitmono-dev/campsite",
-  "https://github.com/siisee11/jbot",
-  "https://github.com/luiscarlin/next-fast-turbo",
-  "https://github.com/chat-omega/template",
-  "https://github.com/alterview-app/alterview",
-  "https://github.com/Flnnkstln/cal.com-appointments",
-  "https://github.com/mindsdb/mindsdb-docs-old",
-  "https://github.com/MobulaFi/mobula-api-docs",
-  "https://github.com/gavin-chua/typebot.io",
-  "https://github.com/AntonNovak/Aera",
-  "https://github.com/glideapps/api-docs",
-  "https://github.com/pplink/pagecall-docs",
-  "https://github.com/versori/user-docs",
-  "https://github.com/Corgea/docs",
-  "https://github.com/yyassif/ragmind",
-  "https://github.com/vantam1022/lab05",
-  "https://github.com/shadsheikh/mycal",
-  "https://github.com/ShivankMahor/browser-use",
-  "https://github.com/Parthverma2409/Bitwars",
-  "https://github.com/massimoalbarello/docs",
-  "https://github.com/jqshuv/docs",
-  "https://github.com/leap-ai/docs-v2",
-  "https://github.com/mrfelipemartins/mintlify-docs",
-  "https://github.com/Portless-2024/docs",
-  "https://github.com/itsparser/docs",
-  "https://github.com/dks333/docs",
-  "https://github.com/lucasnobrega7/one",
-  "https://github.com/hemantsoni23/workflow-builder",
-  "https://github.com/abhishekmishragithub/docs-mintlify",
-  "https://github.com/anubhavashok/docs",
-  "https://github.com/Jahoda/docs",
-  "https://github.com/RenanGeorgio/ignai-bot.io",
-  "https://github.com/Chat-Fly/docs",
-  "https://github.com/crease-tech/docs",
-  "https://github.com/ndimares/mintlify-docs",
-  "https://github.com/ethan-stone/optra",
-  "https://github.com/trisongz/lazyops",
-  "https://github.com/techartyst/docs",
-  "https://github.com/suhailkakar/docs",
-  "https://github.com/sparack/docs",
-  "https://github.com/smartmind-team/mintlify-docs",
-  "https://github.com/sidhq/docs",
-  "https://github.com/wesog/documentation",
-  "https://github.com/controlplane-docs/docs",
-  "https://github.com/Millis-AI/docs",
-  "https://github.com/sumanyu/docs",
-  "https://github.com/tzktok/fastapi",
-  "https://github.com/jaytoday/with-ai-docs",
-  "https://github.com/chirag-chhajed/docs",
-  "https://github.com/Sela-AI/docs",
-  "https://github.com/Match-Yang/mintlifydocs",
-  "https://github.com/kinboxapp/docs",
-  "https://github.com/finup-development/docs",
-  "https://github.com/askui/docs-mintlify",
-  "https://github.com/woosukji/mintlify-docs",
-  "https://github.com/Hashibutogarasu/docs",
-  "https://github.com/equiwatt/docs",
-  "https://github.com/NewGameJay/docs",
-  "https://github.com/joshuathorngren/docs",
-  "https://github.com/tractorbeamai-archive/docs",
-  "https://github.com/ehrishirajsharma/documentation",
-  "https://github.com/preethyray/docs",
-  "https://github.com/BitYoungjae/docs",
-  "https://github.com/hari-gateai/mintlify-docs",
-  "https://github.com/alleslabs/docs",
-  "https://github.com/castledio/docs",
-  "https://github.com/mfbx9da4/docs",
-  "https://github.com/unicodeveloper/docx",
-  "https://github.com/keyforgecloud/docs",
-  "https://github.com/zenml-io/zenml-docs",
-  "https://github.com/rosaboyle/personal-browser-use",
-  "https://github.com/ThangDoan2905/docs-ermis",
-  "https://github.com/SchematicHQ/docs",
-  "https://github.com/wbrunovieira/SocialMediaSchedulling",
-  "https://github.com/jeffersonlicet/docs",
-  "https://github.com/classicalguss/docs",
-  "https://github.com/MuthoniMN/cashboard",
-  "https://github.com/smallest-inc/mintlify-docs",
-  "https://github.com/dambaquyen96/docs",
-  "https://github.com/JuanmeGarcia/docs",
-  "https://github.com/enterprise-labs/docs",
-  "https://github.com/WorldsOrg/worldsbase-docs",
-  "https://github.com/Ecofit-Homes/docs",
-  "https://github.com/Parth-RenderNet/docs-poc",
-  "https://github.com/kevinlanglois/docs",
-  "https://github.com/gre-dev/greip-docs",
-  "https://github.com/tfullwood/dub",
-  "https://github.com/lovlyx/docs",
-  "https://github.com/AnuthaDev/docs",
-  "https://github.com/Vatis-Tech/docs",
-  "https://github.com/Yhozen/docs",
-  "https://github.com/bouncer-admin/docs",
-  "https://github.com/vimulatus/docs",
-  "https://github.com/mintlify/starter-pearsdb",
-  "https://github.com/videodotdev/docs",
-  "https://github.com/VIDA-Global/docs",
-  "https://github.com/DavidsonGomes/docs",
-  "https://github.com/syedmusaali359/mu-mindsdb",
-  "https://github.com/apitraffic/docs",
-  "https://github.com/tomletoai/wikibot-docs",
-  "https://github.com/playmaticai/browser-use-1-37",
-  "https://github.com/Dragocytus/wapikit",
-  "https://github.com/arbitrary-design/cal_booking",
-  "https://github.com/upasna-talworx/skillgram",
-  "https://github.com/coulton-dev/caldotcom-submodule",
-  "https://github.com/nofilamer/Together_BrowserUse",
-  "https://github.com/ThonyPan/browser-use",
-  "https://github.com/phact/mcp-browser-use-tools",
-  "https://github.com/WillemB-CPT/my-hyperswitch",
-  "https://github.com/attinto/voice-browser-use",
-  "https://github.com/william-Dic/Deepflow_Public",
-  "https://github.com/fknince/Jarvis_Project_Community",
-  "https://github.com/onyx-dot-app/documentation",
-  "https://github.com/whopio/developer-documentation",
-  "https://github.com/Oxen-AI/docs",
-  "https://github.com/activeboxes/activeboxes",
-  "https://github.com/Fairfood/docs",
-  "https://github.com/shadeform/docs",
-  "https://github.com/7qrcodes/7QR",
-  "https://github.com/reservoirprotocol/reservoir-tools-docs",
-  "https://github.com/Ikromjon1998/ikromjons-cal-com-testing",
-  "https://github.com/luizguil99/Api-Questoes",
-  "https://github.com/needanamehelp/calcom-custom",
-  "https://github.com/Send-Dots/dots-docs-v2",
-  "https://github.com/hahnbeelee/docs-hi",
-  "https://github.com/Melodi-fyi/docs",
-  "https://github.com/lookevink/docs",
-  "https://github.com/tanaylakhani/docs",
-  "https://github.com/AdamikHQ/adamik-documentation",
-  "https://github.com/SNR-Audio/docs",
-  "https://github.com/nicksenap/footway-plus-api-doc",
-  "https://github.com/francis2tm/docs",
-  "https://github.com/nozma-knows/docs",
-  "https://github.com/mariamlekv/docs",
-  "https://github.com/peterberkenbosch/bsdcommerce",
-  "https://github.com/ckamina/docs",
-  "https://github.com/josetr/mintlify-clone",
-  "https://github.com/mx-gp/starter_mintlify",
-  "https://github.com/tareqalmuntasir7/docs",
-  "https://github.com/mascotbot/mascotbot-docs",
-  "https://github.com/blendduck/docs",
-  "https://github.com/TrataHQ/trata-api-docs",
-  "https://github.com/pateli18/entity_match_docs",
-  "https://github.com/aira-dev/docs",
-  "https://github.com/gocobalt/mintlify-docs",
-  "https://github.com/EinStack/docs",
-  "https://github.com/Gulp-AI/docs",
-  "https://github.com/mintlify-onboarding/global-landing-page",
-  "https://github.com/KiterApp/docs",
-  "https://github.com/Seifbejaoui/reqlick-api-docs",
-  "https://github.com/ForkableWorld/forkable-world-os",
-  "https://github.com/sidd-genmo/docs",
-  "https://github.com/Atlaz-org/docs",
-  "https://github.com/BorysByne/docs",
-  "https://github.com/VoltView/docs",
-  "https://github.com/MatthewFoxAF/docs",
-  "https://github.com/afonsomatos/docs",
-  "https://github.com/juspay/hyperswitch-api-reference",
-  "https://github.com/namehash/namekit",
-  "https://github.com/deco31416/Landing--Panora",
-  "https://github.com/CharlesXavier1313/FlexibleAgentTool",
-  "https://github.com/titocosta/docs",
-  "https://github.com/Rishabhg71/docs",
-  "https://github.com/PremShinde-2013/supermemory",
-  "https://github.com/skull8888888/docs",
-  "https://github.com/mon1torGuy/mintlify-docs",
-  "https://github.com/dvjsharma/deployment",
-  "https://github.com/BrieucCaillot/docs",
-  "https://github.com/WorqHat/worqhat-docs-temporary",
-  "https://github.com/thegptlab/docs",
-  "https://github.com/heysavvy/docs",
-  "https://github.com/sent-dm/docs",
-  "https://github.com/proficientai/docs",
-  "https://github.com/joebush/luminous-api",
-  "https://github.com/yanndine/prosp-public-api-docs",
-  "https://github.com/vladimirbright/mintlifytest",
-  "https://github.com/AdyanTanver/docs",
-  "https://github.com/theleanship/mintlify-docs",
-  "https://github.com/gateai/docs",
-  "https://github.com/G-Ke/docs",
-  "https://github.com/PrestonColdwell/infisical",
-  "https://github.com/hkhangus/mintlify",
-  "https://github.com/hayashidakeiichiro/test-pilot-agent",
-  "https://github.com/Sphereon-Opensource/sdk-documentation-site",
-  "https://github.com/sidpremkumar/docs",
-  "https://github.com/skilledkitten/adata-docs",
-  "https://github.com/Pepijn0/docs",
-  "https://github.com/maks-ivanov/docs",
-  "https://github.com/ingram-technologies/support.fabrile.app",
-  "https://github.com/ScorpionBytes/MS-Mindsdb",
-  "https://github.com/panterlo/docs",
-  "https://github.com/mintlify-converter-test/developers-dialpad-c9yx9oincom-starter",
-  "https://github.com/Wayfaster/wayfaster-python-sdk",
-  "https://github.com/fern-api/fern",
-  "https://github.com/handotdev/docsjson-migration-tests",
-  "https://github.com/Jamesline/Mem0",
-  "https://github.com/SirMalamute/browser-use-mod",
-  "https://github.com/mahyancheng/browseruse",
-  "https://github.com/angelstreet/automai",
-  "https://github.com/gitroomhq/crosspublic",
-  "https://github.com/atoma-network/atoma-docs",
-  "https://github.com/Pelps12/jonze",
-  "https://github.com/triggerdotdev/v2-docs-deprecated",
-  "https://github.com/supernotes/developer-docs",
-  "https://github.com/bluesightai/docs",
-  "https://github.com/skulabs/docs",
-  "https://github.com/ventogram-admin/docs",
-  "https://github.com/TPAStream/mintlify-docs",
-  "https://github.com/swapcoffee/documentation",
-  "https://github.com/ssoima/boilerplates",
-  "https://github.com/standielpls/dev-platform-docs",
-  "https://github.com/pb40development/Composer",
-  "https://github.com/BeyondOT/cal-sentinelle",
-  "https://github.com/EngineerTheory/recap-docs",
-  "https://github.com/stewartjarod/docs",
-  "https://github.com/janhkmn/docs",
-  "https://github.com/protoxyz/docs",
-  "https://github.com/benstein/docs",
-  "https://github.com/maciekpapiez/docs",
-  "https://github.com/fritzh321/mintlify-docs",
-  "https://github.com/gomessguii/docs",
-  "https://github.com/arthemislacrout/GLPI_Whatsapp",
-  "https://github.com/shadowaxe99/ZEUS",
-  "https://github.com/BunsDev/boofi-poc-interface",
-  "https://github.com/kynnyhsap/docs",
-  "https://github.com/SethuKarthick/docs",
-  "https://github.com/EFU41/docs",
-  "https://github.com/rinoradCross/Tilechat_bot",
-  "https://github.com/hero-page/hero-page-api-docs",
-  "https://github.com/itsmikepowers/scrapetable-docs-old",
-  "https://github.com/topher515/mintlify-starter",
-  "https://github.com/flyx-ai/api-docs",
-  "https://github.com/reservoirprotocol/reservoir-api-docs",
-  "https://github.com/yolkmonday/docs",
-  "https://github.com/ChainUp-Custody/custody-docs",
-  "https://github.com/willchertoff/docs",
-  "https://github.com/hoophq/documentation",
-  "https://github.com/jlaupa/docs",
-  "https://github.com/michaelscannable/docs",
-  "https://github.com/Codehagen/docs",
-  "https://github.com/SumitPugalia/docs",
-  "https://github.com/Super-Billy/CPSC-552-Project",
-  "https://github.com/IKatsuba/openstatus",
-  "https://github.com/arsensalmanov/qrapidocs",
-  "https://github.com/BotStacks/mintlify-docs",
-  "https://github.com/devatclearoutio/clearout-mintlify-docs",
-  "https://github.com/Dev-Liz/docs",
-  "https://github.com/voxboy2/docs",
-  "https://github.com/fombas/mintlify-sandbox",
-  "https://github.com/keenanwl/docs",
-  "https://github.com/evi1m0/docs",
-  "https://github.com/miickel/docs",
-  "https://github.com/togai-bot/docs",
-  "https://github.com/Imsharad/julep-ai-based-blog-generation",
-  "https://github.com/OrderlyNetwork/documentation-public",
-  "https://github.com/CruelMoney/docs",
-  "https://github.com/PlaybookMediaEngineering/thinkthank-platform-services",
-  "https://github.com/Ezehuche/fiscalohq",
-  "https://github.com/scottjuliander/foodback",
-  "https://github.com/stratumn/docs",
-  "https://github.com/titouanprx/mintlify-docs",
-  "https://github.com/upsolve-docs/docs",
-  "https://github.com/dev-qolaig/docs",
-  "https://github.com/Victor-Hiya/platform-docs-hiya",
-  "https://github.com/junaid33/mint",
-  "https://github.com/zuora/togai-mintlify-docs",
-  "https://github.com/ixoworld/docs",
-  "https://github.com/lifenautjoe/peekalink-docs",
-  "https://github.com/Qucoon-1/docs",
-  "https://github.com/defer-run/documentation",
-  "https://github.com/rnadigital/agentcloud-docs",
-  "https://github.com/samradha-1/wapikit",
-  "https://github.com/steven-tey/dub-test",
-  "https://github.com/diwakar453t/hyperswitch",
-  "https://github.com/luzhipeng728/hyperswitch_api",
-  "https://github.com/theRMH/typebot-rmh",
-  "https://github.com/higornands7x/typebot.io",
-  "https://github.com/higornands7x/typebot",
-  "https://github.com/higornands7x/type-modify",
-  "https://github.com/junaid33/mint-hJ03",
-  "https://github.com/activepieces/activepieces",
-  "https://github.com/JhumanJ/OpnForm",
-  "https://github.com/yunger7/enem-api",
-  "https://github.com/projectdiscovery/docs",
-  "https://github.com/rownd/docs",
-  "https://github.com/distributeaid/docs",
-  "https://github.com/onehashai/onehash-cal",
-  "https://github.com/EvolutionAPI/docs-evolution",
-  "https://github.com/argildotai/app-docs",
-  "https://github.com/luminolabs/docs",
-  "https://github.com/daun-io/u0.wtf",
-  "https://github.com/Suhaib3100/typebot",
-  "https://github.com/smallwall/quivr",
-  "https://github.com/romitg2/calcom",
-  "https://github.com/VapiAI/docs-archived",
-  "https://github.com/rnadigital/monita-docs",
-  "https://github.com/jay-cyble/docs",
-  "https://github.com/ShivaBhattacharjee/adapt-docs",
-  "https://github.com/kohortpay/docs",
-  "https://github.com/weavel-ai/mintlify-docs",
-  "https://github.com/mclenhard/docs",
-  "https://github.com/AbdoALPOP/docs",
-  "https://github.com/GleapSDK/MintlifiDocs",
-  "https://github.com/cybledev/odin-docs",
-  "https://github.com/ctrlplanedev/docs",
-  "https://github.com/mrkurt/docs",
-  "https://github.com/muhsin-k/docs",
-  "https://github.com/aiFlow-Inc/docs",
-  "https://github.com/maiquangtuan/docs",
-  "https://github.com/monterey-ai/docs",
-  "https://github.com/phospho-app/docs",
-  "https://github.com/maidul98/infisical-test",
-  "https://github.com/andrewlayer/docs",
-  "https://github.com/mastercrop/tv-reseller-api-doc",
-  "https://github.com/Gistsai/docs",
-  "https://github.com/heidiLinguist/docs",
-  "https://github.com/wanfa123456/woo",
-  "https://github.com/Iqmaa/docs",
-  "https://github.com/ahervy/api-docs",
-  "https://github.com/harbuzniak/docs",
-  "https://github.com/Receiptor-AI/receiptor-docs",
-  "https://github.com/elijahross/docs",
-  "https://github.com/ground-ai/docs",
-  "https://github.com/Luxingxin-6/docs",
-  "https://github.com/benbonnet/mintlify-docs",
-  "https://github.com/stef-bloom/wildcatgpt",
-  "https://github.com/Samueleons/Doc",
-  "https://github.com/wirtualdev/wirtual-docs",
-  "https://github.com/eersnington/feedbackthing-monorepo",
-  "https://github.com/unifyx69/docs",
-  "https://github.com/Jesse-Sawa/mintlify-docs",
-  "https://github.com/lzrscg/docs",
-  "https://github.com/rumorz-ai/docs",
-  "https://github.com/revent-app/docs",
-  "https://github.com/thatapicompany/theauthapi-docs",
-  "https://github.com/Sissnik/browser-use",
-  "https://github.com/nuonic/midland-docs",
-  "https://github.com/MaxenceMo/docs",
-  "https://github.com/abd296/docs",
-  "https://github.com/livepeer/docs",
-  "https://github.com/Axle-Labs/axle",
-  "https://github.com/DigitalForge-Dynamics/Trace",
-  "https://github.com/hahnbeelee/docs-kathe",
-  "https://github.com/543x/GoogleCloud",
-  "https://github.com/RahulKulhari/docs",
-  "https://github.com/InquiraHealth/docs",
-  "https://github.com/wild-card-ai/docs",
-  "https://github.com/ro-ro-b/mintlyf",
-  "https://github.com/fergven/mintlify-test",
-  "https://github.com/iabdulloh-dt/docs",
-  "https://github.com/r3gina-lin/docs",
-  "https://github.com/biuuisyou/docs",
-  "https://github.com/SokenSu/docs",
-  "https://github.com/tookey-io/automation",
-  "https://github.com/JaYani55/QuivrJay",
-  "https://github.com/vitos73/docs",
-  "https://github.com/rigby-sh/mercur-v2-docs",
-  "https://github.com/Narayanbhat166/docs",
-  "https://github.com/Ateende-Net/Typebot",
-  "https://github.com/AlanLiu96/docs",
-  "https://github.com/FrankAveig/docs",
-  "https://github.com/Andom-Geniam/renewal-active",
-  "https://github.com/miguelmartmart/activepieceserp",
-  "https://github.com/phrloureiro/enem-api",
-  "https://github.com/AndrewCraswell/cal",
-  "https://github.com/Nomin9/repo-cal-com",
-  "https://github.com/steven-tey/docs",
-  "https://github.com/reservoirprotocol/relay-docs",
-  "https://github.com/suhailkakar/new-livepeer-docs",
-  "https://github.com/drockparashar/user-browser-test",
-  "https://github.com/bundleglobal/bundlesocial-docs",
-  "https://github.com/stan-business/docs",
-  "https://github.com/silent-cipher/mintlify-docs",
-  "https://github.com/tobias-sj/docs",
-  "https://github.com/KodyAnderson1/docs",
-  "https://github.com/Nneji123/docs",
-  "https://github.com/benlower/mintlify-docs",
-  "https://github.com/vesselapi/all-api-docs",
-  "https://github.com/saliheendeltadev/docs",
-  "https://github.com/btnalexandre/lmn8-api-docs",
-  "https://github.com/Altera-co/altera-docs",
-  "https://github.com/joshsadler/docs",
-  "https://github.com/reprompt/docs",
-  "https://github.com/Sumit55/docs",
-  "https://github.com/roundtableAI/docs",
-  "https://github.com/shareef945/docs",
-  "https://github.com/handotdev/docusaurus-test",
-  "https://github.com/chatter-ai/chatter-docs",
-  "https://github.com/SharedDesk/desk-finder-docs",
-  "https://github.com/Inticate-com/docs",
-  "https://github.com/RogerPodacter/docs",
-  "https://github.com/lleyton/mint",
-  "https://github.com/joaopcm1996/docs",
-  "https://github.com/zuketo/docs",
-  "https://github.com/WorqHat/API-Docs",
-  "https://github.com/davhao/docs",
-  "https://github.com/MatthiasRMS/docs",
-  "https://github.com/ysyneu/docs",
-  "https://github.com/ecfm/browser-use",
-  "https://github.com/silent-cipher/docs"
+  {
+    "repo": "https://github.com/browser-use/browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/calcom/cal.com",
+    "openApiValue": "https://raw.githubusercontent.com/calcom/cal.com/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Campaign-Cleaner/docs",
+    "openApiValue": "https://campaign-cleaner.github.io/swagger/campaigncleaner.yaml"
+  },
+  {
+    "repo": "https://github.com/SkilledStars/mintlify",
+    "openApiValue": "https://raw.githubusercontent.com/SkilledStars/mintlify/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/supermemoryai/supermemory",
+    "openApiValue": "https://raw.githubusercontent.com/supermemoryai/supermemory/main/apps/docs/openapi.json"
+  },
+  {
+    "repo": "https://github.com/midday-ai/midday",
+    "openApiValue": "https://engine.midday.ai/openapi"
+  },
+  {
+    "repo": "https://github.com/Infisical/infisical",
+    "openApiValue": "https://app.infisical.com/api/docs/json"
+  },
+  {
+    "repo": "https://github.com/campsite/campsite",
+    "openApiValue": "https://raw.githubusercontent.com/campsite/campsite/main/docs/api-reference/openapi_schema.json"
+  },
+  {
+    "repo": "https://github.com/chroxify/feedbase",
+    "openApiValue": "https://api.feedbase.app/v1"
+  },
+  {
+    "repo": "https://github.com/pezzolabs/pezzo",
+    "openApiValue": "https://raw.githubusercontent.com/pezzolabs/pezzo/main/docs/openapi.json"
+  },
+  {
+    "repo": "https://github.com/useVenice/venice",
+    "openApiValue": "./venice.oas.json"
+  },
+  {
+    "repo": "https://github.com/NeumTry/NeumAI",
+    "openApiValue": "https://neum-v2-app.fly.dev/openapi.json"
+  },
+  {
+    "repo": "https://github.com/fixie-ai/ultradox",
+    "openApiValue": "https://api.ultravox.ai/api/schema/"
+  },
+  {
+    "repo": "https://github.com/cording12/next-fast-turbo",
+    "openApiValue": "https://next-fast-turbo-api.vercel.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/cuse-dev/cuse",
+    "openApiValue": "https://raw.githubusercontent.com/cuse-dev/cuse/main/apps/docs/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/formizee/formizee",
+    "openApiValue": "https://api.formizee.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/cachethq/docs",
+    "openApiValue": "https://raw.githubusercontent.com/cachethq/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/uselotus/lotus",
+    "openApiValue": "https://raw.githubusercontent.com/uselotus/lotus/main/docs/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/gladiaio/docs",
+    "openApiValue": "https://api.gladia.io/openapi.json"
+  },
+  {
+    "repo": "https://github.com/afftester/affeasy",
+    "openApiValue": "https://api.affeasy.link"
+  },
+  {
+    "repo": "https://github.com/OnedocLabs/documentation",
+    "openApiValue": "https://app.onedoclabs.com/api/api-doc"
+  },
+  {
+    "repo": "https://github.com/ARC-Solutions/IntelliQ-V2",
+    "openApiValue": "https://api.arcsolutionsteam.workers.dev/openapi"
+  },
+  {
+    "repo": "https://github.com/HazelHook/Hazel",
+    "openApiValue": "http://localhost:3006/swagger/json"
+  },
+  {
+    "repo": "https://github.com/Eigen-DB/eigen-db",
+    "openApiValue": "https://raw.githubusercontent.com/Eigen-DB/docs/refs/heads/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/govtechmy/go-gov-my",
+    "openApiValue": "https://raw.githubusercontent.com/govtechmy/go-gov-my/main/apps/docs-app/old/openapi.json"
+  },
+  {
+    "repo": "https://github.com/chainpatrol/docs",
+    "openApiValue": "https://app.chainpatrol.io/api/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/egoist/licensebase-docs",
+    "openApiValue": "https://licensebase.io/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/synchronicity-labs/docs",
+    "openApiValue": "https://api.synclabs.so/playground-json"
+  },
+  {
+    "repo": "https://github.com/mixpeek/docs",
+    "openApiValue": "https://server-xb24.onrender.com/docs/openapi.json"
+  },
+  {
+    "repo": "https://github.com/firstquadrant-ai/docs",
+    "openApiValue": "openapi.yml"
+  },
+  {
+    "repo": "https://github.com/flowglad/flowglad",
+    "openApiValue": "https://app.flowglad.com/api/openapi"
+  },
+  {
+    "repo": "https://github.com/qreater/Tartarus",
+    "openApiValue": "https://raw.githubusercontent.com/qreater/Tartarus/main/docs/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Elite1015/cal.com",
+    "openApiValue": "https://raw.githubusercontent.com/Elite1015/cal.com/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/CerebriumAI/documentation",
+    "openApiValue": "https://s3.eu-west-1.amazonaws.com/www.cerebrium.ai/openapi_spec.json"
+  },
+  {
+    "repo": "https://github.com/Chakra-Network/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Chakra-Network/docs/main/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/rabbitholegg/docs",
+    "openApiValue": "https://api.boost.xyz/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ShovelsAI/shovels-docs",
+    "openApiValue": "https://api.shovels.ai/spec/v2/openapi.production.yaml"
+  },
+  {
+    "repo": "https://github.com/paulnestcoin/onboard-docs",
+    "openApiValue": "https://resources.nestechops.com/openapi/dev/onboard/external-gateway.json"
+  },
+  {
+    "repo": "https://github.com/Databraid-Repos/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Databraid-Repos/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/AquilaX-AI/Blog",
+    "openApiValue": "https://raw.githubusercontent.com/AquilaX-AI/Blog/main/api-reference/swagger.yaml"
+  },
+  {
+    "repo": "https://github.com/Derek2Tu/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Derek2Tu/docs/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/fintdevla/docs",
+    "openApiValue": "https://dev.api.fint.app/api/v1/api-docs"
+  },
+  {
+    "repo": "https://github.com/devflowinc/docs",
+    "openApiValue": "https://api.trieve.ai/api-docs/openapi.json"
+  },
+  {
+    "repo": "https://github.com/blaxel-ai/docs",
+    "openApiValue": "https://raw.githubusercontent.com/blaxel-ai/docs/main/api-reference/controlplane.yml"
+  },
+  {
+    "repo": "https://github.com/potpie-ai/mintlify-docs",
+    "openApiValue": "https://production-api.potpie.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/brig-pinkfish/docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/suhailkakar/lp-docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/Primitives-xyz/docs",
+    "openApiValue": "https://api.usetapestry.dev/docs/json"
+  },
+  {
+    "repo": "https://github.com/mark-goody/api-docs",
+    "openApiValue": "goody-api-openapi.json"
+  },
+  {
+    "repo": "https://github.com/apitally/docs",
+    "openApiValue": "https://api.apitally.io/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Project-Scholar-AI/public-docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/flexprice/flexprice-docs",
+    "openApiValue": "https://raw.githubusercontent.com/flexprice/flexprice-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/dasomx/docs",
+    "openApiValue": "https://raw.githubusercontent.com/dasomx/docs/main/api-reference/openapi-spec.json"
+  },
+  {
+    "repo": "https://github.com/Replay-Sales/docs",
+    "openApiValue": "https://app.replay.sale/api/docs"
+  },
+  {
+    "repo": "https://github.com/Lumpin-askui/docs",
+    "openApiValue": "https://workspaces.askui.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Prosper-Technologies/prosper-documentation",
+    "openApiValue": "https://voice.getprosperapp.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/generect/generect-docs",
+    "openApiValue": "api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/circlemind-ai/docs",
+    "openApiValue": "https://api.circlemind.co/openapi.json"
+  },
+  {
+    "repo": "https://github.com/fixadev/docs",
+    "openApiValue": "./api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ethicalhackingplayground/docs",
+    "openApiValue": "https://shield.attaxa.com/api/doc"
+  },
+  {
+    "repo": "https://github.com/mothership/mintlify-docs",
+    "openApiValue": "https://developers.mothership.com/openapi/5c905506c5c26d003ec27c15"
+  },
+  {
+    "repo": "https://github.com/LukeHagar/plex-mintlify-docs",
+    "openApiValue": "https://spec.speakeasy.com/plexapi/plexapi/merge-code-samples-into-spec-with-code-samples"
+  },
+  {
+    "repo": "https://github.com/dejpav/Mintifly_demo",
+    "openApiValue": "https://raw.githubusercontent.com/dejpav/Mintifly_demo/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/yann-yvan/docs",
+    "openApiValue": "https://raw.githubusercontent.com/yann-yvan/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ethansayre/mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/ethansayre/mintlify-docs/main/backendSwagger.json"
+  },
+  {
+    "repo": "https://github.com/nowodev/mintlify-docs",
+    "openApiValue": "https://staging-api.qjumpa.com/docs/api.json"
+  },
+  {
+    "repo": "https://github.com/dubverse-ai/tts-api-docs",
+    "openApiValue": "https://mahatts-assets-new.s3.ap-south-1.amazonaws.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Descriptor-ai/docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/maalbar/docs",
+    "openApiValue": "https://tool.maalbar.dk/openapi.json"
+  },
+  {
+    "repo": "https://github.com/DsChauhan08/linkit",
+    "openApiValue": "https://api.dub.co"
+  },
+  {
+    "repo": "https://github.com/xyzhub/cal.employ.bh",
+    "openApiValue": "https://raw.githubusercontent.com/xyzhub/cal.employ.bh/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/SolomonAIEngineering/core-smb",
+    "openApiValue": "https://engine.midday.ai/openapi"
+  },
+  {
+    "repo": "https://github.com/deco31416/Landing--midday",
+    "openApiValue": "https://engine.midday.ai/openapi"
+  },
+  {
+    "repo": "https://github.com/manfromexistence-friday/friday",
+    "openApiValue": "https://engine.midday.ai/openapi"
+  },
+  {
+    "repo": "https://github.com/manfromexistence-friday/doraemon",
+    "openApiValue": "https://engine.midday.ai/openapi"
+  },
+  {
+    "repo": "https://github.com/gitmono-dev/campsite",
+    "openApiValue": "https://raw.githubusercontent.com/gitmono-dev/campsite/main/docs/api-reference/openapi_schema.json"
+  },
+  {
+    "repo": "https://github.com/siisee11/jbot",
+    "openApiValue": "https://next-fast-turbo-api.vercel.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/luiscarlin/next-fast-turbo",
+    "openApiValue": "https://next-fast-turbo-api.vercel.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/chat-omega/template",
+    "openApiValue": "https://next-fast-turbo-api.vercel.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/alterview-app/alterview",
+    "openApiValue": "https://next-fast-turbo-api.vercel.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Flnnkstln/cal.com-appointments",
+    "openApiValue": "https://raw.githubusercontent.com/Flnnkstln/cal.com-appointments/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/mindsdb/mindsdb-docs-old",
+    "openApiValue": "https://raw.githubusercontent.com/mindsdb/mindsdb/openapi-specs/mindsdb/api/http/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/AntonNovak/Aera",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/glideapps/api-docs",
+    "openApiValue": "https://raw.githubusercontent.com/glideapps/api-docs/main/openapi/swagger.json"
+  },
+  {
+    "repo": "https://github.com/pplink/pagecall-docs",
+    "openApiValue": "https://raw.githubusercontent.com/pplink/pagecall-docs/main/openapi3.yaml"
+  },
+  {
+    "repo": "https://github.com/Corgea/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Corgea/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/yyassif/ragmind",
+    "openApiValue": "https://api.yyassif.dev/openapi.json"
+  },
+  {
+    "repo": "https://github.com/shadsheikh/mycal",
+    "openApiValue": "https://raw.githubusercontent.com/shadsheikh/mycal/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ShivankMahor/browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/massimoalbarello/docs",
+    "openApiValue": "https://raw.githubusercontent.com/massimoalbarello/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/jqshuv/docs",
+    "openApiValue": "https://raw.githubusercontent.com/jqshuv/docs/main/short/openapi.json"
+  },
+  {
+    "repo": "https://github.com/leap-ai/docs-v2",
+    "openApiValue": "https://api.workflows.tryleap.ai/api-json"
+  },
+  {
+    "repo": "https://github.com/mrfelipemartins/mintlify-docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/Portless-2024/docs",
+    "openApiValue": "https://github.com/Portless-2024/docs/blob/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/itsparser/docs",
+    "openApiValue": "https://raw.githubusercontent.com/itsparser/docs/main/swagger/dataset.json"
+  },
+  {
+    "repo": "https://github.com/Jahoda/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Jahoda/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/crease-tech/docs",
+    "openApiValue": "https://api.crease.cloud"
+  },
+  {
+    "repo": "https://github.com/ethan-stone/optra",
+    "openApiValue": "https://demc8isvv0psp.cloudfront.net/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/trisongz/lazyops",
+    "openApiValue": "http://api.dub.co"
+  },
+  {
+    "repo": "https://github.com/suhailkakar/docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/sparack/docs",
+    "openApiValue": "https://raw.githubusercontent.com/sparack/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/smartmind-team/mintlify-docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/wesog/documentation",
+    "openApiValue": "https://raw.githubusercontent.com/wesog/documentation/main/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/Millis-AI/docs",
+    "openApiValue": "https://api-west.millis.ai:8080/openapi.json"
+  },
+  {
+    "repo": "https://github.com/sumanyu/docs",
+    "openApiValue": "https://raw.githubusercontent.com/sendgrid/sendgrid-oai/main/oai_v3_stoplight.json"
+  },
+  {
+    "repo": "https://github.com/tzktok/fastapi",
+    "openApiValue": "https://raw.githubusercontent.com/tzktok/fastapi/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/chirag-chhajed/docs",
+    "openApiValue": "https://carvachoemendpointsv1.azurewebsites.net/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Sela-AI/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Sela-AI/docs/main/Sela_API.yaml"
+  },
+  {
+    "repo": "https://github.com/kinboxapp/docs",
+    "openApiValue": "https://api4.kinbox.com.br/docs-json"
+  },
+  {
+    "repo": "https://github.com/finup-development/docs",
+    "openApiValue": "merchant/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Hashibutogarasu/docs",
+    "openApiValue": "https://api.karasu256.com/docs-json"
+  },
+  {
+    "repo": "https://github.com/equiwatt/docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/NewGameJay/docs",
+    "openApiValue": "0.0.1"
+  },
+  {
+    "repo": "https://github.com/joshuathorngren/docs",
+    "openApiValue": "https://app.mayhem.security/api/v2/api-docs/json"
+  },
+  {
+    "repo": "https://github.com/tractorbeamai-archive/docs",
+    "openApiValue": "https://raw.githubusercontent.com/tractorbeamai-archive/docs/main/openapi.documented.json"
+  },
+  {
+    "repo": "https://github.com/preethyray/docs",
+    "openApiValue": "https://raw.githubusercontent.com/preethyray/docs/main/rippling-support.yml"
+  },
+  {
+    "repo": "https://github.com/agentic-labs/demo-docs",
+    "openApiValue": "https://raw.githubusercontent.com/agentic-labs/demo-docs/main/lotus/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/BitYoungjae/docs",
+    "openApiValue": "http://rest.boxhero-app.com/docs/api-json"
+  },
+  {
+    "repo": "https://github.com/hari-gateai/mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/hari-gateai/mintlify-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/unicodeveloper/docx",
+    "openApiValue": "https://api.novu.co/api-json"
+  },
+  {
+    "repo": "https://github.com/keyforgecloud/docs",
+    "openApiValue": "https://api.keyforge.cloud/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/latest/openapi.json"
+  },
+  {
+    "repo": "https://github.com/rosaboyle/personal-browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/SchematicHQ/docs",
+    "openApiValue": "https://schematic-openapi-da6da39.s3.amazonaws.com/latest.yml"
+  },
+  {
+    "repo": "https://github.com/wbrunovieira/SocialMediaSchedulling",
+    "openApiValue": "https://api.postiz.com/docs-json"
+  },
+  {
+    "repo": "https://github.com/jeffersonlicet/docs",
+    "openApiValue": "https://raw.githubusercontent.com/jeffersonlicet/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/classicalguss/docs",
+    "openApiValue": "https://raw.githubusercontent.com/classicalguss/docs/main/medical-api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/MuthoniMN/cashboard",
+    "openApiValue": "https://raw.githubusercontent.com/MuthoniMN/cashboard/main/docs/api-reference/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/SkilledStars/mintlify",
+    "openApiValue": "https://raw.githubusercontent.com/SkilledStars/mintlify/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/enterprise-labs/docs",
+    "openApiValue": "https://raw.githubusercontent.com/enterprise-labs/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/WorldsOrg/worldsbase-docs",
+    "openApiValue": "https://chain-production.up.railway.app/api-yaml"
+  },
+  {
+    "repo": "https://github.com/Parth-RenderNet/docs-poc",
+    "openApiValue": "rendernet_public_apis.json"
+  },
+  {
+    "repo": "https://github.com/kevinlanglois/docs",
+    "openApiValue": "https://api.nmbr.co/services/payroll/spec.json"
+  },
+  {
+    "repo": "https://github.com/tfullwood/dub",
+    "openApiValue": "https://api.dub.co"
+  },
+  {
+    "repo": "https://github.com/lovlyx/docs",
+    "openApiValue": "https://raw.githubusercontent.com/lovlyx/docs/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/vimulatus/docs",
+    "openApiValue": "https://raw.githubusercontent.com/vimulatus/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/mintlify/starter-pearsdb",
+    "openApiValue": "openapi.json"
+  },
+  {
+    "repo": "https://github.com/syedmusaali359/mu-mindsdb",
+    "openApiValue": "https://raw.githubusercontent.com/mindsdb/mindsdb/openapi-specs/mindsdb/api/http/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/apitraffic/docs",
+    "openApiValue": "https://api.apitraffic.io/openapi.json"
+  },
+  {
+    "repo": "https://github.com/playmaticai/browser-use-1-37",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Dragocytus/wapikit",
+    "openApiValue": "https://raw.githubusercontent.com/wapikit/wapikit/refs/heads/main/spec.openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/arbitrary-design/cal_booking",
+    "openApiValue": "https://raw.githubusercontent.com/arbitrary-design/cal_booking/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/upasna-talworx/skillgram",
+    "openApiValue": "https://raw.githubusercontent.com/upasna-talworx/skillgram/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/coulton-dev/caldotcom-submodule",
+    "openApiValue": "https://raw.githubusercontent.com/coulton-dev/caldotcom-submodule/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/nofilamer/Together_BrowserUse",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/v/0.72.0/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/v/0.74.0/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/v/0.75.0/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/v/0.70.0/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ThonyPan/browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/phact/mcp-browser-use-tools",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/attinto/voice-browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/william-Dic/Deepflow_Public",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/fknince/Jarvis_Project_Community",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Oxen-AI/docs",
+    "openApiValue": "https://hub.oxen.ai/oxen-server-openapi-spec.json"
+  },
+  {
+    "repo": "https://github.com/7qrcodes/7QR",
+    "openApiValue": "https://api.dub.co"
+  },
+  {
+    "repo": "https://github.com/Ikromjon1998/ikromjons-cal-com-testing",
+    "openApiValue": "https://raw.githubusercontent.com/Ikromjon1998/ikromjons-cal-com-testing/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/luizguil99/Api-Questoes",
+    "openApiValue": "https://api.enem.dev/v1"
+  },
+  {
+    "repo": "https://github.com/needanamehelp/calcom-custom",
+    "openApiValue": "https://raw.githubusercontent.com/needanamehelp/calcom-custom/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Send-Dots/dots-docs-v2",
+    "openApiValue": "https://raw.githubusercontent.com/Send-Dots/dots-docs-v2/main/docs/v2.yaml"
+  },
+  {
+    "repo": "https://github.com/hahnbeelee/docs-hi",
+    "openApiValue": "https://raw.githubusercontent.com/hahnbeelee/docs-hi/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Melodi-fyi/docs",
+    "openApiValue": "https://app.melodi.fyi/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/tanaylakhani/docs",
+    "openApiValue": "https://raw.githubusercontent.com/tanaylakhani/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/AdamikHQ/adamik-documentation",
+    "openApiValue": "https://api.adamik.io/openapi.json"
+  },
+  {
+    "repo": "https://github.com/nicksenap/footway-plus-api-doc",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/francis2tm/docs",
+    "openApiValue": "https://raw.githubusercontent.com/francis2tm/docs/main/cloud-api-reference/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/nozma-knows/docs",
+    "openApiValue": "https://api.sync.so/api-json"
+  },
+  {
+    "repo": "https://github.com/mariamlekv/docs",
+    "openApiValue": "https://petstore.swagger.io/v2/swagger.json"
+  },
+  {
+    "repo": "https://github.com/ckamina/docs",
+    "openApiValue": "https://raw.githubusercontent.com/ckamina/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/josetr/mintlify-clone",
+    "openApiValue": "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/refs/heads/main/examples/v3.0/petstore-expanded.json"
+  },
+  {
+    "repo": "https://github.com/tareqalmuntasir7/docs",
+    "openApiValue": "https://api.verbex.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/mascotbot/mascotbot-docs",
+    "openApiValue": "api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/blendduck/docs",
+    "openApiValue": "https://raw.githubusercontent.com/blendduck/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/TrataHQ/trata-api-docs",
+    "openApiValue": "https://raw.githubusercontent.com/TrataHQ/trata-api-docs/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/pateli18/entity_match_docs",
+    "openApiValue": "https://app.getaugerdata.com/api/v1/openapi.json"
+  },
+  {
+    "repo": "https://github.com/aira-dev/docs",
+    "openApiValue": "https://raw.githubusercontent.com/aira-dev/docs/main/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/Gulp-AI/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Gulp-AI/docs/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/KiterApp/docs",
+    "openApiValue": "https://api.promptloop.com/v0/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Seifbejaoui/reqlick-api-docs",
+    "openApiValue": "https://prod-service.reqlick.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ForkableWorld/forkable-world-os",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/sidd-genmo/docs",
+    "openApiValue": "./api-reference/openapi.documented.json"
+  },
+  {
+    "repo": "https://github.com/VoltView/docs",
+    "openApiValue": "https://raw.githubusercontent.com/VoltView/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/afonsomatos/docs",
+    "openApiValue": "https://api.tryjournalist.com/swagger.json"
+  },
+  {
+    "repo": "https://github.com/namehash/namekit",
+    "openApiValue": "https://api.nameguard.io/openapi.json"
+  },
+  {
+    "repo": "https://github.com/titocosta/docs",
+    "openApiValue": "https://www.openindex.ai/index.yaml"
+  },
+  {
+    "repo": "https://github.com/Rishabhg71/docs",
+    "openApiValue": "https://ppa.infers.co/openapi.json"
+  },
+  {
+    "repo": "https://github.com/PremShinde-2013/supermemory",
+    "openApiValue": "https://raw.githubusercontent.com/PremShinde-2013/supermemory/main/apps/docs/openapi.json"
+  },
+  {
+    "repo": "https://github.com/dvjsharma/deployment",
+    "openApiValue": "https://raw.githubusercontent.com/dvjsharma/deployment/main/documentation/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/sent-dm/docs",
+    "openApiValue": "https://www.sent.dm/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/joebush/luminous-api",
+    "openApiValue": "https://raw.githubusercontent.com/joebush/luminous-api/main/api-reference/build.yaml"
+  },
+  {
+    "repo": "https://github.com/vladimirbright/mintlifytest",
+    "openApiValue": "openapi.json"
+  },
+  {
+    "repo": "https://github.com/AdyanTanver/docs",
+    "openApiValue": "https://raw.githubusercontent.com/AdyanTanver/docs/main/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/theleanship/mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/theleanship/mintlify-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/gateai/docs",
+    "openApiValue": "https://gist.githubusercontent.com/hari-gateai/6c126cbe59cb6e513f16e17251c9b2b3/raw/89919f8a0d6ca016e4b2b0c20daf71712c83cccc/GateConnect-OpenAPISpec.yml"
+  },
+  {
+    "repo": "https://github.com/G-Ke/docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/PrestonColdwell/infisical",
+    "openApiValue": "https://app.infisical.com/api/docs/json"
+  },
+  {
+    "repo": "https://github.com/hkhangus/mintlify",
+    "openApiValue": "https://raw.githubusercontent.com/hkhangus/mintlify/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/hayashidakeiichiro/test-pilot-agent",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/develop/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Sphereon-Opensource/sdk-documentation-site",
+    "openApiValue": "https://raw.githubusercontent.com/Sphereon-Opensource/sdk-documentation-site/main/oid4vc/oid4vci/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/skilledkitten/adata-docs",
+    "openApiValue": "https://raw.githubusercontent.com/skilledkitten/adata-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Pepijn0/docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/agentic-labs/demo-docs",
+    "openApiValue": "https://raw.githubusercontent.com/flipt-io/flipt/main/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/ingram-technologies/support.fabrile.app",
+    "openApiValue": "https://fabrile.app/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ScorpionBytes/MS-Mindsdb",
+    "openApiValue": "https://raw.githubusercontent.com/mindsdb/mindsdb/openapi-specs/mindsdb/api/http/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/panterlo/docs",
+    "openApiValue": "https://api.tic.io/docs/v1/swagger.json"
+  },
+  {
+    "repo": "https://github.com/Wayfaster/wayfaster-python-sdk",
+    "openApiValue": "openapi.json"
+  },
+  {
+    "repo": "https://github.com/SirMalamute/browser-use-mod",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/mahyancheng/browseruse",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/angelstreet/automai",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/v/0.66.0/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zenml-io/zenml-docs",
+    "openApiValue": "https://raw.githubusercontent.com/zenml-io/zenml-docs/main/v/0.68.0/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/gitroomhq/crosspublic",
+    "openApiValue": "https://api.crosspublic.com/docs-json"
+  },
+  {
+    "repo": "https://github.com/atoma-network/atoma-docs",
+    "openApiValue": "https://raw.githubusercontent.com/atoma-network/atoma-docs/main/cloud-api-reference/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/Pelps12/jonze",
+    "openApiValue": "https://api.jonze.co/doc"
+  },
+  {
+    "repo": "https://github.com/supernotes/developer-docs",
+    "openApiValue": "https://api.supernotes.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/bluesightai/docs",
+    "openApiValue": "https://api.bluesight.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/skulabs/docs",
+    "openApiValue": "openapi.json"
+  },
+  {
+    "repo": "https://github.com/TPAStream/mintlify-docs",
+    "openApiValue": "https://app.tpastream.com/swagger/"
+  },
+  {
+    "repo": "https://github.com/swapcoffee/documentation",
+    "openApiValue": "https://tokens.swap.coffee/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ssoima/boilerplates",
+    "openApiValue": "https://app.riskcube.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/BeyondOT/cal-sentinelle",
+    "openApiValue": "https://raw.githubusercontent.com/BeyondOT/cal-sentinelle/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/stewartjarod/docs",
+    "openApiValue": "https://api.ionicapi.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/janhkmn/docs",
+    "openApiValue": "https://raw.githubusercontent.com/janhkmn/docs/main/redocly.api.yaml"
+  },
+  {
+    "repo": "https://github.com/benstein/docs",
+    "openApiValue": "https://raw.githubusercontent.com/benstein/docs/main/smart-tools/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/maciekpapiez/docs",
+    "openApiValue": "https://e497-185-50-50-209.ngrok-free.app/index.yaml"
+  },
+  {
+    "repo": "https://github.com/fritzh321/mintlify-docs",
+    "openApiValue": "https://invoice.usefranz.eu/openapi.json"
+  },
+  {
+    "repo": "https://github.com/shadowaxe99/ZEUS",
+    "openApiValue": "https://raw.githubusercontent.com/mindsdb/mindsdb/openapi-specs/mindsdb/api/http/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/BunsDev/boofi-poc-interface",
+    "openApiValue": "https://engine.midday.ai/openapi"
+  },
+  {
+    "repo": "https://github.com/kynnyhsap/docs",
+    "openApiValue": "https://api.integration.app/docs-json"
+  },
+  {
+    "repo": "https://github.com/SethuKarthick/docs",
+    "openApiValue": "https://raw.githubusercontent.com/SethuKarthick/docs/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/EFU41/docs",
+    "openApiValue": "https://raw.githubusercontent.com/EFU41/docs/main/doc.json"
+  },
+  {
+    "repo": "https://github.com/hero-page/hero-page-api-docs",
+    "openApiValue": "https://raw.githubusercontent.com/hero-page/hero-page-api-docs/main/heroapi.yml"
+  },
+  {
+    "repo": "https://github.com/topher515/mintlify-starter",
+    "openApiValue": "https://raw.githubusercontent.com/topher515/mintlify-starter/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/flyx-ai/api-docs",
+    "openApiValue": "https://usefind.ai/api/open_api.json"
+  },
+  {
+    "repo": "https://github.com/yolkmonday/docs",
+    "openApiValue": "https://gist.githubusercontent.com/yolkmonday/7a4a9a0ea813b50a45ab655465b242fe/raw/92d5490ab86e94c39f11aa15e93226a21d0fff3c/kirimi.json"
+  },
+  {
+    "repo": "https://github.com/willchertoff/docs",
+    "openApiValue": "https://raw.githubusercontent.com/willchertoff/docs/main/swagger.yml"
+  },
+  {
+    "repo": "https://github.com/hoophq/documentation",
+    "openApiValue": "https://use.hoop.dev/api/openapiv3.json"
+  },
+  {
+    "repo": "https://github.com/michaelscannable/docs",
+    "openApiValue": "http://localhost:3000/api/docs-json"
+  },
+  {
+    "repo": "https://github.com/SumitPugalia/docs",
+    "openApiValue": "https://7cbd-91-73-95-41.ngrok-free.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Super-Billy/CPSC-552-Project",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/IKatsuba/openstatus",
+    "openApiValue": "https://api.openstatus.dev/v1/openapi"
+  },
+  {
+    "repo": "https://github.com/devatclearoutio/clearout-mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/devatclearoutio/clearout-mintlify-docs/main/api-reference/Clearout-OpenAPI-Spec-V3.yaml"
+  },
+  {
+    "repo": "https://github.com/Dev-Liz/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Dev-Liz/docs/main/api-reference/TMDB-OAS.yaml"
+  },
+  {
+    "repo": "https://github.com/voxboy2/docs",
+    "openApiValue": "https://raw.githubusercontent.com/voxboy2/docs/main/OpenApiSpec.yaml"
+  },
+  {
+    "repo": "https://github.com/keenanwl/docs",
+    "openApiValue": "https://raw.githubusercontent.com/keenanwl/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/miickel/docs",
+    "openApiValue": "https://propdf.fly.dev/openapi"
+  },
+  {
+    "repo": "https://github.com/Imsharad/julep-ai-based-blog-generation",
+    "openApiValue": "https://api.julep.ai/api/openapi.json"
+  },
+  {
+    "repo": "https://github.com/CruelMoney/docs",
+    "openApiValue": "https://moderationapi.com/api/v1/openapi.json"
+  },
+  {
+    "repo": "https://github.com/PlaybookMediaEngineering/thinkthank-platform-services",
+    "openApiValue": "https://engine.solomon-ai-platform.com/openapi"
+  },
+  {
+    "repo": "https://github.com/stratumn/docs",
+    "openApiValue": "https://raw.githubusercontent.com/stratumn/docs/main/api-reference/open-api-v1.json"
+  },
+  {
+    "repo": "https://github.com/titouanprx/mintlify-docs",
+    "openApiValue": "openapi.json"
+  },
+  {
+    "repo": "https://github.com/dev-qolaig/docs",
+    "openApiValue": "https://raw.githubusercontent.com/dev-qolaig/docs/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Victor-Hiya/platform-docs-hiya",
+    "openApiValue": "https://storage.googleapis.com/loccus-docs/platform/external/2024.06.r1-beta.yaml"
+  },
+  {
+    "repo": "https://github.com/ixoworld/docs",
+    "openApiValue": "https://raw.githubusercontent.com/ixoworld/docs/main/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/lifenautjoe/peekalink-docs",
+    "openApiValue": "https://api.peekalink.io/mintlify"
+  },
+  {
+    "repo": "https://github.com/Qucoon-1/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Qucoon-1/docs/main/logo/encryption.yaml"
+  },
+  {
+    "repo": "https://github.com/samradha-1/wapikit",
+    "openApiValue": "https://raw.githubusercontent.com/sarthakjdev/wapikit/refs/heads/feat/v1/spec.openapi.yaml?token=GHSAT0AAAAAACKR6COXX3JZHTMMJDZZIRLIZZFTUYA"
+  },
+  {
+    "repo": "https://github.com/steven-tey/dub-test",
+    "openApiValue": "https://api.dub.sh"
+  },
+  {
+    "repo": "https://github.com/JhumanJ/OpnForm",
+    "openApiValue": "https://raw.githubusercontent.com/JhumanJ/OpnForm/main/docs/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/yunger7/enem-api",
+    "openApiValue": "https://api.enem.dev/v1"
+  },
+  {
+    "repo": "https://github.com/projectdiscovery/docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/rownd/docs",
+    "openApiValue": "https://raw.githubusercontent.com/rownd/docs/main/openapi/api-server.json"
+  },
+  {
+    "repo": "https://github.com/distributeaid/docs",
+    "openApiValue": "https://raw.githubusercontent.com/distributeaid/aggregated-public-information/4de27a2b57da333960ac74ee19d03f5282b59e84/src/extensions/documentation/documentation/1.0.0/full_documentation.json"
+  },
+  {
+    "repo": "https://github.com/onehashai/onehash-cal",
+    "openApiValue": "https://raw.githubusercontent.com/onehashai/onehash-cal/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/luminolabs/docs",
+    "openApiValue": "https://raw.githubusercontent.com/luminolabs/docs/main/api-keys.yml"
+  },
+  {
+    "repo": "https://github.com/daun-io/u0.wtf",
+    "openApiValue": "https://api.u0.wtf"
+  },
+  {
+    "repo": "https://github.com/smallwall/quivr",
+    "openApiValue": "https://api.quivr.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/romitg2/calcom",
+    "openApiValue": "https://raw.githubusercontent.com/romitg2/calcom/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/rnadigital/monita-docs",
+    "openApiValue": "https://raw.githubusercontent.com/rnadigital/monita-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/jay-cyble/docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/ShivaBhattacharjee/adapt-docs",
+    "openApiValue": "https://raw.githubusercontent.com/ShivaBhattacharjee/adapt-docs/main/realtime_sdk/openapi.json"
+  },
+  {
+    "repo": "https://github.com/kohortpay/docs",
+    "openApiValue": "https://api.kohortpay.dev/static-files/openapi.json"
+  },
+  {
+    "repo": "https://github.com/weavel-ai/mintlify-docs",
+    "openApiValue": "https://api.weavel.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/mclenhard/docs",
+    "openApiValue": "https://raw.githubusercontent.com/mclenhard/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/AbdoALPOP/docs",
+    "openApiValue": "https://api.thought.ly/schema.json"
+  },
+  {
+    "repo": "https://github.com/GleapSDK/MintlifiDocs",
+    "openApiValue": "https://api.gleap.io/api-docs.json"
+  },
+  {
+    "repo": "https://github.com/cybledev/odin-docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/ctrlplanedev/docs",
+    "openApiValue": "https://raw.githubusercontent.com/ctrlplanedev/ctrlplane/refs/heads/main/openapi.v1.json"
+  },
+  {
+    "repo": "https://github.com/mrkurt/docs",
+    "openApiValue": "https://raw.githubusercontent.com/mrkurt/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/monterey-ai/docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/phospho-app/docs",
+    "openApiValue": "openapi.yml"
+  },
+  {
+    "repo": "https://github.com/maidul98/infisical-test",
+    "openApiValue": "https://app.infisical.com/api/docs/json"
+  },
+  {
+    "repo": "https://github.com/andrewlayer/docs",
+    "openApiValue": "webflow_openapi.json"
+  },
+  {
+    "repo": "https://github.com/mastercrop/tv-reseller-api-doc",
+    "openApiValue": "https://raw.githubusercontent.com/mastercrop/tv-reseller-api-doc/main/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Gistsai/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Gistsai/docs/main/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/Iqmaa/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Iqmaa/docs/main/api-reference/TMDB.json"
+  },
+  {
+    "repo": "https://github.com/harbuzniak/docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Receiptor-AI/receiptor-docs",
+    "openApiValue": "https://developer.api.receiptor.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/elijahross/docs",
+    "openApiValue": "https://raw.githubusercontent.com/elijahross/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/benbonnet/mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/benbonnet/mintlify-docs/main/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/stef-bloom/wildcatgpt",
+    "openApiValue": "https://api.quivr.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/wirtualdev/wirtual-docs",
+    "openApiValue": "https://raw.githubusercontent.com/onchainengineer/mintlify-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/eersnington/feedbackthing-monorepo",
+    "openApiValue": "https://api.feedbackthing.pro/v1"
+  },
+  {
+    "repo": "https://github.com/rumorz-ai/docs",
+    "openApiValue": "https://raw.githubusercontent.com/rumorz-ai/docs/main/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/revent-app/docs",
+    "openApiValue": "https://raw.githubusercontent.com/revent-app/docs/main/api-reference/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/Sissnik/browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/MaxenceMo/docs",
+    "openApiValue": "https://raw.githubusercontent.com/MaxenceMo/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/abd296/docs",
+    "openApiValue": "https://raw.githubusercontent.com/abd296/docs/main/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/Axle-Labs/axle",
+    "openApiValue": "https://raw.githubusercontent.com/Axle-Labs/axle/main/docs/openapi.yml"
+  },
+  {
+    "repo": "https://github.com/hahnbeelee/docs-kathe",
+    "openApiValue": "https://api.elevenlabs.io/openapi.json"
+  },
+  {
+    "repo": "https://github.com/InquiraHealth/docs",
+    "openApiValue": "https://raw.githubusercontent.com/InquiraHealth/docs/main/api-reference/openapi-spec.yml"
+  },
+  {
+    "repo": "https://github.com/wild-card-ai/docs",
+    "openApiValue": "https://raw.githubusercontent.com/wild-card-ai/docs/main/wildcard_openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/ro-ro-b/mintlyf",
+    "openApiValue": "OPENAI.YAML"
+  },
+  {
+    "repo": "https://github.com/fergven/mintlify-test",
+    "openApiValue": "https://raw.githubusercontent.com/fergven/mintlify-test/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/r3gina-lin/docs",
+    "openApiValue": "./apispec.json"
+  },
+  {
+    "repo": "https://github.com/biuuisyou/docs",
+    "openApiValue": "https://raw.githubusercontent.com/biuuisyou/docs/main/api-reference/jup-openapi.json"
+  },
+  {
+    "repo": "https://github.com/JaYani55/QuivrJay",
+    "openApiValue": "https://api.quivr.app/openapi.json"
+  },
+  {
+    "repo": "https://github.com/vitos73/docs",
+    "openApiValue": "https://raw.githubusercontent.com/vitos73/docs/main/api-reference/open-api-last.json"
+  },
+  {
+    "repo": "https://github.com/AlanLiu96/docs",
+    "openApiValue": "https://healthharbor.co/openapi.json"
+  },
+  {
+    "repo": "https://github.com/FrankAveig/docs",
+    "openApiValue": "https://raw.githubusercontent.com/FrankAveig/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/phrloureiro/enem-api",
+    "openApiValue": "https://api.enem.dev/v1"
+  },
+  {
+    "repo": "https://github.com/AndrewCraswell/cal",
+    "openApiValue": "https://raw.githubusercontent.com/AndrewCraswell/cal/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Nomin9/repo-cal-com",
+    "openApiValue": "https://raw.githubusercontent.com/Nomin9/repo-cal-com/main/docs/api-reference/v2/openapi.json"
+  },
+  {
+    "repo": "https://github.com/steven-tey/docs",
+    "openApiValue": "https://api.dub.sh"
+  },
+  {
+    "repo": "https://github.com/suhailkakar/new-livepeer-docs",
+    "openApiValue": "openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/drockparashar/user-browser-test",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/silent-cipher/mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/silent-cipher/mintlify-docs/main/eigen-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/benlower/mintlify-docs",
+    "openApiValue": "https://raw.githubusercontent.com/benlower/mintlify-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/saliheendeltadev/docs",
+    "openApiValue": "https://raw.githubusercontent.com/saliheendeltadev/docs/main/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/btnalexandre/lmn8-api-docs",
+    "openApiValue": "https://lmn8-partner-platform-staging.up.railway.app/api/swagger"
+  },
+  {
+    "repo": "https://github.com/Altera-co/altera-docs",
+    "openApiValue": "https://raw.githubusercontent.com/Altera-co/altera-docs/main/openapi/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Sumit55/docs",
+    "openApiValue": "https://petstore3.swagger.io/api/v3/openapi.json"
+  },
+  {
+    "repo": "https://github.com/roundtableAI/docs",
+    "openApiValue": "api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/shareef945/docs",
+    "openApiValue": "https://swift.saitechnology.co/api-json"
+  },
+  {
+    "repo": "https://github.com/chatter-ai/chatter-docs",
+    "openApiValue": "https://backend.trychatter.ai/openapi.json"
+  },
+  {
+    "repo": "https://github.com/SharedDesk/desk-finder-docs",
+    "openApiValue": "https://raw.githubusercontent.com/SharedDesk/desk-finder-docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/Inticate-com/docs",
+    "openApiValue": "https://raw.githubusercontent.com/Inticate-com/docs/main/statusApi.json"
+  },
+  {
+    "repo": "https://github.com/RogerPodacter/docs",
+    "openApiValue": "https://p198.p4.n0.cdn.zight.com/items/7KunYzne/647f2775-69ec-4836-92a4-0427db95d9d2.yaml?v=32cc1da30e078e69f717b6b25dd88ffe"
+  },
+  {
+    "repo": "https://github.com/joaopcm1996/docs",
+    "openApiValue": "https://raw.githubusercontent.com/joaopcm1996/docs/main/api-reference/openapi.json"
+  },
+  {
+    "repo": "https://github.com/zuketo/docs",
+    "openApiValue": "https://api.sort.xyz/docs/json"
+  },
+  {
+    "repo": "https://github.com/davhao/docs",
+    "openApiValue": "https://raw.githubusercontent.com/davhao/docs/main/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/MatthiasRMS/docs",
+    "openApiValue": "https://raw.githubusercontent.com/MatthiasRMS/docs/main/openapi/openapi.yaml"
+  },
+  {
+    "repo": "https://github.com/agentic-labs/demo-docs",
+    "openApiValue": "https://api.trieve.ai/api-docs/openapi.json"
+  },
+  {
+    "repo": "https://github.com/ysyneu/docs",
+    "openApiValue": "openapi.json"
+  },
+  {
+    "repo": "https://github.com/ecfm/browser-use",
+    "openApiValue": "https://api.browser-use.com/openapi.json"
+  },
+  {
+    "repo": "https://github.com/silent-cipher/docs",
+    "openApiValue": "https://raw.githubusercontent.com/silent-cipher/docs/main/eigen-reference/openapi.json"
+  }
 ]

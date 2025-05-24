@@ -20,6 +20,7 @@ type SearchResult = {
 type StoredResult = {
   repoUrl: string;
   openapiPath: string;
+  mintJsonPath: string;
 };
 
 function extractOpenapiValues(textMatches: any[]): string[] {
@@ -36,12 +37,35 @@ function extractOpenapiValues(textMatches: any[]): string[] {
   return matches;
 }
 
+function convertToFullUrl(repoUrl: string, openapiPath: string, mintJsonPath: string): string {
+  // If already a full URL, return as is
+  if (openapiPath.startsWith('http://') || openapiPath.startsWith('https://')) {
+    return openapiPath;
+  }
+  
+  // If starts with /, convert to raw GitHub URL using mint.json location as base
+  if (openapiPath.startsWith('/')) {
+    // Convert https://github.com/owner/repo to https://raw.githubusercontent.com/owner/repo/main
+    const repoMatch = repoUrl.match(/https:\/\/github\.com\/([^\/]+)\/([^\/]+)/);
+    if (repoMatch) {
+      const [, owner, repo] = repoMatch;
+      // Get the directory where mint.json is located
+      const mintJsonDir = mintJsonPath.substring(0, mintJsonPath.lastIndexOf('/'));
+      const basePath = mintJsonDir ? `/${mintJsonDir}` : '';
+      return `https://raw.githubusercontent.com/${owner}/${repo}/main${basePath}${openapiPath}`;
+    }
+  }
+  
+  return openapiPath;
+}
+
 async function findReposWithMintJson() {
   const cacheFile = "scripts/mint-repos.json";
 
   if (existsSync(cacheFile)) {
     const cached = JSON.parse(readFileSync(cacheFile, "utf-8"));
-    return cached;
+    // Handle new structure with rawResults, fallback to old structure
+    return cached.rawResults || cached;
   }
 
   const command = `gh search code --json repository,path,textMatches --limit 1000 --filename mint.json '"openapi":'`;
@@ -63,6 +87,7 @@ findReposWithMintJson().then((res) => {
       storedResults.push({
         repoUrl,
         openapiPath: openapiPaths[0],
+        mintJsonPath: result.path || '',
       });
       console.log(`Repository: ${repoUrl}`);
       console.log(`OpenAPI Path: ${openapiPaths[0]}`);
@@ -70,15 +95,21 @@ findReposWithMintJson().then((res) => {
     }
   });
 
-  // Store raw response in JSON file
-  writeFileSync("scripts/mint-repos.json", JSON.stringify(res, null, 2));
+  // Store raw response and processed results in JSON file
+  writeFileSync("scripts/mint-repos.json", JSON.stringify({
+    rawResults: res,
+    processedResults: storedResults
+  }, null, 2));
+  
+  // Transform storedResults to array of objects with repo and openApiValue fields
+  const urlsWithOpenApi = storedResults.map(result => ({
+    repo: result.repoUrl,
+    openApiValue: convertToFullUrl(result.repoUrl, result.openapiPath, result.mintJsonPath)
+  }));
+  
   writeFileSync(
     "scripts/mint-repos-urls.json",
-    JSON.stringify(
-      [...new Set(res.map((x) => x.repository.url))],
-      null,
-      2,
-    ),
+    JSON.stringify(urlsWithOpenApi, null, 2)
   );
   console.log("Total unique repos:", arr.length);
 });
