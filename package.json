@@ -1,0 +1,6 @@
+{
+  "name": "root",
+  "dependencies": {
+    "typescript": "^5.8.3"
+  }
+}

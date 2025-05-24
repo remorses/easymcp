@@ -1,0 +1,29 @@
+{
+    "include": ["src"],
+    "compilerOptions": {
+        "lib": ["DOM", "DOM.Iterable", "ES2022"],
+        "outDir": "dist",
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "module": "NodeNext",
+
+        "moduleResolution": "nodenext",
+        "resolveJsonModule": true,
+        "target": "ES2022",
+        "strict": true,
+        "allowJs": true,
+        "allowImportingTsExtensions": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "useUnknownInCatchVariables": false,
+        "forceConsistentCasingInFileNames": true,
+
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"],
+        },
+
+        "noEmit": true,
+    },
+}
