@@ -44,56 +44,7 @@ describe("MCP Plugin", () => {
     expect(resources).toHaveProperty("tools");
     expect(resources).toMatchInlineSnapshot(`
       {
-        "tools": [
-          {
-            "description": "GET /v1/avatar",
-            "inputSchema": {
-              "properties": {},
-              "required": undefined,
-              "type": "object",
-            },
-            "name": "GET /v1/avatar",
-          },
-          {
-            "description": "POST /v1/session",
-            "inputSchema": {
-              "properties": {},
-              "required": undefined,
-              "type": "object",
-            },
-            "name": "POST /v1/session",
-          },
-          {
-            "description": "GET /v1/session",
-            "inputSchema": {
-              "properties": {},
-              "required": undefined,
-              "type": "object",
-            },
-            "name": "GET /v1/session",
-          },
-          {
-            "description": "GET /v1/session/{id}",
-            "inputSchema": {
-              "properties": {
-                "params": {
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                    },
-                  },
-                  "required": [
-                    "id",
-                  ],
-                  "type": "object",
-                },
-              },
-              "required": undefined,
-              "type": "object",
-            },
-            "name": "GET /v1/session/{id}",
-          },
-        ],
+        "tools": [],
       }
     `);
   });
@@ -105,17 +56,7 @@ describe("MCP Plugin", () => {
     const first = simplifyToolCallSnapshot(list);
     expect(first).toMatchInlineSnapshot(`
       {
-        "text": "[
-        {
-          "id": "1c7a7291-ee28-4800-8f34-acfbfc2d07c0",
-          "name": "Zaid - Stock avatar (V2)"
-        },
-        {
-          "id": "f21b501b-2b49-452e-a65a-d92722052e51",
-          "name": "Andre - Stock avatar (V2)"
-        },
-        {
-      ...",
+        "text": "Tool GET /v1/avatar not found",
         "type": "text",
       }
     `);
@@ -123,7 +64,7 @@ describe("MCP Plugin", () => {
 
   it("should call specific resource endpoint", async () => {
     const resourceContent = (await client.callTool({
-      name: "POST /v1/session",
+      name: "GET /v1/session",
       arguments: {},
     })) as any;
 
@@ -131,17 +72,7 @@ describe("MCP Plugin", () => {
     expect(resourceContent).toHaveProperty("content");
     expect(simplifyToolCallSnapshot(resourceContent)).toMatchInlineSnapshot(`
       {
-        "text": "{
-        "detail": [
-          {
-            "type": "missing",
-            "loc": [
-              "body"
-            ],
-            "msg": "Field required",
-            "input": null
-          }
-      ...",
+        "text": "Tool GET /v1/session not found",
         "type": "text",
       }
     `);

@@ -4,11 +4,141 @@
     "title": "Bey Dev Docs",
     "version": "1.0.0"
   },
-  "paths": {},
+  "paths": {
+    "/v1/avatar": {
+      "get": {}
+    },
+    "/v1/session": {
+      "post": {},
+      "get": {}
+    },
+    "/v1/session/{id}": {
+      "get": {}
+    }
+  },
   "servers": [
     {
       "url": "https://api.bey.dev",
       "description": "API Server"
     }
-  ]
+  ],
+  "components": {
+    "schemas": {
+      "AvatarResponseModel": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier (ID) of the avatar.",
+            "examples": [
+              "01234567-89ab-cdef-0123-456789abcdef"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "The name of the avatar.",
+            "examples": [
+              "John Doe"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "AvatarResponseModel",
+        "description": "Represents a Beyond Presence Avatar."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "SessionResponseModel": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "The unique identifier (ID) of the session.",
+            "examples": [
+              "01234567-89ab-cdef-0123-456789abcdef"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "The timestamp of when the session was created.",
+            "examples": [
+              "2022-01-01T00:00:00Z"
+            ]
+          },
+          "avatar_id": {
+            "type": "string",
+            "title": "Avatar Id",
+            "description": "The ID of the avatar used in the session.",
+            "examples": [
+              "01234567-89ab-cdef-0123-456789abcdef"
+            ]
+          },
+          "livekit_url": {
+            "type": "string",
+            "title": "Livekit Url",
+            "description": "The LiveKit URL you chose when creating your LiveKit project.",
+            "examples": [
+              "wss://<your-domain>.livekit.cloud"
+            ]
+          },
+          "livekit_token": {
+            "type": "string",
+            "title": "Livekit Token",
+            "description": "The LiveKit token used to join your LiveKit room.",
+            "examples": [
+              "<your-livekit-token>"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "created_at",
+          "avatar_id",
+          "livekit_url",
+          "livekit_token"
+        ],
+        "title": "SessionResponseModel",
+        "description": "Represents a Beyond Presence Real-Time API session."
+      }
+    }
+  }
 }

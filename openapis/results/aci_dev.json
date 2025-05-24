@@ -4,11 +4,283 @@
     "title": "ACI Dev Docs",
     "version": "1.0.0"
   },
-  "paths": {},
+  "paths": {
+    "/v1/app-configurations": {
+      "post": {},
+      "get": {}
+    },
+    "/v1/app-configurations/{app_name}": {
+      "delete": {},
+      "get": {},
+      "patch": {}
+    },
+    "/v1/apps/{app_name}": {
+      "get": {}
+    },
+    "/v1/apps/search": {
+      "get": {}
+    },
+    "/v1/functions/{function_name}/execute": {
+      "post": {}
+    },
+    "/v1/functions/{function_name}/definition": {
+      "get": {}
+    },
+    "/v1/functions/search": {
+      "get": {}
+    },
+    "/v1/linked-accounts/{linked_account_id}": {
+      "delete": {},
+      "get": {}
+    },
+    "/v1/linked-accounts/oauth2": {
+      "get": {}
+    },
+    "/v1/linked-accounts/oauth2/callback": {
+      "get": {}
+    },
+    "/v1/linked-accounts": {
+      "get": {}
+    }
+  },
   "servers": [
     {
       "url": "https://www.aci.dev",
       "description": "API Server"
     }
-  ]
+  ],
+  "components": {
+    "schemas": {
+      "SecurityScheme": {
+        "type": "string",
+        "enum": [
+          "no_auth",
+          "api_key",
+          "http_basic",
+          "http_bearer",
+          "oauth2"
+        ],
+        "title": "SecurityScheme",
+        "description": "security scheme type for an app (or function if support override)"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "AppConfigurationPublic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          },
+          "app_name": {
+            "type": "string",
+            "title": "App Name"
+          },
+          "security_scheme": {
+            "$ref": "#/components/schemas/SecurityScheme"
+          },
+          "security_scheme_overrides": {
+            "type": "object",
+            "title": "Security Scheme Overrides"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "all_functions_enabled": {
+            "type": "boolean",
+            "title": "All Functions Enabled"
+          },
+          "enabled_functions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Enabled Functions"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "project_id",
+          "app_name",
+          "security_scheme",
+          "security_scheme_overrides",
+          "enabled",
+          "all_functions_enabled",
+          "enabled_functions",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "AppConfigurationPublic"
+      },
+      "FunctionBasic": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "FunctionBasic"
+      },
+      "AppBasic": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "title": "AppBasic"
+      },
+      "OpenAIFunction": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "strict": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strict"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "parameters": {
+            "type": "object",
+            "title": "Parameters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "description",
+          "parameters"
+        ],
+        "title": "OpenAIFunction"
+      },
+      "LinkedAccountPublic": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "project_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Project Id"
+          },
+          "app_name": {
+            "type": "string",
+            "title": "App Name"
+          },
+          "linked_account_owner_id": {
+            "type": "string",
+            "title": "Linked Account Owner Id"
+          },
+          "security_scheme": {
+            "$ref": "#/components/schemas/SecurityScheme"
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "project_id",
+          "app_name",
+          "linked_account_owner_id",
+          "security_scheme",
+          "enabled",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "LinkedAccountPublic"
+      }
+    }
+  }
 }

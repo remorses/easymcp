@@ -38,7 +38,7 @@ async function fetchSitemap(url: string): Promise<string[]> {
 
 async function fetchMarkdown(url: string): Promise<string> {
   try {
-    const markdownUrl = `${url}.md`;
+    const markdownUrl = url.endsWith(".md") ? url : `${url}.md`;
     const response = await fetch(markdownUrl);
 
     if (!response.ok) {
@@ -52,29 +52,38 @@ async function fetchMarkdown(url: string): Promise<string> {
   }
 }
 
-function extractYamlCodeBlocks(markdownContent: string): Array<{ content: string; method: string; path: string }> {
-  const yamlBlocks: Array<{ content: string; method: string; path: string }> = [];
+function extractYamlCodeBlocks(
+  markdownContent: string,
+  sourceUrl?: string,
+): Array<{ content: string; method: string; path: string }> {
+  const yamlBlocks: Array<{ content: string; method: string; path: string }> =
+    [];
 
   const tree = remark().parse(markdownContent);
-
   visit(tree, "code", (node: any) => {
-    // Look for YAML blocks with method and path info like "yaml GET /v1/session/{id}"
-    if (
-      (node.lang === "yaml" || (node.lang && node.lang.includes("yaml"))) &&
-      node.value &&
-      node.lang &&
-      node.lang.includes(" ")
-    ) {
-      const parts = node.lang.split(" ");
-      if (parts.length >= 3 && parts[0] === "yaml") {
-        const method = parts[1].toLowerCase();
-        const path = parts[2];
-        
-        yamlBlocks.push({
-          content: node.value,
-          method,
-          path
-        });
+    // Look for YAML blocks
+    if (node.lang === "yaml" && node.value) {
+      // Check if it has method and path info in node.meta
+      if (node.meta && typeof node.meta === "string") {
+        const parts = node.meta.split(" ");
+        if (parts.length >= 2) {
+          const method = parts[0].toLowerCase();
+          const path = parts[1];
+
+          yamlBlocks.push({
+            content: node.value,
+            method,
+            path,
+          });
+        } else {
+          console.log(
+            `Ignored YAML block in ${sourceUrl || "unknown file"}: Invalid meta format "${node.meta}" (expected: METHOD /path)`,
+          );
+        }
+      } else {
+        console.log(
+          `Ignored YAML block in ${sourceUrl || "unknown file"}: No method/path in meta (found: "${JSON.stringify([node.lang, node.meta])}")`,
+        );
       }
     }
   });
@@ -86,7 +95,12 @@ function parseOpenAPIFromYaml(
   yamlContent: string,
   headerMethod: string,
   headerPath: string,
-): { path: string; method: string; spec: OpenAPIV3.OperationObject; components?: OpenAPIV3.ComponentsObject } | null {
+): {
+  path: string;
+  method: string;
+  spec: OpenAPIV3.OperationObject;
+  components?: OpenAPIV3.ComponentsObject;
+} | null {
   try {
     const parsed = yaml.load(yamlContent) as any;
 
@@ -197,11 +211,11 @@ function parseOpenAPIFromYaml(
       // Extract components
       const components = parsed.components || undefined;
 
-      return { 
-        path: headerPath, 
-        method: headerMethod, 
-        spec: spec as OpenAPIV3.OperationObject, 
-        components 
+      return {
+        path: headerPath,
+        method: headerMethod,
+        spec: spec as OpenAPIV3.OperationObject,
+        components,
       };
     }
 
@@ -212,7 +226,10 @@ function parseOpenAPIFromYaml(
   }
 }
 
-async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOptions): Promise<OpenAPIV3.Document> {
+async function processMarkdownFiles(
+  urls: string[],
+  options?: GenerateOpenAPIOptions,
+): Promise<OpenAPIV3.Document> {
   const openApiSchema: OpenAPIV3.Document = {
     openapi: "3.0.3",
     info: {
@@ -236,10 +253,14 @@ async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOpt
       const markdownContent = await fetchMarkdown(url);
       if (!markdownContent) continue;
 
-      const yamlBlocks = extractYamlCodeBlocks(markdownContent);
+      const yamlBlocks = extractYamlCodeBlocks(markdownContent, url);
 
       for (const yamlBlock of yamlBlocks) {
-        const pathInfo = parseOpenAPIFromYaml(yamlBlock.content, yamlBlock.method, yamlBlock.path);
+        const pathInfo = parseOpenAPIFromYaml(
+          yamlBlock.content,
+          yamlBlock.method,
+          yamlBlock.path,
+        );
 
         if (pathInfo) {
           const { path, method, spec, components } = pathInfo;
@@ -257,13 +278,19 @@ async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOpt
             }
 
             // Merge all component types
-            Object.keys(components).forEach(componentType => {
-              if (!openApiSchema.components![componentType as keyof OpenAPIV3.ComponentsObject]) {
+            Object.keys(components).forEach((componentType) => {
+              if (
+                !openApiSchema.components![
+                  componentType as keyof OpenAPIV3.ComponentsObject
+                ]
+              ) {
                 (openApiSchema.components as any)[componentType] = {};
               }
               (openApiSchema.components as any)[componentType] = {
                 ...(openApiSchema.components as any)[componentType],
-                ...components[componentType as keyof OpenAPIV3.ComponentsObject],
+                ...components[
+                  componentType as keyof OpenAPIV3.ComponentsObject
+                ],
               };
             });
           }
@@ -287,7 +314,10 @@ export async function generateOpenAPIFromSitemap(
     console.log(`Found ${urls.length} URLs in sitemap`);
 
     console.log("Processing markdown files...");
-    const openApiSchema = await processMarkdownFiles(urls, options);
+    const openApiSchema = await processMarkdownFiles(
+      urls.map((x) => x + ".md"),
+      options,
+    );
 
     console.log("OpenAPI schema generation completed");
     return openApiSchema;
@@ -317,7 +347,7 @@ export async function main() {
     if (name) {
       options.name = name;
     }
-    
+
     const schema = await generateOpenAPIFromSitemap(sitemapUrl, options);
     console.log(JSON.stringify(schema, null, 2));
   } catch (error) {
