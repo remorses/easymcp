@@ -64,8 +64,14 @@ function getOperationParameters(operation: OpenAPIV3.OperationObject): {
 
   return result;
 }
-type Fetch = typeof fetch;
+function extractApiFromBaseUrl(openapi: OpenAPIV3.Document): string {
+  if (openapi.servers && openapi.servers.length > 0) {
+    return openapi.servers[0].url;
+  }
+  throw new Error("No servers defined in OpenAPI document");
+}
 
+type Fetch = typeof fetch;
 
 export function createMCPServer({
   name = "spiceflow",
@@ -73,12 +79,16 @@ export function createMCPServer({
   openapi,
   basePath = "",
   fetch,
+  paths,
+  baseUrl = "",
 }: {
   name?: string;
   version?: string;
   basePath?: string;
   fetch: Fetch;
   openapi: OpenAPIV3.Document;
+  paths?: string[];
+  baseUrl?: string;
 }) {
   const server = new Server(
     { name, version },
@@ -89,16 +99,29 @@ export function createMCPServer({
       },
     },
   );
+  if (!baseUrl) {
+    baseUrl = extractApiFromBaseUrl(openapi);
+  }
+
+  async function fetchWithBaseServerAndAuth(u, options) {
+    return await fetch(new URL(u, baseUrl), {
+      ...options,
+    });
+  }
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    const paths = Object.entries(openapi.paths).filter(
-      ([path]) =>
-        !["/mcp-openapi", "/mcp", "/mcp/message"].includes(
-          path.replace(basePath, ""),
-        ),
-    );
+    const filteredPaths = Object.entries(openapi.paths).filter(([path]) => {
+      const normalizedPath = path.replace(basePath, "");
+      if (["/openapi"].includes(normalizedPath)) return false;
+      if (paths && paths.length > 0) {
+        return paths.some((filterPath) =>
+          normalizedPath.startsWith(filterPath),
+        );
+      }
+      return true;
+    });
 
-    const tools = paths.flatMap(([path, pathObj]) =>
+    const tools = filteredPaths.flatMap(([path, pathObj]) =>
       Object.entries(pathObj || {})
         .filter(([method]) => method !== "parameters")
         .map(([method, operation]) => {
@@ -224,53 +247,12 @@ export function createMCPServer({
         }
       }
     }
-    return { resources };
+    return { resources: [] };
   });
 
   server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-    const resourceUrl = new URL(request.params.uri);
-    const path = resourceUrl.pathname;
-
-    const pathObj = openapi.paths[path];
-    if (!pathObj?.get) {
-      throw new Error("Resource not found");
-    }
-
-    const response = await fetch(
-      new Request(resourceUrl, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-        },
-      }),
-    );
-
-    const contentType = response.headers.get("content-type");
-    const text = await response.text();
-
-    if (contentType?.includes("application/json")) {
-      return {
-        contents: [
-          {
-            uri: request.params.uri,
-            mimeType: "application/json",
-            text: text,
-          },
-        ],
-      };
-    }
-
-    return {
-      contents: [
-        {
-          uri: request.params.uri,
-          mimeType: "text/plain",
-          text,
-        },
-      ],
-    };
+    throw new Error("Resources are not supported - use tools instead");
   });
-
 
   return { server };
 }
