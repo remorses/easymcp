@@ -7,7 +7,6 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { createMCPServer } from "./mcp.ts";
 import { connectClientServer, simplifyToolCallSnapshot } from "./mcp.test.ts";
 
-
 describe("MCP Plugin", () => {
   let server: Server;
   let client: Client;
@@ -146,3 +145,4 @@ describe("MCP Plugin", () => {
       }
     `);
   });
+});
