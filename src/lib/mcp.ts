@@ -185,22 +185,22 @@ export function createMCPServer({
         });
       }
 
-      const url = new URL(`http://localhost${basePath}${path}`);
+      let fullPath = `${basePath}${path}`;
       if (query) {
+        const searchParams = new URLSearchParams();
         Object.entries(query).forEach(([key, value]) => {
-          url.searchParams.set(key, String(value));
+          searchParams.set(key, String(value));
         });
+        fullPath += `?${searchParams.toString()}`;
       }
 
-      const response = await fetch(
-        new Request(url, {
-          method: method,
-          headers: {
-            "content-type": "application/json",
-          },
-          body: body ? JSON.stringify(body) : undefined,
-        }),
-      );
+      const response = await fetchWithBaseServerAndAuth(fullPath, {
+        method,
+        headers: {
+          "content-type": "application/json",
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
 
       const isError = !response.ok;
       const contentType = response.headers.get("content-type");
@@ -240,7 +240,7 @@ export function createMCPServer({
 
         if (!hasRequiredQuery) {
           resources.push({
-            uri: new URL(path, "http://localhost").href,
+            uri: path,
             mimeType: "application/json",
             name: `GET ${path}`,
           });

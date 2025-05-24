@@ -7,15 +7,19 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { createMCPServer } from "./mcp.ts";
 
 // Utility function to connect client and server
-async function connectClientServer(server: Server, clientName = "test-client", clientVersion = "1.0.0") {
+async function connectClientServer(
+  server: Server,
+  clientName = "test-client",
+  clientVersion = "1.0.0",
+) {
   const [clientTx, serverTx] = InMemoryTransport.createLinkedPair();
   const client = new Client({ name: clientName, version: clientVersion });
   await Promise.all([server.connect(serverTx), client.connect(clientTx)]);
-  
+
   const cleanup = async () => {
     await Promise.all([client.close(), server.close()]);
   };
-  
+
   return { client, cleanup };
 }
 
@@ -106,24 +110,49 @@ describe("MCP Plugin", () => {
       }
     `);
 
-    const resourceContent = await client.callTool({
-      name: "POST /somethingElse/:id",
+    const list = (await client.callTool({
+      name: "GET /api/v2/ability/",
+    })) as any;
+    const first = simplifyToolCallSnapshot(list);
+    expect(first).toMatchInlineSnapshot(`
+      {
+        "text": "{
+        "count": 367,
+        "next": "https://pokeapi.co/api/v2/ability/?offset=20&limit=20",
+        "previous": null,
+        "results": [
+          {
+            "name": "stench",
+            "url": "https://pokeapi.co/api/v2/ability/1/"
+          },
+          {
+      ...",
+        "type": "text",
+      }
+    `);
+    const resourceContent = (await client.callTool({
+      name: "GET /api/v2/ability/{id}/",
       arguments: {
-        params: { id: "xxx" },
+        params: { id: "own-tempo" },
       },
-    });
+    })) as any;
 
     expect(resourceContent).toBeDefined();
     expect(resourceContent).toHaveProperty("content");
-    expect(resourceContent).toMatchInlineSnapshot(`
+    expect(simplifyToolCallSnapshot(resourceContent)).toMatchInlineSnapshot(`
       {
-        "content": [
+        "text": "{
+        "effect_changes": [],
+        "effect_entries": [
           {
-            "text": "Tool POST /somethingElse/:id not found",
-            "type": "text",
-          },
-        ],
-        "isError": true,
+            "effect": "Ein Pokémon mit dieser Fähigkeit kann nicht verwirrt werden.\\n\\nWenn ein Pokémon verwirrt ist und diese Fähigkeit erhält, wird es von der confusion geheilt.",
+            "language": {
+              "name": "de",
+              "url": "https://pokeapi.co/api/v2/language/6/"
+            },
+            "short_effect": "Verhindert confusion."
+      ...",
+        "type": "text",
       }
     `);
   });
@@ -158,7 +187,10 @@ describe("MCP Plugin", () => {
       name: "pokemon-unfiltered",
     });
 
-    const unfilteredConnection = await connectClientServer(unfiltered.server, "unfiltered-client");
+    const unfilteredConnection = await connectClientServer(
+      unfiltered.server,
+      "unfiltered-client",
+    );
     const unfilteredTools = await unfilteredConnection.client.listTools();
     const unfilteredCount = unfilteredTools.tools.length;
 
@@ -172,7 +204,10 @@ describe("MCP Plugin", () => {
       paths: ["/api/v2/ability"], // Only include paths starting with /api/v2/ability
     });
 
-    const filteredConnection = await connectClientServer(filtered.server, "filtered-client");
+    const filteredConnection = await connectClientServer(
+      filtered.server,
+      "filtered-client",
+    );
     const filteredTools = await filteredConnection.client.listTools();
     const filteredCount = filteredTools.tools.length;
 
@@ -238,3 +273,22 @@ describe("MCP Plugin", () => {
     }
   });
 });
+
+/**
+ * Simplifies tool call results for inline snapshots by taking only the first content item's text
+ * and truncating it to a maximum of 10 lines
+ */
+function simplifyToolCallSnapshot(toolCallResult: any) {
+  if (!toolCallResult?.content?.[0]?.text) {
+    return toolCallResult;
+  }
+
+  const firstContent = toolCallResult.content[0];
+  const lines = firstContent.text.split("\n");
+  const truncatedText = lines.slice(0, 10).join("\n");
+
+  return {
+    text: truncatedText + (lines.length > 10 ? "\n..." : ""),
+    type: firstContent.type,
+  };
+}
