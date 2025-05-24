@@ -358,10 +358,16 @@ function getPathFromToolName(toolName: string): {
   if (cached) {
     return cached;
   }
-  throw new Error(`Tool name '${toolName}' not found. It might not have been registered or was invalid.`);
+  throw new Error(
+    `Tool name '${toolName}' not found. It might not have been registered or was invalid.`,
+  );
 }
 
-function formatToolName(nameToFormat: string, method: string, pathForMap: string): string {
+function formatToolName(
+  nameToFormat: string,
+  method: string,
+  pathForMap: string,
+): string {
   if (!nameToFormat || nameToFormat.trim() === "") {
     throw new Error("Original tool name for formatting cannot be empty");
   }
@@ -381,7 +387,9 @@ function formatToolName(nameToFormat: string, method: string, pathForMap: string
   formatted = formatted.replace(/_+$/, "");
 
   if (formatted === "") {
-    throw new Error(`Tool name results in empty string after formatting (from original: '${nameToFormat}')`);
+    throw new Error(
+      `Tool name results in empty string after formatting (from original: '${nameToFormat}')`,
+    );
   }
 
   // Validate against regex
@@ -394,13 +402,16 @@ function formatToolName(nameToFormat: string, method: string, pathForMap: string
 
   // Check for duplicates: if this formatted name already exists and belongs to a DIFFERENT tool (method/path), it's a collision.
   const existingEntry = toolNameToPath.get(formatted);
-  if (existingEntry && (existingEntry.method !== method || existingEntry.path !== pathForMap)) {
-      throw new Error(
-          `Duplicate tool name generated: '${formatted}'. ` +
-          `This name was generated for original: '${nameToFormat}' (method: '${method}', path: '${pathForMap}'). ` +
-          `It conflicts with an existing tool that also maps to '${formatted}', originally from (method: '${existingEntry.method}', path: '${existingEntry.path}'). ` +
-          `Ensure operationIds or path/method combinations in your OpenAPI spec are sufficiently unique to avoid naming collisions after formatting.`
-      );
+  if (
+    existingEntry &&
+    (existingEntry.method !== method || existingEntry.path !== pathForMap)
+  ) {
+    throw new Error(
+      `Duplicate tool name generated: '${formatted}'. ` +
+        `This name was generated for original: '${nameToFormat}' (method: '${method}', path: '${pathForMap}'). ` +
+        `It conflicts with an existing tool that also maps to '${formatted}', originally from (method: '${existingEntry.method}', path: '${existingEntry.path}'). ` +
+        `Ensure operationIds or path/method combinations in your OpenAPI spec are sufficiently unique to avoid naming collisions after formatting.`,
+    );
   }
 
   // Register the name with its method and path.
@@ -409,3 +420,5 @@ function formatToolName(nameToFormat: string, method: string, pathForMap: string
 
   return formatted;
 }
+
+export { StdioServerTransport };
