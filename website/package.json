@@ -1,6 +1,6 @@
 {
     "name": "modelcontext",
-
+    "type": "module",
     "bin": "",
     "scripts": {
         "build": "react-router build",
@@ -40,7 +40,7 @@
         "@xmorse/deployment-utils": "^0.3.0",
         "autoprefixer": "^10.4.21",
         "postcss": "^8.5.3",
-        "tailwindcss": "^4.1.7",
+        "tailwindcss": "^3",
         "tsx": "^4.7.1",
         "typescript": "^5.8.3",
         "vite": "^6.3.5",
