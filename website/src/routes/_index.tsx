@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Form, useActionData, useNavigation } from "react-router";
 
 interface Generation {
@@ -70,6 +70,24 @@ export default function OpenAPIMCPLanding() {
     | undefined;
 
   const navigation = useNavigation();
+
+  const schemaTextAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSchemaDrop = (e: React.DragEvent<HTMLTextAreaElement>) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (
+        schemaTextAreaRef.current &&
+        typeof event.target?.result === "string"
+      ) {
+        schemaTextAreaRef.current.value = event.target.result;
+      }
+    };
+    reader.readAsText(file);
+  };
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [generations, setGenerations] = useState<Generation[]>([
@@ -280,13 +298,16 @@ export default function OpenAPIMCPLanding() {
                     <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                       <textarea
                         name="schema"
+                        ref={schemaTextAreaRef}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault();
                             e.currentTarget.form?.requestSubmit();
                           }
                         }}
-                        placeholder="Paste your OpenAPI schema or URL here..."
+                        onDrop={handleSchemaDrop}
+                        onDragOver={(e) => e.preventDefault()}
+                        placeholder="Paste your OpenAPI schema or URL here or drop your schema file…"
                         className="w-full h-40 px-4 py-4 bg-transparent text-gray-900 placeholder-gray-400 resize-none focus:outline-none text-base leading-relaxed pr-16"
                         required
                       />
@@ -464,7 +485,7 @@ export default function OpenAPIMCPLanding() {
                       language="json"
                     />
                     {actionData.requiresApiToken && (
-                      <div className="mt-4 text-sm text-red-700">
+                      <div className="mt-4 text-sm text-blue-700">
                         <strong>Note:</strong> This package could require an API
                         token. Set the appropriate <code>API_TOKEN</code> value
                         in your MCP server’s environment
