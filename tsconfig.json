@@ -12,6 +12,7 @@
         "target": "ES2022",
         "strict": true,
         "allowJs": true,
+        "allowImportingTsExtensions": true,
         "skipLibCheck": true,
         "noImplicitAny": false,
         "useUnknownInCatchVariables": false,

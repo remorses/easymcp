@@ -8,7 +8,6 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { OpenAPIV3 } from "openapi-types";
 
-
 function getOperationRequestBody(
   operation: OpenAPIV3.OperationObject,
 ): OpenAPIV3.SchemaObject | undefined {
@@ -65,16 +64,20 @@ function getOperationParameters(operation: OpenAPIV3.OperationObject): {
 
   return result;
 }
+type Fetch = typeof fetch;
 
-function createMCPServer({
+
+export function createMCPServer({
   name = "spiceflow",
   version = "1.0.0",
   openapi,
   basePath = "",
+  fetch,
 }: {
   name?: string;
   version?: string;
   basePath?: string;
+  fetch: Fetch;
   openapi: OpenAPIV3.Document;
 }) {
   const server = new Server(
@@ -86,7 +89,6 @@ function createMCPServer({
       },
     },
   );
-
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const paths = Object.entries(openapi.paths).filter(
@@ -269,9 +271,9 @@ function createMCPServer({
     };
   });
 
-  return { server, transports };
-}
 
+  return { server };
+}
 
 function getRouteName({
   method,
