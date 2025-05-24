@@ -1,8 +1,7 @@
 "use client";
 
-import type React from "react";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Form, useActionData } from "react-router";
 
 interface Generation {
   id: string;
@@ -10,11 +9,66 @@ interface Generation {
   timestamp: Date;
   packageName: string;
 }
+import { publishNpmPackage } from "modelcontextutils/src/lib/npm-publish";
+
+function generatePackageName(schema: any): string {
+  try {
+    const title = schema?.info?.title || "openapi-mcp";
+    // Convert to lowercase, replace spaces and special chars with hyphens, remove multiple hyphens
+    const safeName = title
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    // Ensure it starts with a letter or number
+    const validName = safeName.match(/^[a-z0-9]/)
+      ? safeName
+      : `mcp-${safeName}`;
+
+    // Add mcp prefix if not present
+    return validName;
+  } catch {
+    return "mcp-openapi-package";
+  }
+}
+
+function safeJsonParse(jsonString: string): any | null {
+  try {
+    return JSON.parse(jsonString);
+  } catch {
+    return null;
+  }
+}
+export async function action({ request }: { request: Request }) {
+  const formData = await request.formData();
+  const schema = formData.get("schema") as string;
+  if (!schema?.trim()) {
+    return { error: "Schema required" };
+  }
+  const res = await publishNpmPackage({
+    openapiSchema: schema,
+    packageName: "test",
+  });
+
+  return {
+    packageName: generatePackageName(safeJsonParse(schema)),
+    schemaTitle: schema.slice(0, 30) + (schema.length > 30 ? "..." : ""),
+    requiresApiToken: true,
+    timestamp: Date.now(),
+  };
+}
 
 export default function OpenAPIMCPLanding() {
-  const [schema, setSchema] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [packageName, setPackageName] = useState("");
+  const actionData = useActionData() as
+    | {
+        packageName: string;
+        schemaTitle: string;
+        requiresApiToken?: boolean;
+        timestamp: number;
+      }
+    | undefined;
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [generations, setGenerations] = useState<Generation[]>([
     {
@@ -37,38 +91,24 @@ export default function OpenAPIMCPLanding() {
     },
   ]);
 
-  const handleSubmit = () => {
-    if (schema.trim()) {
-      const generatedName = `mcp-${Date.now()}`;
-      setPackageName(generatedName);
-
-      // Add to generations history
-      const newGeneration: Generation = {
-        id: Date.now().toString(),
-        title: schema.slice(0, 30) + (schema.length > 30 ? "..." : ""),
-        timestamp: new Date(),
-        packageName: generatedName,
-      };
-      setGenerations((prev) => [newGeneration, ...prev]);
-      setSubmitted(true);
+  // Add action result to history if present and not there yet
+  useEffect(() => {
+    if (
+      actionData?.packageName &&
+      !generations.find((g) => g.packageName === actionData.packageName)
+    ) {
+      setGenerations([
+        {
+          id: String(actionData.timestamp),
+          title: actionData.schemaTitle,
+          timestamp: new Date(actionData.timestamp),
+          packageName: actionData.packageName,
+        },
+        ...generations,
+      ]);
     }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
-  const mcpConfig = {
-    mcpServers: {
-      [packageName]: {
-        command: "npx",
-        args: [packageName],
-      },
-    },
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionData?.packageName]);
 
   const CodeBlock = ({
     code,
@@ -147,38 +187,33 @@ export default function OpenAPIMCPLanding() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
-          <button
-            onClick={() => {
-              setSubmitted(false);
-              setSchema("");
-              setPackageName("");
-            }}
-            className="w-full p-3 text-left rounded-md border border-gray-200 hover:bg-white transition-colors mb-4 flex items-center gap-3"
-          >
-            <svg
-              className="w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+          <Form method="post" replace>
+            <button
+              type="submit"
+              name="_reset"
+              value="1"
+              className="w-full p-3 text-left rounded-md border border-gray-200 hover:bg-white transition-colors mb-4 flex items-center gap-3"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            <span className="text-sm text-gray-600">New conversion</span>
-          </button>
-
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              <span className="text-sm text-gray-600">New conversion</span>
+            </button>
+          </Form>
           <div className="space-y-1">
             {generations.map((gen) => (
-              <button
+              <div
                 key={gen.id}
-                onClick={() => {
-                  setPackageName(gen.packageName);
-                  setSubmitted(true);
-                }}
                 className="w-full p-3 text-left rounded-md hover:bg-white transition-colors border border-transparent hover:border-gray-200 group"
               >
                 <div className="text-sm font-medium text-gray-900 truncate mb-1">
@@ -190,7 +225,7 @@ export default function OpenAPIMCPLanding() {
                 <div className="text-xs text-gray-400 font-mono mt-1 truncate">
                   {gen.packageName}
                 </div>
-              </button>
+              </div>
             ))}
           </div>
         </div>
@@ -223,7 +258,7 @@ export default function OpenAPIMCPLanding() {
         {/* Content Area */}
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
           <div className="w-full max-w-3xl">
-            {!submitted ? (
+            {!actionData?.packageName ? (
               <>
                 {/* Welcome Message */}
                 <div className="text-center mb-12">
@@ -233,58 +268,57 @@ export default function OpenAPIMCPLanding() {
                   </h2>
                   <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                     Convert any OpenAPI specification into a Model Context
-                    Protocol package that works seamlessly with Claude, Cursor,
-                    and other AI tools.
+                    Protocol (MCP) package that works seamlessly with Cursor,
+                    Claude, MCP Client, and other AI tools.
                   </p>
                 </div>
-
                 {/* Input Area */}
-                <div className="relative mb-8">
-                  <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                    <textarea
-                      value={schema}
-                      onChange={(e) => setSchema(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Paste your OpenAPI schema or URL here..."
-                      className="w-full h-40 px-4 py-4 bg-transparent text-gray-900 placeholder-gray-400 resize-none focus:outline-none text-base leading-relaxed pr-16"
-                    />
-                    <button
-                      onClick={handleSubmit}
-                      disabled={!schema.trim()}
-                      className="absolute bottom-3 right-3 flex items-center justify-center w-8 h-8 bg-black text-white rounded-md hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
+                <Form method="post" replace>
+                  <div className="relative mb-8">
+                    <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                      <textarea
+                        name="schema"
+                        placeholder="Paste your OpenAPI schema or URL here..."
+                        className="w-full h-40 px-4 py-4 bg-transparent text-gray-900 placeholder-gray-400 resize-none focus:outline-none text-base leading-relaxed pr-16"
+                        required
+                      />
+                      <button
+                        type="submit"
+                        className="absolute bottom-3 right-3 flex items-center justify-center w-8 h-8 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        />
-                      </svg>
-                    </button>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="mt-3 text-center text-xs text-gray-500">
+                      <span className="inline-flex items-center gap-1">
+                        Press
+                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
+                          Enter
+                        </kbd>
+                        to convert or
+                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
+                          Shift
+                        </kbd>
+                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
+                          Enter
+                        </kbd>
+                        for new line
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-3 text-center text-xs text-gray-500">
-                    <span className="inline-flex items-center gap-1">
-                      Press
-                      <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
-                        Enter
-                      </kbd>
-                      to convert or
-                      <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
-                        Shift
-                      </kbd>
-                      <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
-                        Enter
-                      </kbd>
-                      for new line
-                    </span>
-                  </div>
-                </div>
+                </Form>
 
                 {/* Features */}
                 <div className="grid md:grid-cols-3 gap-6 text-center">
@@ -384,13 +418,13 @@ export default function OpenAPIMCPLanding() {
                   <p className="text-gray-600 mb-6">
                     Your MCP package{" "}
                     <code className="bg-gray-100 px-3 py-1 rounded-md text-black font-mono text-sm border border-gray-200">
-                      {packageName}
+                      {actionData.packageName}
                     </code>{" "}
-                    is ready to use
+                    is ready to use!
                   </p>
                 </div>
 
-                {/* Installation Steps */}
+                {/* Usage Steps */}
                 <div className="space-y-6">
                   <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
                     <div className="flex items-center gap-3 mb-4">
@@ -398,13 +432,41 @@ export default function OpenAPIMCPLanding() {
                         1
                       </div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        Install the package
+                        Add to your MCP tool config
                       </h3>
                     </div>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Add this configuration to your{" "}
+                      <code className="bg-gray-100 px-2 py-1 rounded text-xs border border-gray-200 font-mono">
+                        claude_desktop_config.json
+                      </code>{" "}
+                      or your MCP tool’s equivalent config:
+                    </p>
                     <CodeBlock
-                      code={`npm install ${packageName}`}
-                      language="bash"
+                      code={JSON.stringify(
+                        {
+                          mcpServers: {
+                            [actionData.packageName]: {
+                              command: "npx",
+                              args: ["-y", actionData.packageName],
+                              env: {
+                                API_TOKEN: "<your api token>"
+                              }
+                            },
+                          },
+                        },
+                        null,
+                        2,
+                      )}
+                      language="json"
                     />
+                    {actionData.requiresApiToken && (
+                      <div className="mt-4 text-sm text-red-700">
+                        <strong>Note:</strong> This package could require an API
+                        token. Set the appropriate <code>API_TOKEN</code> value
+                        in your MCP server’s environment
+                      </div>
+                    )}
                   </div>
 
                   <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -413,53 +475,34 @@ export default function OpenAPIMCPLanding() {
                         2
                       </div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        Configure Claude Desktop
-                      </h3>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-4">
-                      Add this configuration to your{" "}
-                      <code className="bg-gray-100 px-2 py-1 rounded text-xs border border-gray-200 font-mono">
-                        claude_desktop_config.json
-                      </code>{" "}
-                      file:
-                    </p>
-                    <CodeBlock
-                      code={JSON.stringify(mcpConfig, null, 2)}
-                      language="json"
-                    />
-                  </div>
-
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-6 h-6 bg-black rounded-full flex items-center justify-center text-white font-medium text-xs">
-                        3
-                      </div>
-                      <h3 className="text-lg font-medium text-gray-900">
-                        Restart and enjoy
+                        Supported in many tools
                       </h3>
                     </div>
                     <p className="text-gray-600">
-                      Restart Claude Desktop to load your new MCP server. Your
-                      API tools will be available in any conversation.
+                      The MCP package works with Cursor, Claude, MCP Client
+                      (open source), and any other MCP-enabled tools.
                     </p>
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3 pt-6">
-                    <button
-                      onClick={() => {
-                        setSubmitted(false);
-                        setSchema("");
-                        setPackageName("");
-                      }}
-                      className="flex-1 px-6 py-3 bg-white text-gray-700 rounded-md hover:bg-gray-50 transition-colors border border-gray-200 font-medium"
-                    >
-                      Convert Another Schema
-                    </button>
-                    <button className="flex-1 px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium">
-                      View Documentation
-                    </button>
-                  </div>
+                  <Form method="post" replace>
+                    <div className="flex flex-col sm:flex-row gap-3 pt-6">
+                      <button
+                        type="submit"
+                        name="_reset"
+                        value="1"
+                        className="flex-1 px-6 py-3 bg-white text-gray-700 rounded-md hover:bg-gray-50 transition-colors border border-gray-200 font-medium"
+                      >
+                        Convert Another Schema
+                      </button>
+                      <button
+                        type="button"
+                        className="flex-1 px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 transition-colors font-medium"
+                      >
+                        View Documentation
+                      </button>
+                    </div>
+                  </Form>
                 </div>
               </>
             )}
