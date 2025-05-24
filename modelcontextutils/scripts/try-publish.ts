@@ -6,7 +6,7 @@ async function main() {
     "https://raw.githubusercontent.com/PokeAPI/pokeapi/4aeb1a63a9420be8a853cf50de28ea556e7aacaf/openapi.yml";
   const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
   await publishNpmPackage({
-    openapiSchema: JSON.stringify(openapi),
+    openapiSchema: JSON.stringify(openapi, null, 2),
     packageName: "pokeapi"
     // version omitted on purpose, will auto-bump or throw if not found
   });
