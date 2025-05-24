@@ -37,7 +37,7 @@ function extractOpenapiValues(textMatches: any[]): string[] {
 }
 
 async function findReposWithMintJson() {
-  const cacheFile = "mint-repos.json";
+  const cacheFile = "scripts/mint-repos.json";
 
   if (existsSync(cacheFile)) {
     const cached = JSON.parse(readFileSync(cacheFile, "utf-8"));
@@ -71,6 +71,14 @@ findReposWithMintJson().then((res) => {
   });
 
   // Store raw response in JSON file
-  writeFileSync("mint-repos.json", JSON.stringify(res));
+  writeFileSync("scripts/mint-repos.json", JSON.stringify(res, null, 2));
+  writeFileSync(
+    "scripts/mint-repos-urls.json",
+    JSON.stringify(
+      [...new Set(res.map((x) => x.repository.url))],
+      null,
+      2,
+    ),
+  );
   console.log("Total unique repos:", arr.length);
 });

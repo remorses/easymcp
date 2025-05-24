@@ -1,0 +1,1889 @@
+{
+  "openapi": "3.1.0",
+  "info": { "version": "1.0.0", "title": "Midday Engine API" },
+  "components": {
+    "securitySchemes": { "Bearer": { "type": "http", "scheme": "bearer" } },
+    "schemas": {
+      "TransactionSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "9293961c-df93-4d6d-a2cc-fc3e353b2d10"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "example": "Transfer to bank account"
+          },
+          "method": { "type": "string", "nullable": true, "example": "other" },
+          "amount": { "type": "number", "example": 100 },
+          "name": { "type": "string", "example": "Vercel Inc." },
+          "date": { "type": "string", "example": "2024-06-12" },
+          "currency": { "type": "string", "example": "USD" },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "posted"],
+            "example": "posted"
+          },
+          "category": {
+            "type": "string",
+            "nullable": true,
+            "example": "travel"
+          },
+          "balance": { "type": "number", "nullable": true, "example": 10000 }
+        },
+        "required": [
+          "id",
+          "description",
+          "method",
+          "amount",
+          "name",
+          "date",
+          "currency",
+          "status",
+          "category",
+          "balance"
+        ]
+      },
+      "TransactionsSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/TransactionSchema" }
+          }
+        },
+        "required": ["data"]
+      },
+      "InstitutionSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "9293961c-df93-4d6d-a2cc-fc3e353b2d10"
+          },
+          "name": { "type": "string", "example": "Wells Fargo Bank" },
+          "logo": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://cdn.midday.ai/institution/9293961c-df93-4d6d-a2cc-fc3e353b2d10.jpg"
+          },
+          "available_history": {
+            "type": "number",
+            "nullable": true,
+            "example": 365
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+            "example": "teller"
+          }
+        },
+        "required": ["id", "name", "logo", "provider"]
+      },
+      "AccountSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "9293961c-df93-4d6d-a2cc-fc3e353b2d10"
+          },
+          "name": { "type": "string", "example": "Savings account" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "depository",
+              "credit",
+              "other_asset",
+              "loan",
+              "other_liability"
+            ],
+            "example": "depository"
+          },
+          "balance": {
+            "type": "object",
+            "properties": {
+              "amount": { "type": "number", "example": 100 },
+              "currency": { "type": "string", "example": "USD" }
+            },
+            "required": ["amount", "currency"]
+          },
+          "currency": { "type": "string", "example": "USD" },
+          "institution": { "$ref": "#/components/schemas/InstitutionSchema" },
+          "enrollment_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Teller/Plaid enrollment id",
+            "example": "add29d44-1b36-4bcc-b317-b2cbc73ab8e7"
+          },
+          "resource_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "GoCardLess reference id",
+            "example": "GBRGZX62Y8"
+          },
+          "expires_at": {
+            "type": "string",
+            "nullable": true,
+            "description": "EnableBanking or GoCardLess access valid until",
+            "example": "2024-03-06"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "balance",
+          "currency",
+          "institution",
+          "enrollment_id",
+          "resource_id",
+          "expires_at"
+        ]
+      },
+      "AccountsSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AccountSchema" }
+          }
+        },
+        "required": ["data"]
+      },
+      "DeleteSchema": {
+        "type": "object",
+        "properties": { "success": { "type": "boolean", "example": true } },
+        "required": ["success"]
+      },
+      "AccountBalanceSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "amount": { "type": "number", "example": 20000 },
+              "currency": { "type": "string", "example": "USD" }
+            },
+            "required": ["amount", "currency"]
+          }
+        },
+        "required": ["data"]
+      },
+      "InstitutionsSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/InstitutionSchema" }
+          }
+        },
+        "required": ["data"]
+      },
+      "UpdateUsageSchema": {
+        "type": "object",
+        "properties": {
+          "data": { "$ref": "#/components/schemas/InstitutionSchema" }
+        },
+        "required": ["data"]
+      },
+      "RatesSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": { "type": "string", "example": "USD" },
+                "date": { "type": "string", "example": "2024-02-29" },
+                "rates": {
+                  "type": "object",
+                  "additionalProperties": { "type": "number" },
+                  "example": {
+                    "EUR": 0.925393,
+                    "GBP": 0.792256,
+                    "SEK": 10,
+                    "BDT": 200
+                  }
+                }
+              },
+              "required": ["source", "date", "rates"]
+            }
+          }
+        },
+        "required": ["data"]
+      },
+      "PlaidLinkSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "link_token": {
+                "type": "string",
+                "example": "ojwmef9823f892n9h98h2efoqed9823hdodfcoj13er92hef"
+              },
+              "expiration": { "type": "string", "example": "2024-06-01" }
+            },
+            "required": ["link_token", "expiration"]
+          }
+        },
+        "required": ["data"]
+      },
+      "PlaidLinkBodySchema": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "example": "9293961c-df93-4d6d-a2cc-fc3e353b2d10"
+          },
+          "language": { "type": "string", "example": "en" },
+          "accessToken": {
+            "type": "string",
+            "description": "Used when initiating the reconnect flow",
+            "example": "ojwmef9823f892n9h98h2efoqed9823hdodfcoj13er92hef"
+          }
+        }
+      },
+      "PlaidExchangeSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "access_token": {
+                "type": "string",
+                "example": "access_9293961c"
+              },
+              "item_id": { "type": "string", "example": "item_9293961c" }
+            },
+            "required": ["access_token", "item_id"]
+          }
+        },
+        "required": ["data"]
+      },
+      "PlaidExchangeBodySchema": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "ojwmef9823f892n9h98h2efoqed9823hdodfcoj13er92hef"
+          }
+        },
+        "required": ["token"]
+      },
+      "GoCardLessLinkSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "link": {
+                "type": "string",
+                "example": "https://ob.gocardless.com/psd2/start/3fa85f64-5717-4562-b3fc-2c963f66afa6/REVOLUT_REVOGB21"
+              }
+            },
+            "required": ["link"]
+          }
+        },
+        "required": ["data"]
+      },
+      "GoCardLessLinkBodySchema": {
+        "type": "object",
+        "properties": {
+          "institutionId": { "type": "string", "example": "REVOLUT_REVOGB21" },
+          "redirect": {
+            "type": "string",
+            "example": "http://www.yourwebpage.com"
+          },
+          "agreement": {
+            "type": "string",
+            "nullable": true,
+            "example": "2dea1b84-97b0-4cb4-8805-302c227587c8"
+          },
+          "reference": { "type": "string", "example": "1234567890" }
+        },
+        "required": ["institutionId", "redirect", "agreement"]
+      },
+      "GoCardLessAgreementSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "2dea1b84-97b0-4cb4-8805-302c227587c8"
+              },
+              "created": { "type": "string", "example": "2024-01-01" },
+              "access_valid_for_days": { "type": "number", "example": 90 },
+              "max_historical_days": { "type": "number", "example": 90 },
+              "institution_id": {
+                "type": "string",
+                "example": "REVOLUT_REVOGB21"
+              },
+              "accepted": { "type": "boolean", "example": true }
+            },
+            "required": [
+              "id",
+              "created",
+              "access_valid_for_days",
+              "max_historical_days",
+              "institution_id",
+              "accepted"
+            ]
+          }
+        },
+        "required": ["data"]
+      },
+      "GoCardLessAgreementBodySchema": {
+        "type": "object",
+        "properties": {
+          "institutionId": { "type": "string", "example": "REVOLUT_REVOGB21" },
+          "transactionTotalDays": { "type": "number", "example": 90 }
+        },
+        "required": ["institutionId", "transactionTotalDays"]
+      },
+      "GoCardLessExchangeSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "example": "2dea1b84-97b0-4cb4-8805-302c227587c8"
+              },
+              "access_valid_for_days": { "type": "number", "example": 90 },
+              "max_historical_days": { "type": "number", "example": 90 },
+              "institution_id": {
+                "type": "string",
+                "example": "REVOLUT_REVOGB21"
+              }
+            },
+            "required": [
+              "id",
+              "access_valid_for_days",
+              "max_historical_days",
+              "institution_id"
+            ]
+          }
+        },
+        "required": ["data"]
+      },
+      "GoCardLessExchangeBodySchema": {
+        "type": "object",
+        "properties": {
+          "institutionId": { "type": "string", "example": "REVOLUT_REVOGB21" },
+          "transactionTotalDays": { "type": "number", "example": 90 }
+        },
+        "required": ["institutionId", "transactionTotalDays"]
+      },
+      "EnableBankingLinkResponseSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string",
+                "example": "https://ob.enablebanking.com/psd2/start/234234234"
+              }
+            },
+            "required": ["url"]
+          }
+        },
+        "required": ["data"]
+      },
+      "EnableBankingLinkBodySchema": {
+        "type": "object",
+        "properties": {
+          "institutionId": { "type": "string", "example": "REVOLUT_REVOGB21" },
+          "country": { "type": "string", "example": "GB" },
+          "teamId": { "type": "string", "example": "1234567890" },
+          "validUntil": { "type": "string", "example": "2024-01-01" },
+          "type": {
+            "type": "string",
+            "enum": ["personal", "business"],
+            "example": "personal"
+          },
+          "state": {
+            "type": "string",
+            "description": "Arbitrary string. Same string will be returned in query parameter when redirecting to the URL passed via redirect_url parameter",
+            "example": "1234567890"
+          }
+        },
+        "required": [
+          "institutionId",
+          "country",
+          "teamId",
+          "validUntil",
+          "type",
+          "state"
+        ]
+      },
+      "EnableBankingSessionSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "session_id": { "type": "string", "example": "234234234" },
+              "expires_at": { "type": "string", "example": "2024-01-01" },
+              "accounts": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "account_reference": {
+                      "type": "string",
+                      "example": "234234234"
+                    },
+                    "account_id": { "type": "string", "example": "234234234" }
+                  },
+                  "required": ["account_reference", "account_id"]
+                }
+              }
+            },
+            "required": ["session_id", "expires_at", "accounts"]
+          }
+        },
+        "required": ["data"]
+      },
+      "ConnectionStatusSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": { "type": "string", "example": "connected" }
+            },
+            "required": ["status"]
+          }
+        },
+        "required": ["data"]
+      },
+      "HealthSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "plaid": {
+                "type": "object",
+                "properties": { "healthy": { "type": "boolean" } },
+                "required": ["healthy"]
+              },
+              "gocardless": {
+                "type": "object",
+                "properties": { "healthy": { "type": "boolean" } },
+                "required": ["healthy"]
+              },
+              "teller": {
+                "type": "object",
+                "properties": { "healthy": { "type": "boolean" } },
+                "required": ["healthy"]
+              },
+              "search": {
+                "type": "object",
+                "properties": { "healthy": { "type": "boolean" } },
+                "required": ["healthy"]
+              }
+            },
+            "required": ["plaid", "gocardless", "teller", "search"]
+          }
+        },
+        "required": ["data"]
+      },
+      "The category of the transaction": { "type": "string", "nullable": true },
+      "The company name": { "type": "string", "nullable": true },
+      "The website of the company": {
+        "type": "string",
+        "nullable": true,
+        "format": "uri"
+      },
+      "Whether the transaction is a recurring subscription payment": {
+        "type": "boolean"
+      },
+      "EnrichSchema": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "$ref": "#/components/schemas/The category of the transaction"
+                },
+                "company": { "$ref": "#/components/schemas/The company name" },
+                "website": {
+                  "$ref": "#/components/schemas/The website of the company"
+                },
+                "subscription": {
+                  "$ref": "#/components/schemas/Whether the transaction is a recurring subscription payment"
+                }
+              },
+              "required": ["category", "company", "website", "subscription"]
+            }
+          }
+        },
+        "required": ["data"]
+      },
+      "The id of the transaction": { "type": "string" },
+      "The date of the transaction": { "type": "string", "nullable": true },
+      "The description of the transaction": { "type": "string" },
+      "The currency of the transaction": { "type": "string" },
+      "The amount of the transaction": { "type": "number" },
+      "The transactions to enrich": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "$ref": "#/components/schemas/The id of the transaction" },
+            "date": {
+              "$ref": "#/components/schemas/The date of the transaction"
+            },
+            "description": {
+              "$ref": "#/components/schemas/The description of the transaction"
+            },
+            "currency": {
+              "$ref": "#/components/schemas/The currency of the transaction"
+            },
+            "amount": {
+              "$ref": "#/components/schemas/The amount of the transaction"
+            },
+            "category": {
+              "$ref": "#/components/schemas/The category of the transaction"
+            }
+          },
+          "required": ["id", "date", "description", "currency", "amount"]
+        },
+        "minItems": 1,
+        "maxItems": 50
+      }
+    },
+    "parameters": {}
+  },
+  "paths": {
+    "/transactions": {
+      "get": {
+        "summary": "Get transactions",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+              "example": "teller"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Get transactions by accountId",
+              "example": "5341343-4234-4c65-815c-t234213442"
+            },
+            "required": true,
+            "name": "accountId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["credit", "depository"],
+              "description": "Get transactions with the correct amount depending on credit or depository",
+              "example": "depository"
+            },
+            "required": true,
+            "name": "accountType",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Used for Teller and Plaid",
+              "example": "token-123"
+            },
+            "required": false,
+            "name": "accessToken",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "boolean",
+              "nullable": true,
+              "default": false,
+              "description": "Get latest transactions",
+              "example": "true"
+            },
+            "required": false,
+            "name": "latest",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve transactions",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TransactionsSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts": {
+      "get": {
+        "summary": "Get Accounts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "GoCardLess reference id",
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "required": false,
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+              "example": "teller"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Teller or Plaid access token",
+              "example": "test_token_ky6igyqi3qxa4"
+            },
+            "required": false,
+            "name": "accessToken",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Plaid institution id",
+              "example": "ins_109508"
+            },
+            "required": false,
+            "name": "institutionId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve accounts",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AccountsSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Accounts",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Account id (GoCardLess)",
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "required": true,
+            "name": "accountId",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+              "example": "teller"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Teller or Plaid access token",
+              "example": "test_token_ky6igyqi3qxa4"
+            },
+            "required": false,
+            "name": "accessToken",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve accounts",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/balance": {
+      "get": {
+        "summary": "Get Account Balance",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Account id",
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "required": true,
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+              "example": "teller"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Teller or Plaid access token",
+              "example": "test_token_ky6igyqi3qxa4"
+            },
+            "required": false,
+            "name": "accessToken",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve account balance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountBalanceSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institutions": {
+      "get": {
+        "summary": "Get Institutions",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "Search query",
+              "example": "Swedbank"
+            },
+            "required": false,
+            "name": "q",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Limit results",
+              "example": "50"
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AT",
+                "BE",
+                "BG",
+                "HR",
+                "CY",
+                "CZ",
+                "DK",
+                "EE",
+                "FI",
+                "FR",
+                "DE",
+                "GR",
+                "HU",
+                "IS",
+                "IE",
+                "IT",
+                "LV",
+                "LI",
+                "LT",
+                "LU",
+                "MT",
+                "NL",
+                "NO",
+                "PL",
+                "PT",
+                "RO",
+                "SK",
+                "SI",
+                "ES",
+                "SE",
+                "GB",
+                "US",
+                "CA"
+              ],
+              "description": "Country code",
+              "example": "BE"
+            },
+            "required": true,
+            "name": "countryCode",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve institutions",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstitutionsSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institutions/{id}/usage": {
+      "put": {
+        "summary": "Update Institution Usage",
+        "parameters": [
+          {
+            "schema": { "type": "string", "example": "STARLING_SRLGGB3L" },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update institution usage",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UpdateUsageSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/institutions/:id": {
+      "get": {
+        "summary": "Get Institution by ID",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "example": "9293961c-df93-4d6d-a2cc-fc3e353b2d10"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve institution by id",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/InstitutionSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Institution not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Institution not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rates": {
+      "get": {
+        "summary": "Get rates",
+        "responses": {
+          "200": {
+            "description": "Retrieve rates",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RatesSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/plaid/link": {
+      "post": {
+        "summary": "Auth Link (Plaid)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/PlaidLinkBodySchema" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retrieve Link",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PlaidLinkSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/plaid/exchange": {
+      "post": {
+        "summary": "Exchange token (Plaid)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlaidExchangeBodySchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retrieve Exchange",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/PlaidExchangeSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/gocardless/link": {
+      "post": {
+        "summary": "Auth link (GoCardLess)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoCardLessLinkBodySchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retrieve Link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoCardLessLinkSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/gocardless/agreement": {
+      "post": {
+        "summary": "Agreement (GoCardLess)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoCardLessAgreementBodySchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retrieve Agreement",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoCardLessAgreementSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/gocardless/exchange": {
+      "post": {
+        "summary": "Exchange token (GoCardLess)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoCardLessExchangeBodySchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retrieve Exchange",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoCardLessExchangeSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/enablebanking/link": {
+      "post": {
+        "summary": "Auth link (EnableBanking)",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnableBankingLinkBodySchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retrieve Link",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnableBankingLinkResponseSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/enablebanking/exchange": {
+      "get": {
+        "summary": "Exchange code (EnableBanking)",
+        "parameters": [
+          {
+            "schema": { "type": "string", "example": "234234234" },
+            "required": true,
+            "name": "code",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve Session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnableBankingSessionSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/status": {
+      "get": {
+        "summary": "Get Connection Status",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "GoCardLess reference id",
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "required": false,
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+              "example": "teller"
+            },
+            "required": true,
+            "name": "provider",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "description": "Teller or Plaid access token",
+              "example": "test_token_ky6igyqi3qxa4"
+            },
+            "required": false,
+            "name": "accessToken",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve connection status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionStatusSchema"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/delete": {
+      "delete": {
+        "summary": "Delete Connection",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "GoCardLess or Enable Banking reference id",
+                    "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "enum": ["teller", "plaid", "gocardless", "enablebanking"],
+                    "example": "teller"
+                  },
+                  "accessToken": {
+                    "type": "string",
+                    "description": "Teller or Plaid access token",
+                    "example": "test_token_ky6igyqi3qxa4"
+                  }
+                },
+                "required": ["provider"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Connection deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": { "success": { "type": "boolean" } },
+                      "required": ["success"]
+                    }
+                  },
+                  "required": ["data"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/gocardless": {
+      "get": {
+        "summary": "Get GoCardless Connections",
+        "responses": {
+          "200": {
+            "description": "Retrieve GoCardless connections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "count": { "type": "number" },
+                    "next": { "type": "string" },
+                    "previous": { "type": "string" },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "string" },
+                          "created": { "type": "string" },
+                          "redirect": { "type": "string" },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "CR",
+                              "GC",
+                              "UA",
+                              "RJ",
+                              "SA",
+                              "GA",
+                              "LN",
+                              "EX"
+                            ]
+                          },
+                          "institution_id": { "type": "string" },
+                          "agreement": { "type": "string" },
+                          "reference": { "type": "string" },
+                          "accounts": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                          },
+                          "user_language": { "type": "string" },
+                          "link": { "type": "string" },
+                          "ssn": { "type": "string" },
+                          "account_selection": { "type": "boolean" },
+                          "redirect_immediate": { "type": "boolean" }
+                        },
+                        "required": [
+                          "id",
+                          "created",
+                          "redirect",
+                          "status",
+                          "institution_id",
+                          "agreement",
+                          "reference",
+                          "accounts",
+                          "user_language",
+                          "link",
+                          "ssn",
+                          "account_selection",
+                          "redirect_immediate"
+                        ]
+                      }
+                    }
+                  },
+                  "required": ["count", "next", "previous", "results"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/:reference": {
+      "get": {
+        "summary": "Get Connection by Reference",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "description": "GoCardLess reference id"
+            },
+            "required": true,
+            "name": "reference",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve connection by reference",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": { "type": "string" },
+                        "accounts": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        }
+                      },
+                      "required": ["id", "accounts"]
+                    }
+                  },
+                  "required": ["data"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Connection not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Connection not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "responses": {
+          "200": {
+            "description": "Retrieve health",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "string", "example": "disconnected" },
+                    "message": {
+                      "type": "string",
+                      "example": "The login details of this item have changed (credentials, MFA, or required user action) and a user login is required to update this information."
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enrich": {
+      "post": {
+        "summary": "Enrich transactions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/The transactions to enrich"
+                  }
+                },
+                "required": ["data"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Enrich a transaction",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/EnrichSchema" }
+              }
+            }
+          },
+          "400": {
+            "description": "Returns an error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "example": "123e4567-e89b-12d3-a456-426655440000"
+                    }
+                  },
+                  "required": ["code", "message", "requestId"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
