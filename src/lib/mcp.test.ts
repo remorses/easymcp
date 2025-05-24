@@ -113,7 +113,17 @@ describe("MCP Plugin", () => {
     const first = simplifyToolCallSnapshot(list);
     expect(first).toMatchInlineSnapshot(`
       {
-        "text": "fetch is not a function",
+        "text": "{
+        "count": 367,
+        "next": "https://pokeapi.co/api/v2/ability/?offset=20&limit=20",
+        "previous": null,
+        "results": [
+          {
+            "name": "stench",
+            "url": "https://pokeapi.co/api/v2/ability/1/"
+          },
+          {
+      ...",
         "type": "text",
       }
     `);
@@ -128,7 +138,17 @@ describe("MCP Plugin", () => {
     expect(resourceContent).toHaveProperty("content");
     expect(simplifyToolCallSnapshot(resourceContent)).toMatchInlineSnapshot(`
       {
-        "text": "fetch is not a function",
+        "text": "{
+        "effect_changes": [],
+        "effect_entries": [
+          {
+            "effect": "Ein Pokémon mit dieser Fähigkeit kann nicht verwirrt werden.\\n\\nWenn ein Pokémon verwirrt ist und diese Fähigkeit erhält, wird es von der confusion geheilt.",
+            "language": {
+              "name": "de",
+              "url": "https://pokeapi.co/api/v2/language/6/"
+            },
+            "short_effect": "Verhindert confusion."
+      ...",
         "type": "text",
       }
     `);

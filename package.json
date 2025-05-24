@@ -5,6 +5,7 @@
     "scripts": {
         "build": "react-router build",
         "dev": "react-router dev",
+        "test": "doppler run -- pnpm vitest",
         "start": "node ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
     },

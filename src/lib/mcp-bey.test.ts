@@ -11,10 +11,16 @@ describe("MCP Plugin", () => {
   let server: Server;
   let client: Client;
   let cleanup: () => Promise<void>;
+  let API_TOKEN = process.env.BEY_API_KEY;
+  process.env.API_TOKEN = API_TOKEN;
+
+  if (!API_TOKEN) {
+    throw new Error("API_TOKEN is not set");
+  }
 
   beforeAll(async () => {
     const openapi = JSON.parse(
-      fs.readFileSync("../openapis/bye.json", "utf8"),
+      fs.readFileSync("./openapis/results/bey_dev.json", "utf8"),
     ) as any;
     const res = createMCPServer({
       openapi,
@@ -24,11 +30,11 @@ describe("MCP Plugin", () => {
 
     const connection = await connectClientServer(server);
     client = connection.client;
-    cleanup = connection.cleanup;
+    cleanup = () => connection.cleanup();
   });
 
   afterAll(async () => {
-    await cleanup();
+    await cleanup?.();
   });
 
   it("should list available tools", async () => {
@@ -40,32 +46,34 @@ describe("MCP Plugin", () => {
       {
         "tools": [
           {
-            "description": "Abilities provide passive effects for Pokémon in battle or in the overworld. Pokémon have multiple possible abilities but can have only one ability at a time. Check out [Bulbapedia](http://bulbapedia.bulbagarden.net/wiki/Ability) for greater detail.",
+            "description": "GET /v1/avatar",
             "inputSchema": {
-              "properties": {
-                "query": {
-                  "properties": {
-                    "limit": {
-                      "type": "integer",
-                    },
-                    "offset": {
-                      "type": "integer",
-                    },
-                    "q": {
-                      "type": "string",
-                    },
-                  },
-                  "required": undefined,
-                  "type": "object",
-                },
-              },
+              "properties": {},
               "required": undefined,
               "type": "object",
             },
-            "name": "GET /api/v2/ability/",
+            "name": "GET /v1/avatar",
           },
           {
-            "description": "Abilities provide passive effects for Pokémon in battle or in the overworld. Pokémon have multiple possible abilities but can have only one ability at a time. Check out [Bulbapedia](http://bulbapedia.bulbagarden.net/wiki/Ability) for greater detail.",
+            "description": "POST /v1/session",
+            "inputSchema": {
+              "properties": {},
+              "required": undefined,
+              "type": "object",
+            },
+            "name": "POST /v1/session",
+          },
+          {
+            "description": "GET /v1/session",
+            "inputSchema": {
+              "properties": {},
+              "required": undefined,
+              "type": "object",
+            },
+            "name": "GET /v1/session",
+          },
+          {
+            "description": "GET /v1/session/{id}",
             "inputSchema": {
               "properties": {
                 "params": {
@@ -83,7 +91,7 @@ describe("MCP Plugin", () => {
               "required": undefined,
               "type": "object",
             },
-            "name": "GET /api/v2/ability/{id}/",
+            "name": "GET /v1/session/{id}",
           },
         ],
       }
@@ -92,12 +100,22 @@ describe("MCP Plugin", () => {
 
   it("should call list endpoint", async () => {
     const list = (await client.callTool({
-      name: "GET /api/v2/ability/",
+      name: "GET /v1/avatar",
     })) as any;
     const first = simplifyToolCallSnapshot(list);
     expect(first).toMatchInlineSnapshot(`
       {
-        "text": "fetch is not a function",
+        "text": "[
+        {
+          "id": "1c7a7291-ee28-4800-8f34-acfbfc2d07c0",
+          "name": "Zaid - Stock avatar (V2)"
+        },
+        {
+          "id": "f21b501b-2b49-452e-a65a-d92722052e51",
+          "name": "Andre - Stock avatar (V2)"
+        },
+        {
+      ...",
         "type": "text",
       }
     `);
@@ -105,17 +123,25 @@ describe("MCP Plugin", () => {
 
   it("should call specific resource endpoint", async () => {
     const resourceContent = (await client.callTool({
-      name: "GET /api/v2/ability/{id}/",
-      arguments: {
-        params: { id: "own-tempo" },
-      },
+      name: "POST /v1/session",
+      arguments: {},
     })) as any;
 
     expect(resourceContent).toBeDefined();
     expect(resourceContent).toHaveProperty("content");
     expect(simplifyToolCallSnapshot(resourceContent)).toMatchInlineSnapshot(`
       {
-        "text": "fetch is not a function",
+        "text": "{
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body"
+            ],
+            "msg": "Field required",
+            "input": null
+          }
+      ...",
         "type": "text",
       }
     `);

@@ -87,7 +87,7 @@ function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.Opera
   if (operation?.security && operation.security.length > 0) {
     const firstSecurityReq = operation.security[0];
     const operationSchemeNames = Object.keys(firstSecurityReq);
-    
+
     for (const schemeName of operationSchemeNames) {
       const scheme = securitySchemes[schemeName];
       if (scheme) {
@@ -132,13 +132,14 @@ function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.Opera
 }
 
 type Fetch = typeof fetch;
+const defaultFetch = fetch
 
 export function createMCPServer({
   name = "spiceflow",
   version = "1.0.0",
   openapi,
   basePath = "",
-  fetch,
+  fetch=defaultFetch,
   paths,
   baseUrl = "",
 }: {
