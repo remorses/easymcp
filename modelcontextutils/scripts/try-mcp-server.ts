@@ -2,7 +2,7 @@ import fs from "fs";
 import YAML from "js-yaml";
 import path from "path";
 
-import { createMCPServer, StdioServerTransport } from "../src/lib/mcp.ts";
+import { createMCPServer, StdioServerTransport } from "../src/lib/mcp.js";
 
 async function main() {
   const name = "pokeapi";

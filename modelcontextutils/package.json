@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "scripts": {},
+  "scripts": {
+    "prepublishOnly": "pnpm tsc"
+  },
   "keywords": [],
   "author": "remorses <beats.by.morse@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
     "dereference-json-schema": "^0.2.1"
-
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",

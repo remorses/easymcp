@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { createMCPServer } from "./mcp.ts";
+import { createMCPServer } from "./mcp.js";
 
 // Utility function to connect client and server
 export async function connectClientServer(

@@ -1,4 +1,4 @@
-import { publishNpmPackage } from "../src/lib/npm-publish";
+import { publishNpmPackage } from "../src/lib/npm-publish.js";
 import YAML from "js-yaml";
 
 async function main() {

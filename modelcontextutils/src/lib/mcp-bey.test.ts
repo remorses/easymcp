@@ -4,8 +4,8 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { connectClientServer, simplifyToolCallSnapshot } from "./mcp.test.ts";
-import { createMCPServer } from "./mcp.ts";
+import { connectClientServer, simplifyToolCallSnapshot } from "./mcp.test.js";
+import { createMCPServer } from "./mcp.js";
 
 describe("MCP Plugin", () => {
   let server: Server;
