@@ -1,5 +1,5 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { dereferenceSync } from "dereference-json-schema";
+import deref  from "dereference-json-schema";
 
 import {
   CallToolRequestSchema,
@@ -164,7 +164,7 @@ export function createMCPServer({
       },
     },
   );
-  openapi = dereferenceSync(openapi);
+  openapi = deref.dereferenceSync(openapi);
   if (!baseUrl) {
     baseUrl = extractApiFromBaseUrl(openapi);
   }
