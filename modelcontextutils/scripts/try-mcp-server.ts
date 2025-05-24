@@ -17,7 +17,7 @@ async function main() {
     "https://raw.githubusercontent.com/PokeAPI/pokeapi/4aeb1a63a9420be8a853cf50de28ea556e7aacaf/openapi.yml";
   const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
 
-  const { server } = createMCPServer({ openapi, name, version });
+  const { server } = createMCPServer({ openapi, name });
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error(`Started MCP STDIO server for ${name}`);

@@ -8,6 +8,7 @@ import {
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { OpenAPIV3 } from "openapi-types";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
 function getOperationRequestBody(
   operation: OpenAPIV3.OperationObject,
