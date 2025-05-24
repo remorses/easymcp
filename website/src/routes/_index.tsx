@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Form, useActionData } from "react-router";
+import { Form, useActionData, useNavigation } from "react-router";
 
 interface Generation {
   id: string;
@@ -68,6 +68,8 @@ export default function OpenAPIMCPLanding() {
         timestamp: number;
       }
     | undefined;
+
+  const navigation = useNavigation();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [generations, setGenerations] = useState<Generation[]>([
@@ -284,21 +286,12 @@ export default function OpenAPIMCPLanding() {
                       />
                       <button
                         type="submit"
-                        className="absolute bottom-3 right-3 flex items-center justify-center w-8 h-8 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
+                        className="absolute bottom-3 right-3 flex items-center justify-center px-2 h-8 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                        disabled={navigation.state === "submitting" || navigation.state === "loading"}
                       >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                          />
-                        </svg>
+                        {(navigation.state === "submitting" || navigation.state === "loading")
+                          ? "Loading..."
+                          : "Generate MCP Server"}
                       </button>
                     </div>
                     <div className="mt-3 text-center text-xs text-gray-500">
