@@ -35,7 +35,7 @@ export async function publishNpmPackage({
   if (!resolvedVersion) {
     resolvedVersion = await getNextNpmVersionOrThrow(
       `${NPM_ORG_SCOPE}/${packageName}`,
-    ).catch((e) => "0.0.0");
+    ).catch((e) => "0.0.1");
   }
 
   // 1. Prepare temp dir

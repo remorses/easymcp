@@ -280,6 +280,12 @@ export default function OpenAPIMCPLanding() {
                     <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                       <textarea
                         name="schema"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            e.currentTarget.form?.requestSubmit();
+                          }
+                        }}
                         placeholder="Paste your OpenAPI schema or URL here..."
                         className="w-full h-40 px-4 py-4 bg-transparent text-gray-900 placeholder-gray-400 resize-none focus:outline-none text-base leading-relaxed pr-16"
                         required
@@ -287,9 +293,13 @@ export default function OpenAPIMCPLanding() {
                       <button
                         type="submit"
                         className="absolute bottom-3 right-3 flex items-center justify-center px-2 h-8 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                        disabled={navigation.state === "submitting" || navigation.state === "loading"}
+                        disabled={
+                          navigation.state === "submitting" ||
+                          navigation.state === "loading"
+                        }
                       >
-                        {(navigation.state === "submitting" || navigation.state === "loading")
+                        {navigation.state === "submitting" ||
+                        navigation.state === "loading"
                           ? "Loading..."
                           : "Generate MCP Server"}
                       </button>
@@ -443,8 +453,8 @@ export default function OpenAPIMCPLanding() {
                               command: "npx",
                               args: ["-y", actionData.packageName],
                               env: {
-                                API_TOKEN: "<your api token>"
-                              }
+                                API_TOKEN: "<your api token>",
+                              },
                             },
                           },
                         },
