@@ -441,12 +441,13 @@ Examples:
         # Generate filename from domain
         parsed_url = urlparse(sitemap_url)
         domain = parsed_url.netloc.replace('docs.', '').replace('www.', '').replace('.', '_')
-        base_filename = f"{domain}_api"
+        base_filename = f"{domain}"
     
     # Save files
     saved_files = []
 
-    os.makedirs('results')
+    if not os.path.exists('results'):
+        os.makedirs('results')  
     
     if not args.yaml_only:
         # Save as JSON
