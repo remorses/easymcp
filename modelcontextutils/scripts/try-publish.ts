@@ -7,8 +7,8 @@ async function main() {
   const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
   await publishNpmPackage({
     openapiSchema: JSON.stringify(openapi),
-    packageName: "pokeapi",
-    version: "0.0.0",
+    packageName: "pokeapi"
+    // version omitted on purpose, will auto-bump or throw if not found
   });
 }
 

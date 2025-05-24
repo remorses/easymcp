@@ -25,14 +25,20 @@ export async function publishNpmPackage({
 }: {
   packageName: string;
   openapiSchema: string;
-  version: string;
+  version?: string;
 }): Promise<void> {
+  // 0. If version isn't provided, try to fetch latest and bump patch; else throw error if none found.
+  let resolvedVersion = version;
+  if (!resolvedVersion) {
+    resolvedVersion = await getNextNpmVersionOrThrow(packageName);
+  }
+
   // 1. Prepare temp dir
   const tempDirPrefix = path.join("/tmp", `modelcontext-npmpub-`);
   const tempDir = await fs.promises.mkdtemp(tempDirPrefix);
 
   // 2. Write package files
-  const files = generateNpmPackageFiles(packageName, openapiSchema, version);
+  const files = generateNpmPackageFiles(packageName, openapiSchema, resolvedVersion);
   for (const file of files) {
     const filePath = path.join(tempDir, file.path);
     await fs.promises.writeFile(filePath, file.content, {
@@ -80,7 +86,7 @@ export async function publishNpmPackage({
   const fullPackageName = `@modelcontext/${packageName}`; // must match used above
   // Encode for npm web url: scoped @ -> %40
   const scopedEncoded = fullPackageName.replace("@", "%40");
-  const pkgUrl = `https://www.npmjs.com/package/${scopedEncoded}/v/${version}`;
+  const pkgUrl = `https://www.npmjs.com/package/${scopedEncoded}`;
   console.log(`Published npm package to: ${pkgUrl}`);
 }
 
@@ -189,4 +195,42 @@ main();
       content: binJsContent,
     },
   ];
+}
+
+/**
+ * Helper to fetch latest version of @modelcontext/{packageName} from npm and return next patch version.
+ * Throws if package not found.
+ */
+async function getNextNpmVersionOrThrow(packageName: string): Promise<string> {
+  const registryUrl = `https://registry.npmjs.org/@modelcontext/${packageName}`;
+  let resp: Response;
+  try {
+    // @ts-ignore: global fetch for node >= 18, you may polyfill if needed
+    resp = await fetch(registryUrl);
+  } catch (err) {
+    throw new Error(
+      `Could not fetch npm registry info for @modelcontext/${packageName}: ${(err as Error).message}`,
+    );
+  }
+  if (!resp.ok) {
+    throw new Error(
+      `Could not find npm package @modelcontext/${packageName} in registry (status ${resp.status}) and no version specified.`,
+    );
+  }
+  const pkgData = await resp.json();
+  if (!pkgData["dist-tags"] || !pkgData["dist-tags"].latest) {
+    throw new Error(
+      `No latest version found for @modelcontext/${packageName} in registry response.`,
+    );
+  }
+  const currentVersion = pkgData["dist-tags"].latest;
+  // Simple semver patch bump (1.2.3 -> 1.2.4)
+  const parts = currentVersion.split(".");
+  if (parts.length !== 3 || parts.some((x: any) => isNaN(Number(x)))) {
+    throw new Error(
+      `Could not parse current package version: '${currentVersion}' from npm.`
+    );
+  }
+  const nextPatch = Number(parts[2]) + 1;
+  return `${parts[0]}.${parts[1]}.${nextPatch}`;
 }
