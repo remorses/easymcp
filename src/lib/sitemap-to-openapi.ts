@@ -100,35 +100,44 @@ function parseOpenAPIFromYaml(
   method: string;
   spec: OpenAPIV3.OperationObject;
   components?: OpenAPIV3.ComponentsObject;
+  securitySchemeNames?: string[];
 } | null {
   try {
     const parsed = yaml.load(yamlContent) as any;
 
-    if (parsed) {
-      // Build OpenAPI operation specification from custom format
+    if (parsed && parsed.paths) {
       const spec: any = {};
+      const pathData = parsed.paths;
+
+      // Use path and method from YAML if available, otherwise use header values
+      const path = pathData.path || headerPath;
+      const method = pathData.method || headerMethod;
+      const securitySchemeNames: string[] = [];
 
       // Handle parameters from request
-      if (parsed.request) {
-        const request = parsed.request;
+      if (pathData.request) {
+        const request = pathData.request;
 
         // Add parameters (path, query, header, cookie)
         const parameters: any[] = [];
 
         if (request.parameters) {
           // Path parameters
-          if (request.parameters.path) {
+          if (request.parameters.path && Object.keys(request.parameters.path).length > 0) {
             Object.entries(request.parameters.path).forEach(
               ([name, param]: [string, any]) => {
                 parameters.push({
                   name,
                   in: "path",
-                  required: param.schema?.[0]?.required || true,
+                  required: param.schema?.[0]?.required !== false,
                   schema: param.schema?.[0]
                     ? {
-                        type: param.schema[0].type,
+                        type: param.schema[0].type || "string",
                         ...(param.schema[0].title && {
                           title: param.schema[0].title,
+                        }),
+                        ...(param.schema[0].description && {
+                          description: param.schema[0].description,
                         }),
                       }
                     : { type: "string" },
@@ -138,7 +147,7 @@ function parseOpenAPIFromYaml(
           }
 
           // Query parameters
-          if (request.parameters.query) {
+          if (request.parameters.query && Object.keys(request.parameters.query).length > 0) {
             Object.entries(request.parameters.query).forEach(
               ([name, param]: [string, any]) => {
                 parameters.push({
@@ -151,12 +160,11 @@ function parseOpenAPIFromYaml(
             );
           }
 
-          // Header parameters
-          if (request.parameters.header) {
+          // Header parameters (skip API key headers as they're handled in security)
+          if (request.parameters.header && Object.keys(request.parameters.header).length > 0) {
             Object.entries(request.parameters.header).forEach(
               ([name, param]: [string, any]) => {
-                if (name !== "x-api-key") {
-                  // Skip API key headers, they'll be in security
+                if (!name.toLowerCase().includes("api") && param.type !== "apiKey") {
                   parameters.push({
                     name,
                     in: "header",
@@ -175,47 +183,163 @@ function parseOpenAPIFromYaml(
 
         // Add request body if present
         if (request.body && Object.keys(request.body).length > 0) {
-          spec.requestBody = request.body;
+          const requestBody: any = {
+            content: {},
+          };
+
+          // Process each content type in the body
+          Object.entries(request.body).forEach(([contentType, bodyDef]: [string, any]) => {
+            if (bodyDef.schemaArray && bodyDef.schemaArray.length > 0) {
+              const schema = bodyDef.schemaArray[0];
+              requestBody.content[contentType] = {
+                schema: convertSchema(schema),
+              };
+
+              if (bodyDef.examples) {
+                requestBody.content[contentType].examples = bodyDef.examples;
+              }
+            }
+          });
+
+          if (Object.keys(requestBody.content).length > 0) {
+            spec.requestBody = requestBody;
+          }
         }
 
         // Add security if present
-        if (request.security) {
-          spec.security = request.security;
+        if (request.security && Array.isArray(request.security)) {
+          spec.security = request.security.map((securityItem: any) => {
+            if (securityItem.parameters?.header) {
+              // Convert Mintlify security format to OpenAPI format
+              const securitySchemes: any = {};
+              Object.entries(securityItem.parameters.header).forEach(([name, header]: [string, any]) => {
+                if (header.type === 'apiKey') {
+                  const schemeName = securityItem.title || name;
+                  securitySchemes[schemeName] = [];
+                  securitySchemeNames.push(schemeName);
+                }
+              });
+              return securitySchemes;
+            }
+            return securityItem;
+          });
         }
       }
 
       // Handle responses
-      if (parsed.response) {
-        spec.responses = parsed.response;
+      if (pathData.response) {
+        const responses: any = {};
+        
+        Object.entries(pathData.response).forEach(([statusCode, responseDef]: [string, any]) => {
+          const response: any = {};
+          
+          if (responseDef.description) {
+            response.description = responseDef.description;
+          }
+          
+          // Process response content
+          if (typeof responseDef === 'object' && !responseDef.description) {
+            response.content = {};
+            Object.entries(responseDef).forEach(([contentType, contentDef]: [string, any]) => {
+              if (contentDef.schemaArray && contentDef.schemaArray.length > 0) {
+                const schema = contentDef.schemaArray[0];
+                response.content[contentType] = {
+                  schema: convertSchema(schema),
+                };
+
+                if (contentDef.examples) {
+                  response.content[contentType].examples = contentDef.examples;
+                }
+              }
+              
+              if (contentDef.description) {
+                response.description = contentDef.description;
+              }
+            });
+          }
+          
+          if (!response.description) {
+            response.description = 'Successful response';
+          }
+          
+          responses[statusCode] = response;
+        });
+        
+        spec.responses = responses;
       }
 
       // Handle summary and description
-      if (parsed.summary) {
-        spec.summary = parsed.summary;
+      if (pathData.summary) {
+        spec.summary = pathData.summary;
       }
 
-      if (parsed.description) {
-        spec.description = parsed.description;
+      if (pathData.description) {
+        spec.description = pathData.description;
       }
 
       // Add deprecated flag if present
-      if (parsed.deprecated !== undefined) {
-        spec.deprecated = parsed.deprecated;
+      if (pathData.deprecated !== undefined) {
+        spec.deprecated = pathData.deprecated;
       }
 
       // Handle tags
-      if (parsed.tags) {
-        spec.tags = parsed.tags;
+      if (pathData.tags) {
+        spec.tags = pathData.tags;
       }
 
-      // Extract components
-      const components = parsed.components || undefined;
+      // Extract and process components
+      let components = parsed.components || {};
+      
+      // Extract schemas from request body and responses
+      const extractedSchemas: any = {};
+      
+      // Extract schemas from request body
+      if (pathData.request?.body) {
+        Object.values(pathData.request.body).forEach((bodyDef: any) => {
+          if (bodyDef.schemaArray) {
+            bodyDef.schemaArray.forEach((schema: any) => {
+              if (schema.refIdentifier && schema.title) {
+                const schemaName = schema.title;
+                extractedSchemas[schemaName] = convertSchema(schema);
+              }
+            });
+          }
+        });
+      }
+      
+      // Extract schemas from responses
+      if (pathData.response) {
+        Object.values(pathData.response).forEach((responseDef: any) => {
+          Object.values(responseDef).forEach((contentDef: any) => {
+            if (contentDef.schemaArray) {
+              contentDef.schemaArray.forEach((schema: any) => {
+                if (schema.refIdentifier && schema.title) {
+                  const schemaName = schema.title;
+                  extractedSchemas[schemaName] = convertSchema(schema);
+                }
+              });
+            }
+          });
+        });
+      }
+      
+      // Merge extracted schemas with existing components
+      if (Object.keys(extractedSchemas).length > 0) {
+        if (!components.schemas) {
+          components.schemas = {};
+        }
+        components.schemas = {
+          ...components.schemas,
+          ...extractedSchemas,
+        };
+      }
 
       return {
-        path: headerPath,
-        method: headerMethod,
+        path,
+        method,
         spec: spec as OpenAPIV3.OperationObject,
-        components,
+        components: Object.keys(components).length > 0 ? components : undefined,
+        securitySchemeNames,
       };
     }
 
@@ -224,6 +348,87 @@ function parseOpenAPIFromYaml(
     console.error("Error parsing YAML:", error);
     return null;
   }
+}
+
+// Helper function to convert Mintlify schema format to OpenAPI schema format
+function convertSchema(schema: any): any {
+  if (!schema) return {};
+
+  // Handle $ref first
+  if (schema.$ref) {
+    return { $ref: schema.$ref };
+  }
+
+  // Handle refIdentifier (convert to $ref)
+  if (schema.refIdentifier) {
+    return { $ref: schema.refIdentifier };
+  }
+
+  const converted: any = {};
+
+  if (schema.type) converted.type = schema.type;
+  if (schema.title) converted.title = schema.title;
+  if (schema.description) converted.description = schema.description;
+  if (schema.examples) converted.examples = schema.examples;
+  if (schema.format) converted.format = schema.format;
+  if (schema.default !== undefined) converted.default = schema.default;
+
+  // Handle properties for object types
+  if (schema.properties) {
+    converted.properties = {};
+    Object.entries(schema.properties).forEach(([key, prop]: [string, any]) => {
+      if (prop.allOf && prop.allOf.length > 0) {
+        // For allOf, use the first schema in the array
+        converted.properties[key] = convertSchema(prop.allOf[0]);
+      } else {
+        converted.properties[key] = convertSchema(prop);
+      }
+    });
+  }
+
+  // Handle required properties - check both 'required' and 'requiredProperties'
+  if (schema.requiredProperties) {
+    converted.required = schema.requiredProperties;
+  } else if (schema.required && Array.isArray(schema.required)) {
+    converted.required = schema.required;
+  }
+
+  // Handle array items
+  if (schema.items) {
+    if (schema.items.allOf && schema.items.allOf.length > 0) {
+      // For items with allOf, extract the $ref if present
+      const firstItem = schema.items.allOf[0];
+      if (firstItem.$ref) {
+        converted.items = { $ref: firstItem.$ref };
+      } else {
+        converted.items = convertSchema(firstItem);
+      }
+    } else {
+      converted.items = convertSchema(schema.items);
+    }
+  }
+
+  // Handle allOf - convert each item
+  if (schema.allOf && schema.allOf.length > 0) {
+    if (schema.allOf.length === 1) {
+      // If only one item in allOf, flatten it
+      return convertSchema(schema.allOf[0]);
+    } else {
+      converted.allOf = schema.allOf.map((item: any) => convertSchema(item));
+    }
+  }
+
+  // Handle anyOf
+  if (schema.anyOf) {
+    converted.anyOf = schema.anyOf.map((item: any) => convertSchema(item));
+  }
+
+  // Handle oneOf
+  if (schema.oneOf) {
+    converted.oneOf = schema.oneOf.map((item: any) => convertSchema(item));
+  }
+
+  return converted;
 }
 
 async function processMarkdownFiles(
@@ -248,6 +453,8 @@ async function processMarkdownFiles(
     ];
   }
 
+  const securitySchemes = new Set<string>();
+
   for (const url of urls) {
     try {
       const markdownContent = await fetchMarkdown(url);
@@ -256,6 +463,7 @@ async function processMarkdownFiles(
       const yamlBlocks = extractYamlCodeBlocks(markdownContent, url);
 
       for (const yamlBlock of yamlBlocks) {
+        console.log(yamlBlock.content)
         const pathInfo = parseOpenAPIFromYaml(
           yamlBlock.content,
           yamlBlock.method,
@@ -263,13 +471,18 @@ async function processMarkdownFiles(
         );
 
         if (pathInfo) {
-          const { path, method, spec, components } = pathInfo;
+          const { path, method, spec, components, securitySchemeNames } = pathInfo;
 
           if (!openApiSchema.paths[path]) {
             openApiSchema.paths[path] = {};
           }
 
           (openApiSchema.paths[path] as any)[method] = spec;
+
+          // Track security schemes
+          if (securitySchemeNames) {
+            securitySchemeNames.forEach(name => securitySchemes.add(name));
+          }
 
           // Merge components if they exist
           if (components) {
@@ -299,6 +512,24 @@ async function processMarkdownFiles(
     } catch (error) {
       console.error(`Error processing ${url}:`, error);
     }
+  }
+
+  // Add security schemes to components
+  if (securitySchemes.size > 0) {
+    if (!openApiSchema.components) {
+      openApiSchema.components = {};
+    }
+    if (!openApiSchema.components.securitySchemes) {
+      openApiSchema.components.securitySchemes = {};
+    }
+
+    securitySchemes.forEach(schemeName => {
+      openApiSchema.components!.securitySchemes![schemeName] = {
+        type: "apiKey",
+        in: "header",
+        name: schemeName.toLowerCase().includes("x-api-key") ? "x-api-key" : "X-API-KEY",
+      };
+    });
   }
 
   return openApiSchema;

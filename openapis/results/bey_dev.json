@@ -6,14 +6,222 @@
   },
   "paths": {
     "/v1/avatar": {
-      "get": {}
+      "get": {
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Response List Avatars V1 Avatar Get",
+                  "items": {
+                    "$ref": "#/components/schemas/AvatarResponseModel"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "name": "John Doe"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/session": {
-      "post": {},
-      "get": {}
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SessionRequestModel"
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                    "livekit_url": "wss://<your-domain>.livekit.cloud",
+                    "livekit_token": "<your-livekit-token>"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseModel"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "01234567-89ab-cdef-0123-456789abcdef",
+                      "created_at": "2022-01-01T00:00:00Z",
+                      "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                      "livekit_url": "wss://<your-domain>.livekit.cloud",
+                      "livekit_token": "<your-livekit-token>"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Response List Session V1 Session Get",
+                  "items": {
+                    "$ref": "#/components/schemas/SessionResponseModel"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "created_at": "2022-01-01T00:00:00Z",
+                        "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "livekit_url": "wss://<your-domain>.livekit.cloud",
+                        "livekit_token": "<your-livekit-token>"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/session/{id}": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Id"
+            }
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SessionResponseModel"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "01234567-89ab-cdef-0123-456789abcdef",
+                      "created_at": "2022-01-01T00:00:00Z",
+                      "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                      "livekit_url": "wss://<your-domain>.livekit.cloud",
+                      "livekit_token": "<your-livekit-token>"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     }
   },
   "servers": [
@@ -84,6 +292,9 @@
         ],
         "title": "ValidationError"
       },
+      "SessionRequestModel": {
+        "$ref": "#/components/schemas/SessionRequestModel"
+      },
       "SessionResponseModel": {
         "properties": {
           "id": {
@@ -138,6 +349,16 @@
         ],
         "title": "SessionResponseModel",
         "description": "Represents a Beyond Presence Real-Time API session."
+      },
+      "HTTPValidationError": {
+        "$ref": "#/components/schemas/HTTPValidationError"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
       }
     }
   }

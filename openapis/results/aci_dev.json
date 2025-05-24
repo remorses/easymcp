@@ -6,41 +6,1364 @@
   },
   "paths": {
     "/v1/app-configurations": {
-      "post": {},
-      "get": {}
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppConfigurationCreate"
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "app_name": "<string>",
+                    "security_scheme": "no_auth",
+                    "security_scheme_overrides": {},
+                    "all_functions_enabled": true,
+                    "enabled_functions": [
+                      "<string>"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppConfigurationPublic"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "app_names",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "required": false,
+                "title": "App Names",
+                "description": "Filter by app names."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "App Names",
+                "description": "Filter by app names."
+              }
+            ]
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Limit",
+                "description": "Maximum number of results per response.",
+                "maximum": 1000,
+                "minimum": 1,
+                "default": 100
+              }
+            ]
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Offset",
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "default": 0
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Response App-Configurations-List App Configurations",
+                  "items": {
+                    "$ref": "#/components/schemas/AppConfigurationPublic"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "app_name": "<string>",
+                        "security_scheme": "no_auth",
+                        "security_scheme_overrides": {},
+                        "enabled": true,
+                        "all_functions_enabled": true,
+                        "enabled_functions": [
+                          "<string>"
+                        ],
+                        "created_at": "2023-11-07T05:31:56Z",
+                        "updated_at": "2023-11-07T05:31:56Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/app-configurations/{app_name}": {
-      "delete": {},
-      "get": {},
-      "patch": {}
+      "delete": {
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "any"
+                },
+                "examples": {
+                  "example": {
+                    "value": "<any>"
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppConfigurationPublic"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      },
+      "patch": {
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AppConfigurationUpdate"
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "security_scheme": "no_auth",
+                    "security_scheme_overrides": {},
+                    "enabled": true,
+                    "all_functions_enabled": true,
+                    "enabled_functions": [
+                      "<string>"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppConfigurationPublic"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "security_scheme": "no_auth",
+                      "security_scheme_overrides": {},
+                      "enabled": true,
+                      "all_functions_enabled": true,
+                      "enabled_functions": [
+                        "<string>"
+                      ],
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/apps/{app_name}": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "App Name"
+            }
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppBasicWithFunctions"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "name": "<string>",
+                      "description": "<string>",
+                      "functions": [
+                        {
+                          "name": "<string>",
+                          "description": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/apps/search": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "intent",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              }
+            ]
+          },
+          {
+            "name": "configured_only",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "boolean",
+                "required": false,
+                "title": "Configured Only",
+                "description": "If true, only return apps that have been configured.",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "categories",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "required": false,
+                "title": "Categories",
+                "description": "List of categories for filtering."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Categories",
+                "description": "List of categories for filtering."
+              }
+            ]
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Limit",
+                "description": "Maximum number of Apps per response.",
+                "maximum": 1000,
+                "minimum": 1,
+                "default": 100
+              }
+            ]
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Offset",
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "default": 0
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Response Apps-Search Apps",
+                  "items": {
+                    "$ref": "#/components/schemas/AppBasic"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "name": "<string>",
+                        "description": "<string>"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/functions/{function_name}/execute": {
-      "post": {}
+      "post": {
+        "parameters": [
+          {
+            "name": "function_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Function Name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FunctionExecute"
+              },
+              "examples": {
+                "example": {
+                  "value": {
+                    "function_input": {},
+                    "linked_account_owner_id": "<string>"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FunctionExecutionResult"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "success": true,
+                      "data": "<any>",
+                      "error": "<string>"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/functions/{function_name}/definition": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "function_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Function Name"
+            }
+          },
+          {
+            "name": "inference_provider",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "enum<string>",
+                "enum": [
+                  "openai",
+                  "anthropic"
+                ],
+                "required": false,
+                "title": "InferenceProvider",
+                "description": "The inference provider, which determines the format of the function definition."
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAIFunctionDefinition"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "type": "function",
+                      "function": {
+                        "name": "<string>",
+                        "strict": true,
+                        "description": "<string>",
+                        "parameters": {}
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/functions/search": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "app_names",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "required": false,
+                "title": "App Names",
+                "description": "List of app names for filtering functions."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "App Names",
+                "description": "List of app names for filtering functions."
+              }
+            ]
+          },
+          {
+            "name": "intent",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Intent",
+                "description": "Natural language intent for vector similarity sorting. Results will be sorted by relevance to the intent."
+              }
+            ]
+          },
+          {
+            "name": "configured_only",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "boolean",
+                "required": false,
+                "title": "Configured Only",
+                "description": "If true, only returns functions of apps that are configured.",
+                "default": false
+              }
+            ]
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Limit",
+                "description": "Maximum number of Apps per response.",
+                "maximum": 1000,
+                "minimum": 1,
+                "default": 100
+              }
+            ]
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "integer",
+                "required": false,
+                "title": "Offset",
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "default": 0
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Response Functions-Search Functions",
+                  "items": {
+                    "$ref": "#/components/schemas/FunctionBasic"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "name": "<string>",
+                        "description": "<string>"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/linked-accounts/{linked_account_id}": {
-      "delete": {},
-      "get": {}
+      "delete": {
+        "parameters": [
+          {
+            "name": "linked_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Linked Account Id"
+            }
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "content": {
+              "_mintlify/placeholder": {
+                "schema": {
+                  "type": "any",
+                  "description": "Successful Response"
+                },
+                "examples": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      },
+      "get": {
+        "parameters": [
+          {
+            "name": "linked_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Linked Account Id"
+            }
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedAccountPublic"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "linked_account_owner_id": "<string>",
+                      "security_scheme": "no_auth",
+                      "enabled": true,
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/linked-accounts/oauth2": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": true,
+                "title": "App Name"
+              }
+            ]
+          },
+          {
+            "name": "linked_account_owner_id",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": true,
+                "title": "Linked Account Owner Id"
+              }
+            ]
+          },
+          {
+            "name": "after_oauth2_link_redirect_url",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "After Oauth2 Link Redirect Url"
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "After Oauth2 Link Redirect Url"
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Linked-Accounts-Link Oauth2 Account",
+                  "properties": {}
+                },
+                "examples": {
+                  "example": {
+                    "value": {}
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/linked-accounts/oauth2/callback": {
-      "get": {}
+      "get": {
+        "security": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LinkedAccountPublic"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                      "app_name": "<string>",
+                      "linked_account_owner_id": "<string>",
+                      "security_scheme": "no_auth",
+                      "enabled": true,
+                      "created_at": "2023-11-07T05:31:56Z",
+                      "updated_at": "2023-11-07T05:31:56Z"
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "deprecated": false
+      }
     },
     "/v1/linked-accounts": {
-      "get": {}
+      "get": {
+        "parameters": [
+          {
+            "name": "app_name",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "App Name"
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "App Name"
+              }
+            ]
+          },
+          {
+            "name": "linked_account_owner_id",
+            "in": "query",
+            "required": false,
+            "schema": [
+              {
+                "type": "string",
+                "required": false,
+                "title": "Linked Account Owner Id"
+              },
+              {
+                "type": "null",
+                "required": false,
+                "title": "Linked Account Owner Id"
+              }
+            ]
+          }
+        ],
+        "security": [
+          {
+            "APIKeyHeader": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "title": "Response Linked-Accounts-List Linked Accounts",
+                  "items": {
+                    "$ref": "#/components/schemas/LinkedAccountPublic"
+                  }
+                },
+                "examples": {
+                  "example": {
+                    "value": [
+                      {
+                        "id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "project_id": "3c90c3cc-0d44-4b50-8888-8dd25736052a",
+                        "app_name": "<string>",
+                        "linked_account_owner_id": "<string>",
+                        "security_scheme": "no_auth",
+                        "enabled": true,
+                        "created_at": "2023-11-07T05:31:56Z",
+                        "updated_at": "2023-11-07T05:31:56Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                "examples": {
+                  "example": {
+                    "value": {
+                      "detail": [
+                        {
+                          "loc": [
+                            "<string>"
+                          ],
+                          "msg": "<string>",
+                          "type": "<string>"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "deprecated": false
+      }
     }
   },
   "servers": [
@@ -96,69 +1419,17 @@
         ],
         "title": "ValidationError"
       },
+      "AppConfigurationCreate": {
+        "$ref": "#/components/schemas/AppConfigurationCreate"
+      },
       "AppConfigurationPublic": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Id"
-          },
-          "project_id": {
-            "type": "string",
-            "format": "uuid",
-            "title": "Project Id"
-          },
-          "app_name": {
-            "type": "string",
-            "title": "App Name"
-          },
-          "security_scheme": {
-            "$ref": "#/components/schemas/SecurityScheme"
-          },
-          "security_scheme_overrides": {
-            "type": "object",
-            "title": "Security Scheme Overrides"
-          },
-          "enabled": {
-            "type": "boolean",
-            "title": "Enabled"
-          },
-          "all_functions_enabled": {
-            "type": "boolean",
-            "title": "All Functions Enabled"
-          },
-          "enabled_functions": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Enabled Functions"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Updated At"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "project_id",
-          "app_name",
-          "security_scheme",
-          "security_scheme_overrides",
-          "enabled",
-          "all_functions_enabled",
-          "enabled_functions",
-          "created_at",
-          "updated_at"
-        ],
-        "title": "AppConfigurationPublic"
+        "$ref": "#/components/schemas/AppConfigurationPublic"
+      },
+      "HTTPValidationError": {
+        "$ref": "#/components/schemas/HTTPValidationError"
+      },
+      "AppConfigurationUpdate": {
+        "$ref": "#/components/schemas/AppConfigurationUpdate"
       },
       "FunctionBasic": {
         "properties": {
@@ -178,6 +1449,9 @@
         ],
         "title": "FunctionBasic"
       },
+      "AppBasicWithFunctions": {
+        "$ref": "#/components/schemas/AppBasicWithFunctions"
+      },
       "AppBasic": {
         "properties": {
           "name": {
@@ -195,6 +1469,12 @@
           "description"
         ],
         "title": "AppBasic"
+      },
+      "FunctionExecute": {
+        "$ref": "#/components/schemas/FunctionExecute"
+      },
+      "FunctionExecutionResult": {
+        "$ref": "#/components/schemas/FunctionExecutionResult"
       },
       "OpenAIFunction": {
         "properties": {
@@ -229,6 +1509,12 @@
           "parameters"
         ],
         "title": "OpenAIFunction"
+      },
+      "OpenAIFunctionDefinition": {
+        "$ref": "#/components/schemas/OpenAIFunctionDefinition"
+      },
+      "AnthropicFunctionDefinition": {
+        "$ref": "#/components/schemas/AnthropicFunctionDefinition"
       },
       "LinkedAccountPublic": {
         "properties": {
@@ -280,6 +1566,13 @@
           "updated_at"
         ],
         "title": "LinkedAccountPublic"
+      }
+    },
+    "securitySchemes": {
+      "APIKeyHeader": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
       }
     }
   }
