@@ -85,7 +85,7 @@ export function createMCPServer({
   name?: string;
   version?: string;
   basePath?: string;
-  fetch: Fetch;
+  fetch?: Fetch;
   openapi: OpenAPIV3.Document;
   paths?: string[];
   baseUrl?: string;

@@ -2,10 +2,9 @@ import YAML from "js-yaml";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { createMCPServer } from "./mcp.ts";
 import { connectClientServer, simplifyToolCallSnapshot } from "./mcp.test.ts";
+import { createMCPServer } from "./mcp.ts";
 
 describe("MCP Plugin", () => {
   let server: Server;
@@ -13,14 +12,11 @@ describe("MCP Plugin", () => {
   let cleanup: () => Promise<void>;
 
   beforeAll(async () => {
-    const baseUrl = "https://pokeapi.co/api/v2/";
+    
     const openapiUrl =
       "https://raw.githubusercontent.com/PokeAPI/pokeapi/4aeb1a63a9420be8a853cf50de28ea556e7aacaf/openapi.yml";
     const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
     const res = createMCPServer({
-      fetch(path, options) {
-        return fetch(new URL(path, baseUrl), options);
-      },
       openapi,
       name: "pokemon",
       paths: ["/api/v2/ability/"], // Filter to only include /api/v2 paths
