@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Dict, List, Any, Union
 from anthropic import Anthropic, Client
+import json_repair
 
 SYSTEM_PROMPT = """You are an expert API designer specializing in enhancing OpenAPI specifications for Model Context Protocol (MCP) server conversion. Your task is to improve the specification by:
 
@@ -53,22 +54,38 @@ MAX_OUTPUT = 8000
 # Initialize Anthropic client
 client = Anthropic()
 
-MODEL = "claude-sonnet-4-20250514"
+CLAUDE = "claude-sonnet-4-20250514"
+GEMINI = "gemini-2.5-flash-preview-05-20"
+
+
+def call_gemini(content:str) -> str:
+    print(f"Calling {GEMINI}!")
+    from google import genai
+    
+    api_key = os.getenv("GEMINI_API_KEY")
+    client = genai.Client(api_key=api_key)
+
+    response = client.models.generate_content(
+        model=GEMINI, contents=SYSTEM_PROMPT + CONTENT_PROMPT.format(CONTENT=content)
+    )
+
+    print("Gemini: Calling finshed!")
+    return response.text
 
 def call_claude(content: str) -> str:
     """Call Claude to prettify the content."""
-    print("Calling claude!")
+    print(f"Calling {CLAUDE}!")
     response = client.messages.create(
-        model=MODEL,
+        model=CLAUDE,
         messages=[{"role": "user", "content": SYSTEM_PROMPT + CONTENT_PROMPT.format(CONTENT=content)}],
         max_tokens=MAX_OUTPUT
     )
-    print("Calling finshed!")
+    print("Claude: Calling finshed!")
     return response.content[0].text
 
 def count_tokens(content: str) -> int:
     response = client.messages.count_tokens(
-        model=MODEL,
+        model=CLAUDE,
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": content}],
     )
@@ -98,26 +115,32 @@ def prettify(input_file: str) -> None:
     
     num_tokens = count_tokens(content)
     
-    # If content is small enough, write it directly
     if num_tokens <= MAXIMUM_CHUNK_SIZE:
         prettified_content = call_claude(content)
-        print(prettified_content)
-        
-        # Remove markdown code block markers if present
-        prettified_content = prettified_content.strip()
-        if prettified_content.startswith('```json'):
-            prettified_content = prettified_content[7:]
-        if prettified_content.endswith('```'):
-            prettified_content = prettified_content[:-3]
-        prettified_content = prettified_content.strip()
-        
-        with open(DATA_SOURCE_PATH / f"{file_name}_pretty.json", 'w') as f:
-            json.dump(json.loads(prettified_content), f)
-            
-        return
+    else:
+        prettified_content = call_gemini(content)
+    
+    # Remove markdown code block markers if present
+    prettified_content = prettified_content.strip()
+    if prettified_content.startswith('```json'):
+        prettified_content = prettified_content[7:]
+    if prettified_content.endswith('```'):
+        prettified_content = prettified_content[:-3]
+    prettified_content = prettified_content.strip()
 
-    print(f"Large context {num_tokens}: not yet implemented")
+    with open(DATA_SOURCE_PATH / f"{file_name}_debug.txt", 'w') as f:
+        f.write(prettified_content)
+    
+    try:
+        extracted_content = json.loads(prettified_content)
+    except:
+        extracted_content = json_repair.repair_json(prettified_content, return_objects=True)
+
+    with open(DATA_SOURCE_PATH / f"{file_name}_pretty.json", 'w') as f:
+        json.dump(extracted_content, f)
+            
     return
 
+
 if __name__ == "__main__":
-    prettify("bey_dev.json")
+    prettify("cal.json")
