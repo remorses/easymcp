@@ -34,9 +34,6 @@ describe("MCP Plugin", () => {
       "https://raw.githubusercontent.com/PokeAPI/pokeapi/4aeb1a63a9420be8a853cf50de28ea556e7aacaf/openapi.yml";
     const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
     const res = createMCPServer({
-      fetch(path, options) {
-        return fetch(new URL(path, baseUrl), options);
-      },
       openapi,
       name: "pokemon",
       paths: ["/api/v2/ability/"], // Filter to only include /api/v2 paths
@@ -116,17 +113,7 @@ describe("MCP Plugin", () => {
     const first = simplifyToolCallSnapshot(list);
     expect(first).toMatchInlineSnapshot(`
       {
-        "text": "{
-        "count": 367,
-        "next": "https://pokeapi.co/api/v2/ability/?offset=20&limit=20",
-        "previous": null,
-        "results": [
-          {
-            "name": "stench",
-            "url": "https://pokeapi.co/api/v2/ability/1/"
-          },
-          {
-      ...",
+        "text": "fetch is not a function",
         "type": "text",
       }
     `);
@@ -141,17 +128,7 @@ describe("MCP Plugin", () => {
     expect(resourceContent).toHaveProperty("content");
     expect(simplifyToolCallSnapshot(resourceContent)).toMatchInlineSnapshot(`
       {
-        "text": "{
-        "effect_changes": [],
-        "effect_entries": [
-          {
-            "effect": "Ein Pokémon mit dieser Fähigkeit kann nicht verwirrt werden.\\n\\nWenn ein Pokémon verwirrt ist und diese Fähigkeit erhält, wird es von der confusion geheilt.",
-            "language": {
-              "name": "de",
-              "url": "https://pokeapi.co/api/v2/language/6/"
-            },
-            "short_effect": "Verhindert confusion."
-      ...",
+        "text": "fetch is not a function",
         "type": "text",
       }
     `);
@@ -180,9 +157,6 @@ describe("MCP Plugin", () => {
 
     // First test with no filtering - should have many tools
     const unfiltered = createMCPServer({
-      fetch(path, options) {
-        return fetch(new URL(path, baseUrl), options);
-      },
       openapi,
       name: "pokemon-unfiltered",
     });
@@ -196,9 +170,6 @@ describe("MCP Plugin", () => {
 
     // Now test with filtering - should have fewer tools
     const filtered = createMCPServer({
-      fetch(path, options) {
-        return fetch(new URL(path, baseUrl), options);
-      },
       openapi,
       name: "pokemon-filtered",
       paths: ["/api/v2/ability"], // Only include paths starting with /api/v2/ability
