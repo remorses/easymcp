@@ -17,7 +17,21 @@ interface OpenAPIPath {
   [method: string]: any;
 }
 
+interface GenerateOpenAPIOptions {
+  serverUrl?: string;
+  name?: string;
+}
+
 interface OpenAPISchema {
+  openapi?: string;
+  info?: {
+    title: string;
+    version: string;
+  };
+  servers?: Array<{
+    url: string;
+    description?: string;
+  }>;
   paths: {
     [path: string]: OpenAPIPath;
   };
@@ -61,8 +75,8 @@ async function fetchMarkdown(url: string): Promise<string> {
   }
 }
 
-function extractYamlCodeBlocks(markdownContent: string): string[] {
-  const yamlBlocks: string[] = [];
+function extractYamlCodeBlocks(markdownContent: string): Array<{ content: string; method?: string; path?: string }> {
+  const yamlBlocks: Array<{ content: string; method?: string; path?: string }> = [];
 
   const tree = remark().parse(markdownContent);
 
@@ -72,7 +86,23 @@ function extractYamlCodeBlocks(markdownContent: string): string[] {
       (node.lang === "yaml" || (node.lang && node.lang.includes("yaml"))) &&
       node.value
     ) {
-      yamlBlocks.push(node.value);
+      // Check if the lang contains method and path info like "yaml GET /v1/session/{id}"
+      let method: string | undefined;
+      let path: string | undefined;
+      
+      if (node.lang && node.lang.includes(" ")) {
+        const parts = node.lang.split(" ");
+        if (parts.length >= 3 && parts[0] === "yaml") {
+          method = parts[1].toLowerCase();
+          path = parts[2];
+        }
+      }
+      
+      yamlBlocks.push({
+        content: node.value,
+        method,
+        path
+      });
     }
   });
 
@@ -81,10 +111,27 @@ function extractYamlCodeBlocks(markdownContent: string): string[] {
 
 function parseOpenAPIFromYaml(
   yamlContent: string,
+  headerMethod?: string,
+  headerPath?: string,
 ): { path: string; method: string; spec: any; components?: any } | null {
   try {
     const parsed = yaml.load(yamlContent) as any;
 
+    // If we have method and path from header, treat the YAML as direct OpenAPI spec
+    if (headerMethod && headerPath && parsed) {
+      const components = parsed.components || undefined;
+      // Remove components from the main spec to avoid duplication
+      const { components: _, ...spec } = parsed;
+      
+      return { 
+        path: headerPath, 
+        method: headerMethod, 
+        spec, 
+        components 
+      };
+    }
+
+    // Fallback to old format parsing
     if (parsed && parsed.paths && parsed.paths.path && parsed.paths.method) {
       const path = parsed.paths.path;
       const method = parsed.paths.method.toLowerCase();
@@ -191,13 +238,27 @@ function parseOpenAPIFromYaml(
   }
 }
 
-async function processMarkdownFiles(urls: string[]): Promise<OpenAPISchema> {
+async function processMarkdownFiles(urls: string[], options?: GenerateOpenAPIOptions): Promise<OpenAPISchema> {
   const openApiSchema: OpenAPISchema = {
+    openapi: "3.0.3",
+    info: {
+      title: options?.name || "Generated API",
+      version: "1.0.0",
+    },
     paths: {},
     components: {
       schemas: {},
     },
   };
+
+  if (options?.serverUrl) {
+    openApiSchema.servers = [
+      {
+        url: options.serverUrl,
+        description: "API Server",
+      },
+    ];
+  }
 
   for (const url of urls) {
     try {
@@ -207,7 +268,7 @@ async function processMarkdownFiles(urls: string[]): Promise<OpenAPISchema> {
       const yamlBlocks = extractYamlCodeBlocks(markdownContent);
 
       for (const yamlBlock of yamlBlocks) {
-        const pathInfo = parseOpenAPIFromYaml(yamlBlock);
+        const pathInfo = parseOpenAPIFromYaml(yamlBlock.content, yamlBlock.method, yamlBlock.path);
 
         if (pathInfo) {
           const { path, method, spec, components } = pathInfo;
@@ -244,6 +305,7 @@ async function processMarkdownFiles(urls: string[]): Promise<OpenAPISchema> {
 
 export async function generateOpenAPIFromSitemap(
   sitemapUrl: string,
+  options?: GenerateOpenAPIOptions,
 ): Promise<OpenAPISchema> {
   try {
     console.log("Fetching sitemap...");
@@ -251,7 +313,7 @@ export async function generateOpenAPIFromSitemap(
     console.log(`Found ${urls.length} URLs in sitemap`);
 
     console.log("Processing markdown files...");
-    const openApiSchema = await processMarkdownFiles(urls);
+    const openApiSchema = await processMarkdownFiles(urls, options);
 
     console.log("OpenAPI schema generation completed");
     return openApiSchema;
@@ -264,14 +326,25 @@ export async function generateOpenAPIFromSitemap(
 // Example usage
 export async function main() {
   const sitemapUrl = process.argv[2];
+  const serverUrl = process.argv[3];
+  const name = process.argv[4];
 
   if (!sitemapUrl) {
     console.error("Please provide a sitemap URL as an argument");
+    console.error("Usage: node script.js <sitemapUrl> [serverUrl] [name]");
     process.exit(1);
   }
 
   try {
-    const schema = await generateOpenAPIFromSitemap(sitemapUrl);
+    const options: GenerateOpenAPIOptions = {};
+    if (serverUrl) {
+      options.serverUrl = serverUrl;
+    }
+    if (name) {
+      options.name = name;
+    }
+    
+    const schema = await generateOpenAPIFromSitemap(sitemapUrl, options);
     console.log(JSON.stringify(schema, null, 2));
   } catch (error) {
     console.error("Failed to generate OpenAPI schema:", error);
