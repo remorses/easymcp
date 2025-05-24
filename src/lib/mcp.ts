@@ -1,6 +1,5 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { dereferenceSync } from 'dereference-json-schema';
-
+import { dereferenceSync } from "dereference-json-schema";
 
 import {
   CallToolRequestSchema,
@@ -34,7 +33,8 @@ function getOperationParameters(operation: OpenAPIV3.OperationObject): {
   operation.parameters.forEach((param) => {
     const paramObj = param as OpenAPIV3.ParameterObject;
     if (paramObj.in === "query") {
-      queryProperties[paramObj.name] = paramObj.schema as OpenAPIV3.SchemaObject;
+      queryProperties[paramObj.name] =
+        paramObj.schema as OpenAPIV3.SchemaObject;
       if (paramObj.required) queryRequired.push(paramObj.name);
     } else if (paramObj.in === "path") {
       pathProperties[paramObj.name] = paramObj.schema as OpenAPIV3.SchemaObject;
@@ -72,7 +72,10 @@ function extractApiFromBaseUrl(openapi: OpenAPIV3.Document): string {
   throw new Error("No servers defined in OpenAPI document");
 }
 
-function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.OperationObject): Record<string, string> {
+function getAuthHeaders(
+  openapi: OpenAPIV3.Document,
+  operation?: OpenAPIV3.OperationObject,
+): Record<string, string> {
   const headers: Record<string, string> = {};
   const token = process.env.API_TOKEN;
 
@@ -132,14 +135,14 @@ function getAuthHeaders(openapi: OpenAPIV3.Document, operation?: OpenAPIV3.Opera
 }
 
 type Fetch = typeof fetch;
-const defaultFetch = fetch
+const defaultFetch = fetch;
 
 export function createMCPServer({
   name = "spiceflow",
   version = "1.0.0",
   openapi,
   basePath = "",
-  fetch=defaultFetch,
+  fetch = defaultFetch,
   paths,
   baseUrl = "",
 }: {
@@ -160,13 +163,16 @@ export function createMCPServer({
       },
     },
   );
-  openapi = dereferenceSync(openapi)
+  openapi = dereferenceSync(openapi);
   if (!baseUrl) {
     baseUrl = extractApiFromBaseUrl(openapi);
   }
 
-
-  async function fetchWithBaseServerAndAuth(u: string, options: RequestInit, operation?: OpenAPIV3.OperationObject) {
+  async function fetchWithBaseServerAndAuth(
+    u: string,
+    options: RequestInit,
+    operation?: OpenAPIV3.OperationObject,
+  ) {
     const authHeaders = getAuthHeaders(openapi, operation);
     return await fetch!(new URL(u, baseUrl), {
       ...options,
@@ -246,7 +252,9 @@ export function createMCPServer({
 
     try {
       const { body, query, params } = request.params.arguments || {};
-      const operation = pathObj[method.toLowerCase()] as OpenAPIV3.OperationObject;
+      const operation = pathObj[
+        method.toLowerCase()
+      ] as OpenAPIV3.OperationObject;
 
       if (params) {
         Object.entries(params).forEach(([key, value]) => {
@@ -263,13 +271,17 @@ export function createMCPServer({
         fullPath += `?${searchParams.toString()}`;
       }
 
-      const response = await fetchWithBaseServerAndAuth(fullPath, {
-        method,
-        headers: {
-          "content-type": "application/json",
+      const response = await fetchWithBaseServerAndAuth(
+        fullPath,
+        {
+          method,
+          headers: {
+            "content-type": "application/json",
+          },
+          body: body ? JSON.stringify(body) : undefined,
         },
-        body: body ? JSON.stringify(body) : undefined,
-      }, operation);
+        operation,
+      );
 
       const isError = !response.ok;
       const contentType = response.headers.get("content-type");
@@ -319,9 +331,9 @@ export function createMCPServer({
     return { resources: [] };
   });
 
-  server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-    throw new Error("Resources are not supported - use tools instead");
-  });
+  // server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  //   throw new Error("Resources are not supported - use tools instead");
+  // });
 
   return { server };
 }
@@ -333,18 +345,67 @@ function getRouteName({
   method: string;
   path: string;
 }): string {
-  return `${method.toUpperCase()} ${path}`;
+  return formatToolName(`${method.toUpperCase()} ${path}`, method, path);
 }
+
+const toolNameToPath = new Map<string, { method: string; path: string }>();
 
 function getPathFromToolName(toolName: string): {
   path: string;
   method: string;
 } {
-  const parts = toolName.split(" ");
-  if (parts.length < 2) {
-    throw new Error("Invalid tool name format");
+  const cached = toolNameToPath.get(toolName);
+  if (cached) {
+    return cached;
   }
-  const method = parts[0].toUpperCase();
-  const path = parts.slice(1).join(" ");
-  return { path, method };
+  throw new Error(`Tool name '${toolName}' not found. It might not have been registered or was invalid.`);
+}
+
+function formatToolName(nameToFormat: string, method: string, pathForMap: string): string {
+  if (!nameToFormat || nameToFormat.trim() === "") {
+    throw new Error("Original tool name for formatting cannot be empty");
+  }
+
+  // Replace spaces and other invalid characters with underscores
+  let formatted = nameToFormat
+    .replace(/[^a-zA-Z0-9_-]/g, "_")
+    .replace(/_+/g, "_") // Replace multiple underscores with single underscore
+    .replace(/^_+|_+$/g, ""); // Remove leading/trailing underscores
+
+  // Truncate to 64 characters if necessary
+  if (formatted.length > 64) {
+    formatted = formatted.substring(0, 64);
+  }
+
+  // Remove trailing underscores again in case truncation created them or they persisted
+  formatted = formatted.replace(/_+$/, "");
+
+  if (formatted === "") {
+    throw new Error(`Tool name results in empty string after formatting (from original: '${nameToFormat}')`);
+  }
+
+  // Validate against regex
+  const regex = /^[a-zA-Z0-9_-]{1,64}$/;
+  if (!regex.test(formatted)) {
+    throw new Error(
+      `Formatted tool name "${formatted}" (from original: '${nameToFormat}') does not match required pattern: ^[a-zA-Z0-9_-]{1,64}$`,
+    );
+  }
+
+  // Check for duplicates: if this formatted name already exists and belongs to a DIFFERENT tool (method/path), it's a collision.
+  const existingEntry = toolNameToPath.get(formatted);
+  if (existingEntry && (existingEntry.method !== method || existingEntry.path !== pathForMap)) {
+      throw new Error(
+          `Duplicate tool name generated: '${formatted}'. ` +
+          `This name was generated for original: '${nameToFormat}' (method: '${method}', path: '${pathForMap}'). ` +
+          `It conflicts with an existing tool that also maps to '${formatted}', originally from (method: '${existingEntry.method}', path: '${existingEntry.path}'). ` +
+          `Ensure operationIds or path/method combinations in your OpenAPI spec are sufficiently unique to avoid naming collisions after formatting.`
+      );
+  }
+
+  // Register the name with its method and path.
+  // If the same tool (method/path) is formatted again to the same name, this just overwrites with identical values.
+  toolNameToPath.set(formatted, { method, path: pathForMap });
+
+  return formatted;
 }

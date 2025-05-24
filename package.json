@@ -1,6 +1,6 @@
 {
     "name": "modelcontext",
-    "type": "module",
+
     "bin": "",
     "scripts": {
         "build": "react-router build",
