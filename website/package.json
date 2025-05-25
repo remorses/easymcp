@@ -1,6 +1,7 @@
 {
   "name": "modelcontext",
   "type": "module",
+  "private": true,
   "bin": "",
   "scripts": {
     "build": "react-router build",
