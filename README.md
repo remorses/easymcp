@@ -30,6 +30,11 @@ For example, to run the website locally, navigate to the `website/` directory an
 pnpm dev
 ```
 
+## Documentation
+If you want to dive deeper into the project, head to:
+- 🧠 [Documentation main page](https://deepwiki.com/remorses/modelcontext/1-overview)
+- 🚀 [QuickStart](https://deepwiki.com/remorses/modelcontext/1.1-quick-start-guide)
+
 ## Start testing MCP server:
 
 ```
