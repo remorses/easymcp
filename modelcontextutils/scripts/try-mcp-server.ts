@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 async function main() {
-  const name = "pokeapi";
+  const name = "socialbundle";
 
   // const openapiUrl =
   // const openapiUrl =
@@ -18,7 +18,7 @@ async function main() {
   // const openapi = YAML.load(await (await fetch(openapiUrl)).text()) as any;
   const openapi = JSON.parse(
     fs.readFileSync(
-      path.resolve(__dirname, "../../openapis/results/cal.json"),
+      path.resolve(__dirname, `../../openapis/results/${name}.json`),
       "utf8",
     ),
   ) as any;
