@@ -1,7 +1,8 @@
 // modelcontext/src/lib/npm-publish.ts
 
-const NPM_ORG_SCOPE = "@modelcontext";
-const NPM_ORG_SCOPE_NO_AT = "modelcontext";
+// Remove hardcoded scope
+// const NPM_ORG_SCOPE = "@modelcontext";
+// const NPM_ORG_SCOPE_NO_AT = "modelcontext";
 
 import { spawn } from "child_process";
 import * as fs from "fs";
@@ -20,7 +21,6 @@ function safeJsonParse(str: string): any {
   }
 }
 
-
 /**
  * Writes generated npm package files to a temp directory under /tmp,
  * runs `npm publish` in that directory, handles failures,
@@ -29,15 +29,21 @@ function safeJsonParse(str: string): any {
  * @param packageName The short name of the package (e.g., "my-tool").
  * @param openapiSchema The OpenAPI schema, as a string (can be a URL or a JSON/YAML string).
  * @param version The version of the package (e.g., "1.0.0").
+ * @param npmUser The NPM username to use for the package scope.
+ * @param npmApiKey The NPM API key for authentication.
  */
 export async function publishNpmPackage({
   packageName,
   openapiSchema,
   version,
+  npmUser,
+  npmApiKey,
 }: {
   packageName: string;
   openapiSchema: string;
   version?: string;
+  npmUser?: string;
+  npmApiKey?: string;
 }) {
   const parsed = safeJsonParse(openapiSchema);
   if (!parsed) {
@@ -46,11 +52,16 @@ export async function publishNpmPackage({
   if (!parsed.servers) {
     throw new Error("No servers found in schema, add a servers array with url of the API");
   }
+
+  // Use provided npmUser or fallback to modelcontext
+  const scope = npmUser ? `@${npmUser}` : "@modelcontext";
+  const scopeNoAt = npmUser || "modelcontext";
+
   // 0. If version isn't provided, try to fetch latest and bump patch; else throw error if none found.
   let resolvedVersion = version;
   if (!resolvedVersion) {
     resolvedVersion = await getNextNpmVersionOrThrow(
-      `${NPM_ORG_SCOPE}/${packageName}`,
+      `${scope}/${packageName}`,
     ).catch((e) => "0.0.1");
   }
 
@@ -63,6 +74,7 @@ export async function publishNpmPackage({
     packageName,
     openapiSchema,
     resolvedVersion,
+    scope,
   );
   for (const file of files) {
     const filePath = path.join(tempDir, file.path);
@@ -76,7 +88,18 @@ export async function publishNpmPackage({
     }
   }
 
-  // 3. npm publish
+  // 3. Create .npmrc file with authentication if API key is provided
+  if (npmApiKey) {
+    const npmrcContent = `//registry.npmjs.org/:_authToken=${npmApiKey}
+@${npmUser}:registry=https://registry.npmjs.org/
+`;
+    await fs.promises.writeFile(path.join(tempDir, ".npmrc"), npmrcContent, {
+      encoding: "utf8",
+      mode: 0o600, // Secure permissions for auth file
+    });
+  }
+
+  // 4. npm publish
   await new Promise<void>((resolve, reject) => {
     const publish = spawn("npm", ["publish", "--access", "public"], {
       cwd: tempDir,
@@ -107,8 +130,8 @@ export async function publishNpmPackage({
     });
   });
 
-  // 4. Print the published npm package URL
-  const fullPackageName = `${NPM_ORG_SCOPE}/${packageName}`; // must match used above
+  // 5. Print the published npm package URL
+  const fullPackageName = `${scope}/${packageName}`; // must match used above
   // Encode for npm web url: scoped @ -> %40
   const scopedEncoded = fullPackageName.replace("@", "%40");
   const pkgUrl = `https://www.npmjs.com/package/${scopedEncoded}`;
@@ -122,14 +145,16 @@ export async function publishNpmPackage({
  * @param packageName The short name of the package (e.g., "my-tool").
  * @param openapiSchema The OpenAPI schema, as a string (can be a URL or a JSON/YAML string).
  * @param version The version of the package (e.g., "1.0.0").
+ * @param scope The NPM scope to use (e.g., "@username").
  * @returns An array of NpmFile objects representing the files to be created.
  */
 export async function generateNpmPackageFiles(
   packageName: string,
   openapiSchema: string,
   version: string,
+  scope: string,
 ) {
-  const fullPackageName = `${NPM_ORG_SCOPE}/${packageName}`;
+  const fullPackageName = `${scope}/${packageName}`;
 
   // Helper function to escape strings for use as content within JavaScript single-quoted literals
   const escapeForJsSingleQuotedStringContent = (str: string): string => {
