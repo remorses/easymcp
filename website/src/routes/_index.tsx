@@ -466,10 +466,7 @@ export default function OpenAPIMCPLanding() {
                 {/* Welcome Message */}
                 <div className="text-center mb-12">
                   <div className="mb-6"></div>
-                  <img src="/logo2.jpg" alt="Logo" className="mx-auto mb-4" style={{ maxWidth: 220, height: "auto" }} />
-                  <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-black">
-                    Transform your OpenAPI schema
-                  </h2>
+                  <img src="/logo.png" alt="Logo" className="mx-auto mb-4" style={{ maxWidth: 400, height: "auto" }} />
                   <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                     Convert any OpenAPI specification into a Model Context
                     Protocol (MCP) package that works seamlessly with Cursor,
