@@ -5419,7 +5419,8 @@
                                 "type": "null"
                             }
                         ],
-                        "title": "Model"
+                        "title": "Model",
+                        "description": "Model to use for OCR. Should be mistral-ocr-latest"
                     },
                     "id": {
                         "type": "string",

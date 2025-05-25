@@ -230,7 +230,7 @@ export function createMCPServer({
         const token = process.env.API_TOKEN
         const commonHeaders: Record<string, string> = token
             ? {
-                  authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${token}`,
                   'x-api-key': token,
               }
             : {}
@@ -251,7 +251,7 @@ export function createMCPServer({
                 : cookieHeader
         }
 
-        console.log(`using headers ${JSON.stringify(finalHeaders, null, 2)}`)
+        console.error(`using headers ${JSON.stringify(finalHeaders, null, 2)}`)
 
         return await fetch!(new URL(u, baseUrl), {
             ...options,

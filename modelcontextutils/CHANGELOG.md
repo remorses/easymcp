@@ -1,5 +1,11 @@
 # modelcontextutils
 
+## 1.0.5
+
+### Patch Changes
+
+- fix mcp utils headers log
+
 ## 1.0.4
 
 ### Patch Changes
