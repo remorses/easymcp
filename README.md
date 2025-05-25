@@ -4,7 +4,8 @@ This repository contains the code for the Easy MCP project. It includes various 
 
 The key functionalities of this project is the conversion of [OpenAPI](https://learn.openapis.org/) specifications to the [MCP](https://modelcontextprotocol.io/introduction) format.
 
-🔥 CHECK OUT THE OFFICIAL YOUTUBE VIDEO -> [link](https://www.youtube.com/watch?v=RzIdTyg0iZo&ab_channel=Lelewithdots)
+🔥 CHECK OUT THE OFFICIAL YOUTUBE VIDEO -> [link](https://www.youtube.com/watch?v=RzIdTyg0iZo&ab_channel=Lelewithdots) 🔥
+And the detailed one [here](https://youtu.be/iLl6emn14bY)
 
 ## Installation
 
