@@ -12,6 +12,15 @@ export interface NpmFile {
   content: string;
 }
 
+function safeJsonParse(str: string): any {
+  try {
+    return JSON.parse(str);
+  } catch (e) {
+    return null;
+  }
+}
+
+
 /**
  * Writes generated npm package files to a temp directory under /tmp,
  * runs `npm publish` in that directory, handles failures,
@@ -30,6 +39,13 @@ export async function publishNpmPackage({
   openapiSchema: string;
   version?: string;
 }) {
+  const parsed = safeJsonParse(openapiSchema);
+  if (!parsed) {
+    throw new Error("Invalid JSON");
+  }
+  if (!parsed.servers) {
+    throw new Error("No servers found in schema, add a servers array with url of the API");
+  }
   // 0. If version isn't provided, try to fetch latest and bump patch; else throw error if none found.
   let resolvedVersion = version;
   if (!resolvedVersion) {
