@@ -66,7 +66,7 @@ export async function action({ request }: { request: Request }) {
   console.log("publishNpmPackage result:", res);
 
   return {
-    packageName,
+    packageName: res.packageName,
     schemaTitle: schema.slice(0, 30) + (schema.length > 30 ? "..." : ""),
     requiresApiToken: true,
     timestamp: Date.now(),

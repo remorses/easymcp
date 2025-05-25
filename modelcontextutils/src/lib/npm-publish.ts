@@ -29,7 +29,7 @@ export async function publishNpmPackage({
   packageName: string;
   openapiSchema: string;
   version?: string;
-}): Promise<void> {
+}) {
   // 0. If version isn't provided, try to fetch latest and bump patch; else throw error if none found.
   let resolvedVersion = version;
   if (!resolvedVersion) {
@@ -97,6 +97,7 @@ export async function publishNpmPackage({
   const scopedEncoded = fullPackageName.replace("@", "%40");
   const pkgUrl = `https://www.npmjs.com/package/${scopedEncoded}`;
   console.log(`Published npm package to: ${pkgUrl}`);
+  return {packageName:fullPackageName }
 }
 
 /**
