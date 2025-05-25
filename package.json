@@ -1,7 +1,14 @@
 {
   "name": "root",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
   "dependencies": {
     "typescript": "^5.8.3",
     "vitest": "^3.1.4"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
   }
 }
