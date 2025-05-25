@@ -1,0 +1,979 @@
+{
+    "components": {
+        "responses": {
+            "BadRequestError": {
+                "content": {
+                    "application/json": {
+                        "examples": {
+                            "invalid_request": {
+                                "summary": "Invalid request format",
+                                "value": {
+                                    "error": {
+                                        "code": "BAD_REQUEST",
+                                        "message": "Invalid request format or parameters"
+                                    }
+                                }
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        }
+                    }
+                },
+                "description": "Bad request - Invalid request format or parameters"
+            },
+            "ForbiddenError": {
+                "content": {
+                    "application/json": {
+                        "examples": {
+                            "insufficient_permissions": {
+                                "summary": "Insufficient permissions",
+                                "value": {
+                                    "error": {
+                                        "code": "FORBIDDEN",
+                                        "message": "Insufficient permissions to access this resource"
+                                    }
+                                }
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        }
+                    }
+                },
+                "description": "Access forbidden - Insufficient permissions"
+            },
+            "InternalServerError": {
+                "content": {
+                    "application/json": {
+                        "examples": {
+                            "server_error": {
+                                "summary": "Internal server error",
+                                "value": {
+                                    "error": {
+                                        "code": "INTERNAL_SERVER_ERROR",
+                                        "message": "An unexpected error occurred. Please try again later."
+                                    }
+                                }
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        }
+                    }
+                },
+                "description": "Internal server error - Something went wrong on our end"
+            },
+            "RateLimitError": {
+                "content": {
+                    "application/json": {
+                        "examples": {
+                            "rate_limit_exceeded": {
+                                "summary": "Rate limit exceeded",
+                                "value": {
+                                    "error": {
+                                        "code": "RATE_LIMIT_EXCEEDED",
+                                        "message": "Rate limit exceeded. Please try again later."
+                                    }
+                                }
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        }
+                    }
+                },
+                "description": "Rate limit exceeded - Too many requests",
+                "headers": {
+                    "Retry-After": {
+                        "description": "Seconds to wait before retrying",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "X-RateLimit-Remaining": {
+                        "description": "Number of requests remaining",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "X-RateLimit-Reset": {
+                        "description": "Unix timestamp when rate limit resets",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                }
+            },
+            "UnauthorizedError": {
+                "content": {
+                    "application/json": {
+                        "examples": {
+                            "missing_api_key": {
+                                "summary": "Missing API key",
+                                "value": {
+                                    "error": {
+                                        "code": "UNAUTHORIZED",
+                                        "message": "API key is required for this endpoint"
+                                    }
+                                }
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/components/schemas/ErrorResponse"
+                        }
+                    }
+                },
+                "description": "Authentication required - Invalid or missing API key"
+            },
+            "ValidationError": {
+                "content": {
+                    "application/json": {
+                        "examples": {
+                            "validation_failed": {
+                                "summary": "Validation failed",
+                                "value": {
+                                    "detail": [
+                                        {
+                                            "loc": [
+                                                "body",
+                                                "avatar_id"
+                                            ],
+                                            "msg": "field required",
+                                            "type": "value_error.missing"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "schema": {
+                            "$ref": "#/components/schemas/HTTPValidationError"
+                        }
+                    }
+                },
+                "description": "Validation error - Request data failed validation"
+            }
+        },
+        "schemas": {
+            "AvatarResponseModel": {
+                "description": "Represents a Beyond Presence Avatar with its capabilities and metadata",
+                "properties": {
+                    "capabilities": {
+                        "description": "List of avatar capabilities",
+                        "example": [
+                            "voice",
+                            "gesture",
+                            "expression"
+                        ],
+                        "items": {
+                            "enum": [
+                                "voice",
+                                "gesture",
+                                "expression",
+                                "movement"
+                            ],
+                            "type": "string"
+                        },
+                        "title": "Capabilities",
+                        "type": "array"
+                    },
+                    "description": {
+                        "description": "A brief description of the avatar's characteristics",
+                        "example": "Professional business avatar with friendly demeanor",
+                        "maxLength": 500,
+                        "title": "Description",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "The unique identifier (UUID) of the avatar",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "format": "uuid",
+                        "title": "Avatar ID",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "The display name of the avatar",
+                        "example": "John Doe",
+                        "maxLength": 100,
+                        "minLength": 1,
+                        "title": "Avatar Name",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "title": "AvatarResponseModel",
+                "type": "object"
+            },
+            "ErrorResponse": {
+                "description": "Standard error response format",
+                "properties": {
+                    "error": {
+                        "properties": {
+                            "code": {
+                                "description": "Error code for programmatic handling",
+                                "type": "string"
+                            },
+                            "details": {
+                                "additionalProperties": true,
+                                "description": "Additional error details",
+                                "type": "object"
+                            },
+                            "message": {
+                                "description": "Human-readable error message",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "code",
+                            "message"
+                        ],
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "error"
+                ],
+                "title": "ErrorResponse",
+                "type": "object"
+            },
+            "HTTPValidationError": {
+                "description": "HTTP validation error response",
+                "properties": {
+                    "detail": {
+                        "description": "List of validation errors",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "title": "Detail",
+                        "type": "array"
+                    }
+                },
+                "title": "HTTPValidationError",
+                "type": "object"
+            },
+            "PaginationInfo": {
+                "description": "Pagination information for list responses",
+                "properties": {
+                    "has_more": {
+                        "description": "Whether there are more items available",
+                        "type": "boolean"
+                    },
+                    "limit": {
+                        "description": "Maximum number of items returned in this response",
+                        "minimum": 1,
+                        "type": "integer"
+                    },
+                    "offset": {
+                        "description": "Number of items skipped",
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "total": {
+                        "description": "Total number of items available",
+                        "minimum": 0,
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "total",
+                    "limit",
+                    "offset",
+                    "has_more"
+                ],
+                "title": "PaginationInfo",
+                "type": "object"
+            },
+            "SessionRequestModel": {
+                "description": "Request model for creating a new real-time avatar session",
+                "properties": {
+                    "avatar_id": {
+                        "description": "The unique identifier of the avatar to use in the session",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "format": "uuid",
+                        "title": "Avatar ID",
+                        "type": "string"
+                    },
+                    "livekit_token": {
+                        "description": "JWT token for authenticating with the LiveKit server",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "minLength": 10,
+                        "title": "LiveKit Token",
+                        "type": "string"
+                    },
+                    "livekit_url": {
+                        "description": "The WebSocket URL of your LiveKit server instance",
+                        "example": "wss://your-domain.livekit.cloud",
+                        "format": "uri",
+                        "pattern": "^wss://",
+                        "title": "LiveKit URL",
+                        "type": "string"
+                    },
+                    "session_config": {
+                        "description": "Optional configuration settings for the session",
+                        "properties": {
+                            "audio_enabled": {
+                                "default": true,
+                                "description": "Enable audio in the session",
+                                "type": "boolean"
+                            },
+                            "max_duration": {
+                                "default": 3600,
+                                "description": "Maximum session duration in seconds",
+                                "maximum": 7200,
+                                "minimum": 60,
+                                "type": "integer"
+                            },
+                            "video_enabled": {
+                                "default": true,
+                                "description": "Enable video in the session",
+                                "type": "boolean"
+                            }
+                        },
+                        "title": "Session Configuration",
+                        "type": "object"
+                    }
+                },
+                "required": [
+                    "avatar_id",
+                    "livekit_url",
+                    "livekit_token"
+                ],
+                "title": "SessionRequestModel",
+                "type": "object"
+            },
+            "SessionResponseModel": {
+                "description": "Represents a Beyond Presence Real-Time API session with status and connection details",
+                "properties": {
+                    "avatar_id": {
+                        "description": "The ID of the avatar used in the session",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "format": "uuid",
+                        "title": "Avatar ID",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "ISO 8601 timestamp when the session was created",
+                        "example": "2024-01-01T00:00:00Z",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "type": "string"
+                    },
+                    "expires_at": {
+                        "description": "ISO 8601 timestamp when the session expires",
+                        "example": "2024-01-01T01:00:00Z",
+                        "format": "date-time",
+                        "title": "Expires At",
+                        "type": "string"
+                    },
+                    "id": {
+                        "description": "The unique identifier (UUID) of the session",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "format": "uuid",
+                        "title": "Session ID",
+                        "type": "string"
+                    },
+                    "livekit_token": {
+                        "description": "JWT token for LiveKit authentication",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "title": "LiveKit Token",
+                        "type": "string"
+                    },
+                    "livekit_url": {
+                        "description": "The WebSocket URL for connecting to LiveKit",
+                        "example": "wss://your-domain.livekit.cloud",
+                        "format": "uri",
+                        "title": "LiveKit URL",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Current status of the session",
+                        "enum": [
+                            "active",
+                            "inactive",
+                            "expired",
+                            "terminated"
+                        ],
+                        "example": "active",
+                        "title": "Session Status",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "id",
+                    "created_at",
+                    "avatar_id",
+                    "livekit_url",
+                    "livekit_token",
+                    "status"
+                ],
+                "title": "SessionResponseModel",
+                "type": "object"
+            },
+            "ValidationError": {
+                "description": "Validation error details",
+                "properties": {
+                    "loc": {
+                        "description": "Path to the field that caused the validation error",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "title": "Location",
+                        "type": "array"
+                    },
+                    "msg": {
+                        "description": "Description of the validation error",
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Type of validation error",
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError",
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "APIKeyHeader": {
+                "description": "API key for authenticating requests. Include your API key in the X-API-KEY header.",
+                "in": "header",
+                "name": "X-API-KEY",
+                "type": "apiKey"
+            }
+        }
+    },
+    "info": {
+        "contact": {
+            "name": "Bey Dev Support",
+            "url": "https://bey.dev/support"
+        },
+        "description": "The Bey Dev API provides real-time avatar session management with LiveKit integration. This API allows you to manage avatars and create interactive sessions for real-time communication.",
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "title": "Bey Dev Real-Time Avatar API",
+        "version": "1.0.0"
+    },
+    "openapi": "3.0.3",
+    "paths": {
+        "/v1/avatar": {
+            "get": {
+                "description": "Retrieves a list of all available avatars that can be used in real-time sessions. Avatars are pre-configured digital personas with specific characteristics and behaviors.",
+                "operationId": "listAvatars",
+                "parameters": [
+                    {
+                        "description": "Maximum number of avatars to return",
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 50,
+                            "maximum": 100,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Number of avatars to skip for pagination",
+                        "in": "query",
+                        "name": "offset",
+                        "required": false,
+                        "schema": {
+                            "default": 0,
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "successful_response": {
+                                        "summary": "Successful avatar list retrieval",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "capabilities": [
+                                                        "voice",
+                                                        "gesture",
+                                                        "expression"
+                                                    ],
+                                                    "description": "Professional business avatar",
+                                                    "id": "01234567-89ab-cdef-0123-456789abcdef",
+                                                    "name": "John Doe"
+                                                }
+                                            ],
+                                            "pagination": {
+                                                "has_more": false,
+                                                "limit": 50,
+                                                "offset": 0,
+                                                "total": 1
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/AvatarResponseModel"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/PaginationInfo"
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "pagination"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved list of avatars",
+                        "headers": {
+                            "X-RateLimit-Remaining": {
+                                "description": "Number of requests remaining in the current window",
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            },
+                            "X-RateLimit-Reset": {
+                                "description": "Unix timestamp when the rate limit resets",
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/ForbiddenError"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimitError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "summary": "List Available Avatars",
+                "tags": [
+                    "avatars"
+                ],
+                "x-cache-ttl": 300,
+                "x-rate-limit": {
+                    "requests": 100,
+                    "window": "1m"
+                }
+            }
+        },
+        "/v1/session": {
+            "get": {
+                "description": "Retrieves a paginated list of all sessions associated with your account. Sessions are ordered by creation date (newest first).",
+                "operationId": "listSessions",
+                "parameters": [
+                    {
+                        "description": "Maximum number of sessions to return",
+                        "in": "query",
+                        "name": "limit",
+                        "required": false,
+                        "schema": {
+                            "default": 20,
+                            "maximum": 100,
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Number of sessions to skip for pagination",
+                        "in": "query",
+                        "name": "offset",
+                        "required": false,
+                        "schema": {
+                            "default": 0,
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "description": "Filter sessions by status",
+                        "in": "query",
+                        "name": "status",
+                        "required": false,
+                        "schema": {
+                            "enum": [
+                                "active",
+                                "inactive",
+                                "expired",
+                                "terminated"
+                            ],
+                            "example": "active",
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Filter sessions by avatar ID",
+                        "in": "query",
+                        "name": "avatar_id",
+                        "required": false,
+                        "schema": {
+                            "example": "01234567-89ab-cdef-0123-456789abcdef",
+                            "format": "uuid",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "session_list": {
+                                        "summary": "List of sessions",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                                                    "created_at": "2024-01-01T00:00:00Z",
+                                                    "expires_at": "2024-01-01T01:00:00Z",
+                                                    "id": "01234567-89ab-cdef-0123-456789abcdef",
+                                                    "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                                                    "livekit_url": "wss://your-domain.livekit.cloud",
+                                                    "status": "active"
+                                                }
+                                            ],
+                                            "pagination": {
+                                                "has_more": false,
+                                                "limit": 20,
+                                                "offset": 0,
+                                                "total": 1
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "items": {
+                                                "$ref": "#/components/schemas/SessionResponseModel"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/PaginationInfo"
+                                        }
+                                    },
+                                    "required": [
+                                        "data",
+                                        "pagination"
+                                    ],
+                                    "type": "object"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved list of sessions"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/ForbiddenError"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimitError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "summary": "List Sessions",
+                "tags": [
+                    "sessions"
+                ],
+                "x-cache-ttl": 60,
+                "x-rate-limit": {
+                    "requests": 100,
+                    "window": "1m"
+                }
+            },
+            "post": {
+                "description": "Creates a new real-time session with the specified avatar and LiveKit configuration. The session enables real-time interaction with the avatar through WebRTC using LiveKit infrastructure.",
+                "operationId": "createSession",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "basic_session": {
+                                    "summary": "Basic session creation",
+                                    "value": {
+                                        "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                                        "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                                        "livekit_url": "wss://your-domain.livekit.cloud",
+                                        "session_config": {
+                                            "audio_enabled": true,
+                                            "max_duration": 3600,
+                                            "video_enabled": true
+                                        }
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "$ref": "#/components/schemas/SessionRequestModel"
+                            }
+                        }
+                    },
+                    "description": "Session configuration including avatar ID and LiveKit connection details",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "created_session": {
+                                        "summary": "Successfully created session",
+                                        "value": {
+                                            "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                                            "created_at": "2024-01-01T00:00:00Z",
+                                            "expires_at": "2024-01-01T01:00:00Z",
+                                            "id": "01234567-89ab-cdef-0123-456789abcdef",
+                                            "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                                            "livekit_url": "wss://your-domain.livekit.cloud",
+                                            "status": "active"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionResponseModel"
+                                }
+                            }
+                        },
+                        "description": "Session successfully created",
+                        "headers": {
+                            "Location": {
+                                "description": "URL of the created session",
+                                "schema": {
+                                    "format": "uri",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequestError"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/ForbiddenError"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "avatar_not_found": {
+                                        "summary": "Avatar not found",
+                                        "value": {
+                                            "error": {
+                                                "code": "AVATAR_NOT_FOUND",
+                                                "details": {
+                                                    "avatar_id": "01234567-89ab-cdef-0123-456789abcdef"
+                                                },
+                                                "message": "The specified avatar ID does not exist or is not accessible"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Avatar not found"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimitError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "summary": "Create New Session",
+                "tags": [
+                    "sessions"
+                ],
+                "x-rate-limit": {
+                    "requests": 10,
+                    "window": "1m"
+                }
+            }
+        },
+        "/v1/session/{id}": {
+            "get": {
+                "description": "Retrieves detailed information about a specific session by its unique identifier. This includes current status, configuration, and connection details.",
+                "operationId": "getSession",
+                "parameters": [
+                    {
+                        "description": "The unique identifier of the session",
+                        "example": "01234567-89ab-cdef-0123-456789abcdef",
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "format": "uuid",
+                            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "session_details": {
+                                        "summary": "Session details",
+                                        "value": {
+                                            "avatar_id": "01234567-89ab-cdef-0123-456789abcdef",
+                                            "created_at": "2024-01-01T00:00:00Z",
+                                            "expires_at": "2024-01-01T01:00:00Z",
+                                            "id": "01234567-89ab-cdef-0123-456789abcdef",
+                                            "livekit_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                                            "livekit_url": "wss://your-domain.livekit.cloud",
+                                            "status": "active"
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionResponseModel"
+                                }
+                            }
+                        },
+                        "description": "Successfully retrieved session details"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/UnauthorizedError"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/ForbiddenError"
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "session_not_found": {
+                                        "summary": "Session not found",
+                                        "value": {
+                                            "error": {
+                                                "code": "SESSION_NOT_FOUND",
+                                                "details": {
+                                                    "session_id": "01234567-89ab-cdef-0123-456789abcdef"
+                                                },
+                                                "message": "The specified session ID does not exist or is not accessible"
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "$ref": "#/components/schemas/ErrorResponse"
+                                }
+                            }
+                        },
+                        "description": "Session not found"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimitError"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/InternalServerError"
+                    }
+                },
+                "security": [
+                    {
+                        "APIKeyHeader": []
+                    }
+                ],
+                "summary": "Get Session Details",
+                "tags": [
+                    "sessions"
+                ],
+                "x-cache-ttl": 30,
+                "x-rate-limit": {
+                    "requests": 100,
+                    "window": "1m"
+                }
+            }
+        }
+    },
+    "security": [
+        {
+            "APIKeyHeader": []
+        }
+    ],
+    "servers": [
+        {
+            "description": "Production API Server",
+            "url": "https://api.bey.dev"
+        }
+    ],
+    "tags": [
+        {
+            "description": "Avatar management operations",
+            "name": "avatars"
+        },
+        {
+            "description": "Real-time session management with LiveKit integration",
+            "name": "sessions"
+        }
+    ]
+}

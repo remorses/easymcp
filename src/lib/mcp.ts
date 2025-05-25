@@ -160,10 +160,10 @@ export function createMCPServer({
       },
     },
   );
+  openapi = dereferenceSync(openapi)
   if (!baseUrl) {
     baseUrl = extractApiFromBaseUrl(openapi);
   }
-  openapi = dereferenceSync(openapi)
 
 
   async function fetchWithBaseServerAndAuth(u: string, options: RequestInit, operation?: OpenAPIV3.OperationObject) {
