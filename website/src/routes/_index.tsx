@@ -45,20 +45,25 @@ function safeJsonParse(jsonString: string): any | null {
   }
 }
 export async function action({ request }: { request: Request }) {
+  console.log("Received request:", request.method, request.url);
   const formData = await request.formData();
   const schema = formData.get("schema") as string;
+  console.log("Received schema:", schema?.slice(0, 100) + (schema?.length > 100 ? "..." : ""));
   if (!schema?.trim()) {
     return { error: "Schema required" };
   }
   const parsed = safeJsonParse(schema);
+  console.log("Parsed schema:", parsed);
   if (!parsed) {
     throw new Error("Invalid JSON");
   }
   const packageName = generatePackageName(parsed);
+  console.log("Generated package name:", packageName);
   const res = await publishNpmPackage({
     openapiSchema: schema,
     packageName,
   });
+  console.log("publishNpmPackage result:", res);
 
   return {
     packageName,
@@ -247,42 +252,6 @@ export default function OpenAPIMCPLanding() {
       }
     });
   };
-
-  // Modified handleFinalSubmit to set loading and wait for process
-  const handleFinalSubmit = async () => {
-    if (!parsedSchema) return;
-    setIsContinueLoading(true);
-    // Filter paths
-    const filteredPaths: any = {};
-    for (const tool of toolChoices) {
-      if (selectedTools.includes(tool.key)) {
-        const { path, method } = tool.value;
-        if (!filteredPaths[path]) filteredPaths[path] = {};
-        filteredPaths[path][method] = parsedSchema.paths[path][method];
-      }
-    }
-    const filteredSchema = { ...parsedSchema, paths: filteredPaths };
-    // Create a form and submit
-    const form = document.createElement("form");
-    form.method = "post";
-    form.style.display = "none";
-    const input = document.createElement("input");
-    input.name = "schema";
-    input.value = JSON.stringify(filteredSchema);
-    form.appendChild(input);
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-    // Wait for actionData to be set (success page)
-    // We'll use a polling effect below to detect when actionData changes
-  };
-
-  // Effect to stop loading when actionData is set (success page is ready)
-  useEffect(() => {
-    if (isContinueLoading && actionData?.packageName) {
-      setIsContinueLoading(false);
-    }
-  }, [actionData, isContinueLoading]);
 
   // When toolChoices changes, update selectedTags to include tags of all selected tools
   useEffect(() => {
@@ -519,74 +488,89 @@ export default function OpenAPIMCPLanding() {
                     </div>
                   </form>
                 ) : (
-                  <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
-                    <h3 className="text-lg font-semibold mb-4">Select tools to include</h3>
-                    {/* Tag filter bar */}
-                    {allTags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {allTags.map((tag) => (
-                          <button
-                            key={tag}
-                            type="button"
-                            className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${selectedTags.includes(tag) ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
-                            onClick={() => handleTagClick(tag)}
-                          >
-                            {tag}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                    <div className="max-h-64 overflow-y-auto mb-6">
-                      {sortedToolChoices.map((tool) => (
-                        <label key={tool.key} className="flex items-start gap-2 py-2 cursor-pointer border-b border-gray-100 last:border-b-0">
-                          <input
-                            type="checkbox"
-                            checked={selectedTools.includes(tool.key)}
-                            onChange={() => handleToolCheckbox(tool.key)}
-                            className="mt-1"
-                          />
-                          <div className="flex-1">
-                            <div className="font-medium text-sm text-gray-900 flex items-center gap-2">
-                              {tool.label}
-                              {tool.tags && tool.tags.length > 0 && (
-                                <span className="flex flex-wrap gap-1 ml-2">
-                                  {tool.tags.map((tag: string) => (
-                                    <span key={tag} className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
-                                      {tag}
-                                    </span>
-                                  ))}
-                                </span>
+                  <Form method="post" replace>
+                    {/* Hidden input to pass the filtered schema data to the action */}
+                    <input type="hidden" name="schema" value={JSON.stringify({
+                       ...parsedSchema,
+                       paths: Object.fromEntries(
+                         toolChoices
+                           .filter(tool => selectedTools.includes(tool.key))
+                           .map(tool => [tool.value.path, { ...parsedSchema.paths[tool.value.path], [tool.value.method]: parsedSchema.paths[tool.value.path][tool.value.method] }])
+                           .reduce((acc, [path, methods]) => {
+                              if (!acc.has(path)) acc.set(path, {});
+                              Object.assign(acc.get(path), methods);
+                              return acc;
+                           }, new Map())
+                           )
+                    })} />
+                    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+                      <h3 className="text-lg font-semibold mb-4">Select tools to include</h3>
+                      {/* Tag filter bar */}
+                      {allTags.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-6">
+                          {allTags.map((tag) => (
+                            <button
+                              key={tag}
+                              type="button"
+                              className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${selectedTags.includes(tag) ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
+                              onClick={() => handleTagClick(tag)}
+                            >
+                              {tag}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      <div className="max-h-64 overflow-y-auto mb-6">
+                        {sortedToolChoices.map((tool) => (
+                          <label key={tool.key} className="flex items-start gap-2 py-2 cursor-pointer border-b border-gray-100 last:border-b-0">
+                            <input
+                              type="checkbox"
+                              checked={selectedTools.includes(tool.key)}
+                              onChange={() => handleToolCheckbox(tool.key)}
+                              className="mt-1"
+                            />
+                            <div className="flex-1">
+                              <div className="font-medium text-sm text-gray-900 flex items-center gap-2">
+                                {tool.label}
+                                {tool.tags && tool.tags.length > 0 && (
+                                  <span className="flex flex-wrap gap-1 ml-2">
+                                    {tool.tags.map((tag: string) => (
+                                      <span key={tag} className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
+                                        {tag}
+                                      </span>
+                                    ))}
+                                  </span>
+                                )}
+                              </div>
+                              {tool.description && (
+                                <div className="text-xs text-gray-500 mt-0.5">{tool.description}</div>
                               )}
                             </div>
-                            {tool.description && (
-                              <div className="text-xs text-gray-500 mt-0.5">{tool.description}</div>
-                            )}
-                          </div>
-                        </label>
-                      ))}
+                          </label>
+                        ))}
+                      </div>
+                      <div className="flex gap-4">
+                        <button
+                          type="submit"
+                          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 flex items-center justify-center min-w-[120px]"
+                          disabled={selectedTools.length === 0 || isContinueLoading}
+                        >
+                          {isContinueLoading
+                            ? `Continue${'.'.repeat(dotCount)}`
+                            : 'Continue'}
+                        </button>
+                        <button
+                          className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                          onClick={() => setShowToolSelect(false)}
+                        >
+                          Back
+                        </button>
+                      </div>
+                      {selectedTools.length === 0 && (
+                        <div className="text-red-600 mt-2 text-sm">Select at least one tool.</div>
+                      )}
                     </div>
-                    <div className="flex gap-4">
-                      <button
-                        className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 flex items-center justify-center min-w-[120px]"
-                        onClick={handleFinalSubmit}
-                        disabled={selectedTools.length === 0 || isContinueLoading}
-                        type="button"
-                      >
-                        {isContinueLoading
-                          ? `Continue${'.'.repeat(dotCount)}`
-                          : 'Continue'}
-                      </button>
-                      <button
-                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-                        onClick={() => setShowToolSelect(false)}
-                      >
-                        Back
-                      </button>
-                    </div>
-                    {selectedTools.length === 0 && (
-                      <div className="text-red-600 mt-2 text-sm">Select at least one tool.</div>
-                    )}
-                  </div>
+                  </Form>
                 )}
               </>
             ) : (
