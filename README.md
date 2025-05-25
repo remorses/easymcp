@@ -4,6 +4,8 @@ This repository contains the code for the Easy MCP project. It includes various 
 
 The key functionalities of this project is the conversion of [OpenAPI](https://learn.openapis.org/) specifications to the [MCP](https://modelcontextprotocol.io/introduction) format.
 
+🔥 CHECK OUT THE OFFICIAL YOUTUBE VIDEO -> [link](https://www.youtube.com/watch?v=RzIdTyg0iZo&ab_channel=Lelewithdots)
+
 ## Installation
 
 To install the dependencies, run the following command at the root of the repository:
@@ -29,6 +31,11 @@ For example, to run the website locally, navigate to the `website/` directory an
 ```bash
 pnpm dev
 ```
+
+## Documentation
+If you want to dive deeper into the project, head to:
+- 🧠 [Documentation main page](https://deepwiki.com/remorses/modelcontext/1-overview)
+- 🚀 [QuickStart](https://deepwiki.com/remorses/modelcontext/1.1-quick-start-guide)
 
 ## Start testing MCP server:
 

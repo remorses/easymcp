@@ -1,12 +1,13 @@
 {
-  "name": "openapi-typescript-generator",
-  "version": "1.0.0",
+
   "description": "OpenAPI to TypeScript code generator using MCP",
   "main": "dist/server/index.js",
   "type": "module",
   "bin": {
     "openapi-to-mcp": "dist/cli/openapi-to-mcp.js"
   },
+  "name": "root",
+  "private": true,
   "scripts": {
     "build": "tsc",
     "start": "node dist/server/index.js",
@@ -18,6 +19,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "change-case": "^4.1.2",
+    "@changesets/cli": "^2.29.4",
     "typescript": "^5.8.3",
     "vitest": "^3.1.4",
     "commander": "^14.0.0",
