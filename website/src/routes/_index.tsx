@@ -97,7 +97,8 @@ export default function OpenAPIMCPLanding() {
         schemaTextAreaRef.current &&
         typeof event.target?.result === "string"
       ) {
-        schemaTextAreaRef.current.value = event.target.result;
+        // schemaTextAreaRef.current.value = event.target.result;
+        setSchemaInput(event.target.result);
       }
     };
     reader.readAsText(file);

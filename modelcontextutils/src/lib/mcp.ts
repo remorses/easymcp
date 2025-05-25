@@ -201,6 +201,9 @@ export function createMCPServer({
     if (!baseUrl) {
         baseUrl = extractApiFromBaseUrl(openapi)
     }
+    if (baseUrl.endsWith('/')) {
+        baseUrl = baseUrl.slice(0, -1)
+    }
 
     async function fetchWithBaseServerAndAuth(
         u: string,
@@ -301,14 +304,14 @@ export function createMCPServer({
                     if (cookieParams) {
                         properties.cookies = cookieParams
                     }
-
+                    let description = `API route for ${method} for ${baseUrl}${pathObj}\n`
+                    description +=
+                        (operation as OpenAPIV3.OperationObject).description ||
+                        (operation as OpenAPIV3.OperationObject).summary ||
+                        `${method.toUpperCase()} ${path}`
                     return {
                         name: getRouteName({ method, path }),
-                        description:
-                            (operation as OpenAPIV3.OperationObject)
-                                .description ||
-                            (operation as OpenAPIV3.OperationObject).summary ||
-                            `${method.toUpperCase()} ${path}`,
+                        description,
                         inputSchema: {
                             type: 'object',
                             properties,
