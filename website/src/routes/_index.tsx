@@ -139,7 +139,164 @@ export default function OpenAPIMCPLanding() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actionData?.packageName]);
 
+  const [showToolSelect, setShowToolSelect] = useState(false);
+  const [toolChoices, setToolChoices] = useState<any[]>([]);
+  const [selectedTools, setSelectedTools] = useState<any[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
+  const [parsedSchema, setParsedSchema] = useState<any | null>(null);
+  const [schemaInput, setSchemaInput] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isContinueLoading, setIsContinueLoading] = useState(false);
+  const [dotCount, setDotCount] = useState(1);
 
+  // Animate dots for loading
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (isContinueLoading) {
+      interval = setInterval(() => {
+        setDotCount((prev) => (prev % 3) + 1);
+      }, 500);
+    } else {
+      setDotCount(1);
+    }
+    return () => clearInterval(interval);
+  }, [isContinueLoading]);
+
+  // Extract tools from OpenAPI schema
+  function extractTools(schema: any) {
+    if (!schema?.paths) return [];
+    const tools: any[] = [];
+    const tagSet = new Set<string>();
+    for (const [apiPath, methods] of Object.entries(schema.paths)) {
+      for (const [method, operation] of Object.entries(methods as any)) {
+        if (method === "parameters") continue;
+        const op = operation as any;
+        const functionName = op.operationId || `${method.toUpperCase()} ${apiPath}`;
+        const description = op.summary || op.description || "";
+        const tags = op.tags || [];
+        tags.forEach((tag: string) => tagSet.add(tag));
+        tools.push({
+          key: `${method.toUpperCase()} ${apiPath}`,
+          value: { path: apiPath, method: method.toLowerCase() },
+          label: functionName,
+          description,
+          tags,
+        });
+      }
+    }
+    setAllTags(Array.from(tagSet));
+    return tools;
+  }
+
+  // Handle schema input change
+  const handleSchemaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSchemaInput(e.target.value);
+    setError(null);
+  };
+
+  // Handle "Generate MCP Server" click
+  const handlePreSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    let parsed: any;
+    try {
+      parsed = JSON.parse(schemaInput);
+    } catch {
+      setError("Invalid JSON");
+      return;
+    }
+    setParsedSchema(parsed);
+    const tools = extractTools(parsed);
+    if (tools.length === 0) {
+      setError("No tools found in schema");
+      return;
+    }
+    setToolChoices(tools);
+    setSelectedTools(tools.map((t) => t.key)); // default: all selected
+    setShowToolSelect(true);
+  };
+
+  // Handle tool selection change
+  const handleToolCheckbox = (key: string) => {
+    setSelectedTools((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  };
+
+  // Handle tag click
+  const handleTagClick = (tag: string) => {
+    setSelectedTags((prev) => {
+      if (prev.includes(tag)) {
+        // Remove tag
+        const newTags = prev.filter((t) => t !== tag);
+        // Deselect all tools with this tag
+        setSelectedTools((prevTools) => {
+          const toolsWithTag = toolChoices.filter((tool) => tool.tags.includes(tag)).map((tool) => tool.key);
+          return prevTools.filter((key) => !toolsWithTag.includes(key));
+        });
+        return newTags;
+      } else {
+        // Add tag
+        // Select all tools with this tag
+        setSelectedTools((prevTools) => {
+          const toolsWithTag = toolChoices.filter((tool) => tool.tags.includes(tag)).map((tool) => tool.key);
+          return Array.from(new Set([...prevTools, ...toolsWithTag]));
+        });
+        return [...prev, tag];
+      }
+    });
+  };
+
+  // Modified handleFinalSubmit to set loading and wait for process
+  const handleFinalSubmit = async () => {
+    if (!parsedSchema) return;
+    setIsContinueLoading(true);
+    // Filter paths
+    const filteredPaths: any = {};
+    for (const tool of toolChoices) {
+      if (selectedTools.includes(tool.key)) {
+        const { path, method } = tool.value;
+        if (!filteredPaths[path]) filteredPaths[path] = {};
+        filteredPaths[path][method] = parsedSchema.paths[path][method];
+      }
+    }
+    const filteredSchema = { ...parsedSchema, paths: filteredPaths };
+    // Create a form and submit
+    const form = document.createElement("form");
+    form.method = "post";
+    form.style.display = "none";
+    const input = document.createElement("input");
+    input.name = "schema";
+    input.value = JSON.stringify(filteredSchema);
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    // Wait for actionData to be set (success page)
+    // We'll use a polling effect below to detect when actionData changes
+  };
+
+  // Effect to stop loading when actionData is set (success page is ready)
+  useEffect(() => {
+    if (isContinueLoading && actionData?.packageName) {
+      setIsContinueLoading(false);
+    }
+  }, [actionData, isContinueLoading]);
+
+  // When toolChoices changes, update selectedTags to include tags of all selected tools
+  useEffect(() => {
+    // If no tags are selected, select all tags by default
+    if (toolChoices.length > 0 && selectedTags.length === 0 && allTags.length > 0) {
+      setSelectedTags(allTags);
+    }
+  }, [toolChoices, allTags]);
+
+  // Sort tools: first those with selected tags, then the rest
+  const sortedToolChoices = [
+    ...toolChoices.filter((tool) => tool.tags.some((tag: string) => selectedTags.includes(tag))),
+    ...toolChoices.filter((tool) => !tool.tags.some((tag: string) => selectedTags.includes(tag))),
+  ].filter((tool, idx, arr) => arr.findIndex(t => t.key === tool.key) === idx); // remove duplicates
 
   const CodeBlock = ({
     code,
@@ -309,6 +466,7 @@ export default function OpenAPIMCPLanding() {
                 {/* Welcome Message */}
                 <div className="text-center mb-12">
                   <div className="mb-6"></div>
+                  <img src="/logo2.jpg" alt="Logo" className="mx-auto mb-4" style={{ maxWidth: 220, height: "auto" }} />
                   <h2 className="text-4xl md:text-5xl font-semibold mb-4 text-black">
                     Transform your OpenAPI schema
                   </h2>
@@ -319,130 +477,120 @@ export default function OpenAPIMCPLanding() {
                   </p>
                 </div>
                 {/* Input Area */}
-                <Form method="post" replace>
-                  <div className="relative mb-8">
-                    <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                      <textarea
-                        name="schema"
-                        ref={schemaTextAreaRef}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            e.currentTarget.form?.requestSubmit();
-                          }
-                        }}
-                        onDrop={handleSchemaDrop}
-                        onDragOver={(e) => e.preventDefault()}
-                        placeholder="Paste your OpenAPI schema or URL here or drop your schema file…"
-                        className="w-full h-40 px-4 py-4 bg-transparent text-gray-900 placeholder-gray-400 resize-none focus:outline-none text-base leading-relaxed pr-16"
-                        required
-                      />
+                {!showToolSelect ? (
+                  <form onSubmit={handlePreSubmit}>
+                    <div className="relative mb-8">
+                      <div className="relative bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                        <textarea
+                          name="schema"
+                          ref={schemaTextAreaRef}
+                          value={schemaInput}
+                          onChange={handleSchemaChange}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" && !e.shiftKey) {
+                              e.preventDefault();
+                              (e.currentTarget.form as any)?.requestSubmit();
+                            }
+                          }}
+                          onDrop={handleSchemaDrop}
+                          onDragOver={(e) => e.preventDefault()}
+                          placeholder="Paste your OpenAPI schema or URL here or drop your schema file…"
+                          className="w-full h-40 px-4 py-4 bg-transparent text-gray-900 placeholder-gray-400 resize-none focus:outline-none text-base leading-relaxed pr-16"
+                          required
+                        />
+                        <button
+                          type="submit"
+                          className="absolute bottom-3 right-3 flex items-center justify-center px-2 h-8 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+                          disabled={navigation.state === "submitting" || navigation.state === "loading"}
+                        >
+                          {navigation.state === "submitting" || navigation.state === "loading"
+                            ? "Loading..."
+                            : "Generate MCP Server"}
+                        </button>
+                      </div>
+                      {error && <div className="text-red-600 mt-2 text-sm">{error}</div>}
+                      <div className="mt-3 text-center text-xs text-gray-500">
+                        <span className="inline-flex items-center gap-1">
+                          Press
+                          <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">Enter</kbd>
+                          to convert or
+                          <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">Shift</kbd>
+                          <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">Enter</kbd>
+                          for new line
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
+                    <h3 className="text-lg font-semibold mb-4">Select tools to include</h3>
+                    {/* Tag filter bar */}
+                    {allTags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {allTags.map((tag) => (
+                          <button
+                            key={tag}
+                            type="button"
+                            className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${selectedTags.includes(tag) ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'}`}
+                            onClick={() => handleTagClick(tag)}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    <div className="max-h-64 overflow-y-auto mb-6">
+                      {sortedToolChoices.map((tool) => (
+                        <label key={tool.key} className="flex items-start gap-2 py-2 cursor-pointer border-b border-gray-100 last:border-b-0">
+                          <input
+                            type="checkbox"
+                            checked={selectedTools.includes(tool.key)}
+                            onChange={() => handleToolCheckbox(tool.key)}
+                            className="mt-1"
+                          />
+                          <div className="flex-1">
+                            <div className="font-medium text-sm text-gray-900 flex items-center gap-2">
+                              {tool.label}
+                              {tool.tags && tool.tags.length > 0 && (
+                                <span className="flex flex-wrap gap-1 ml-2">
+                                  {tool.tags.map((tag: string) => (
+                                    <span key={tag} className="bg-gray-200 text-gray-700 px-2 py-0.5 rounded text-xs font-medium">
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </span>
+                              )}
+                            </div>
+                            {tool.description && (
+                              <div className="text-xs text-gray-500 mt-0.5">{tool.description}</div>
+                            )}
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                    <div className="flex gap-4">
                       <button
-                        type="submit"
-                        className="absolute bottom-3 right-3 flex items-center justify-center px-2 h-8 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
-                        disabled={
-                          navigation.state === "submitting" ||
-                          navigation.state === "loading"
-                        }
+                        className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 flex items-center justify-center min-w-[120px]"
+                        onClick={handleFinalSubmit}
+                        disabled={selectedTools.length === 0 || isContinueLoading}
+                        type="button"
                       >
-                        {navigation.state === "submitting" ||
-                        navigation.state === "loading"
-                          ? "Loading..."
-                          : "Generate MCP Server"}
+                        {isContinueLoading
+                          ? `Continue${'.'.repeat(dotCount)}`
+                          : 'Continue'}
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                        onClick={() => setShowToolSelect(false)}
+                      >
+                        Back
                       </button>
                     </div>
-                    <div className="mt-3 text-center text-xs text-gray-500">
-                      <span className="inline-flex items-center gap-1">
-                        Press
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
-                          Enter
-                        </kbd>
-                        to convert or
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
-                          Shift
-                        </kbd>
-                        <kbd className="px-2 py-1 bg-gray-100 rounded text-xs border border-gray-200 font-mono">
-                          Enter
-                        </kbd>
-                        for new line
-                      </span>
-                    </div>
+                    {selectedTools.length === 0 && (
+                      <div className="text-red-600 mt-2 text-sm">Select at least one tool.</div>
+                    )}
                   </div>
-                </Form>
-
-
-                {/* Features */}
-                <div className="grid md:grid-cols-3 gap-6 text-center">
-                  <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
-                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <svg
-                        className="w-5 h-5 text-gray-700"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="font-medium mb-2 text-gray-900">
-                      Always in Sync
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      No separate MCP code repository to maintain—auto-generates features directly from your OpenAPI specs.
-                    </p>
-                  </div>
-                  <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
-                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <svg
-                        className="w-5 h-5 text-gray-700"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="font-medium mb-2 text-gray-900">
-                      Effortless Integration
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Integrates with thousands of tools, including Claude, OpenAI Agents, and other APIs that support MCP.
-                    </p>
-                  </div>
-                  <div className="p-6 bg-gray-50 rounded-lg border border-gray-100">
-                    <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mx-auto mb-3">
-                      <svg
-                        className="w-5 h-5 text-gray-700"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="font-medium mb-2 text-gray-900">
-                      Secure by Default
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Your token never passes through any middle servers, ensuring end-to-end security.
-                    </p>
-                  </div>
-                </div>
+                )}
               </>
             ) : (
               <>
@@ -491,7 +639,7 @@ export default function OpenAPIMCPLanding() {
                       <code className="bg-gray-100 px-2 py-1 rounded text-xs border border-gray-200 font-mono">
                         claude_desktop_config.json
                       </code>{" "}
-                      or your MCP tool’s equivalent config:
+                      or your MCP tool's equivalent config:
                     </p>
                     <CodeBlock
                       code={JSON.stringify(
@@ -515,7 +663,7 @@ export default function OpenAPIMCPLanding() {
                       <div className="mt-4 text-sm text-blue-700">
                         <strong>Note:</strong> This package could require an API
                         token. Set the appropriate <code>API_TOKEN</code> value
-                        in your MCP server’s environment
+                        in your MCP server's environment
                       </div>
                     )}
                   </div>
