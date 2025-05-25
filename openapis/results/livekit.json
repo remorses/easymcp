@@ -1,0 +1,357 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "LiveKit API",
+    "version": "1.0.0",
+    "description": "LiveKit is an open-source platform for building real-time audio, video, and AI applications. This API specification covers server-side operations, AI agent integrations, and plugin configurations.\n",
+    "contact": {
+      "name": "LiveKit Support",
+      "url": "https://livekit.io",
+      "email": "support@livekit.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.livekit.io",
+      "description": "LiveKit Production Server"
+    },
+    {
+      "url": "https://sandbox.livekit.io",
+      "description": "LiveKit Sandbox Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Rooms",
+      "description": "Manage rooms and their settings."
+    },
+    {
+      "name": "Participants",
+      "description": "Manage participants within rooms."
+    },
+    {
+      "name": "Tracks",
+      "description": "Control media tracks."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Configure webhook endpoints."
+    },
+    {
+      "name": "Agents",
+      "description": "Integrate AI agents."
+    },
+    {
+      "name": "Plugins",
+      "description": "Configure and manage plugins."
+    }
+  ],
+  "paths": {
+    "/rooms": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "List all rooms",
+        "responses": {
+          "200": {
+            "description": "A list of rooms."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Create a new room",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Room created successfully."
+          }
+        }
+      }
+    },
+    "/rooms/{roomId}": {
+      "get": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Get room details",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Room details retrieved."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Rooms"
+        ],
+        "summary": "Delete a room",
+        "parameters": [
+          {
+            "name": "roomId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Room deleted successfully."
+          }
+        }
+      }
+    },
+    "/participants": {
+      "get": {
+        "tags": [
+          "Participants"
+        ],
+        "summary": "List all participants",
+        "responses": {
+          "200": {
+            "description": "A list of participants."
+          }
+        }
+      }
+    },
+    "/participants/{participantId}": {
+      "get": {
+        "tags": [
+          "Participants"
+        ],
+        "summary": "Get participant details",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Participant details retrieved."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Participants"
+        ],
+        "summary": "Remove a participant",
+        "parameters": [
+          {
+            "name": "participantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Participant removed successfully."
+          }
+        }
+      }
+    },
+    "/tracks": {
+      "get": {
+        "tags": [
+          "Tracks"
+        ],
+        "summary": "List all tracks",
+        "responses": {
+          "200": {
+            "description": "A list of tracks."
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Configure a webhook endpoint",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Webhook"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook configured successfully."
+          }
+        }
+      }
+    },
+    "/agents": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Create a new AI agent",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Agent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Agent created successfully."
+          }
+        }
+      }
+    },
+    "/plugins": {
+      "post": {
+        "tags": [
+          "Plugins"
+        ],
+        "summary": "Configure a plugin",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plugin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Plugin configured successfully."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Room": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "empty_timeout": {
+            "type": "integer"
+          },
+          "max_participants": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "url",
+          "events"
+        ]
+      },
+      "Agent": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "VoicePipelineAgent",
+              "MultimodalAgent"
+            ]
+          },
+          "config": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
+      },
+      "Plugin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "enum": [
+              "OpenAI",
+              "Groq",
+              "Ollama",
+              "Perplexity",
+              "TogetherAI",
+              "Telnyx",
+              "OctoAI",
+              "Cerebras"
+            ]
+          },
+          "config": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "provider"
+        ]
+      }
+    }
+  }
+}
