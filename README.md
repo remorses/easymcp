@@ -33,6 +33,17 @@ For example, to run the website locally, navigate to the `website/` directory an
 pnpm dev
 ```
 
+### Self-hosting with Custom NPM Credentials
+
+If you are self-hosting the Easy MCP service and want to publish packages under your own NPM username, follow these steps:
+
+1.  **Run the application locally:** Follow the instructions in the "Running Locally" section to start the website.
+2.  **Open Account Settings:** Once the application is running, open the sidebar menu (usually by clicking the hamburger icon) and click on the "Account" item.
+3.  **Enter NPM Credentials:** In the modal that appears, enter your NPM username and NPM API key.
+4.  **Save Credentials:** Click "Save". These credentials will be stored locally in your browser and used when generating `npm install` commands and for future NPM publishing features.
+
+**Note:** This feature currently stores credentials in `localStorage`. For production or shared environments, consider more secure storage solutions.
+
 ## Documentation
 If you want to dive deeper into the project, head to:
 - 🧠 [Documentation main page](https://deepwiki.com/remorses/modelcontext/1-overview)
