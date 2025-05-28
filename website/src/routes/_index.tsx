@@ -1,6 +1,7 @@
 "use client";
 import "prismjs/themes/prism.css";
 import "prismjs";
+import YAML from 'js-yaml'
 import Prism from "prismjs";
 
 
@@ -39,7 +40,7 @@ function generatePackageName(schema: any): string {
 
 function safeJsonParse(jsonString: string): any | null {
   try {
-    return JSON.parse(jsonString);
+    return YAML.load(jsonString);
   } catch {
     return null;
   }
@@ -60,7 +61,7 @@ export async function action({ request }: { request: Request }) {
   const packageName = generatePackageName(parsed);
   console.log("Generated package name:", packageName);
   const res = await publishNpmPackage({
-    openapiSchema: schema,
+    openapiSchema: JSON.stringify(parsed),
     packageName,
   });
   console.log("publishNpmPackage result:", res);
@@ -207,7 +208,7 @@ export default function OpenAPIMCPLanding() {
     setError(null);
     let parsed: any;
     try {
-      parsed = JSON.parse(schemaInput);
+      parsed = YAML.load(schemaInput);
     } catch {
       setError("Invalid JSON");
       return;
