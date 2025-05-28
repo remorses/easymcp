@@ -16,6 +16,14 @@ interface Generation {
 }
 import { publishNpmPackage } from "modelcontextutils/src/lib/npm-publish";
 
+// Add type definition for publishNpmPackage
+interface PublishNpmPackageParams {
+  packageName: string;
+  openapiSchema: string;
+  version?: string;
+  npmUser?: string;
+}
+
 function generatePackageName(schema: any): string {
   try {
     const title = schema?.info?.title || "openapi-mcp";
@@ -49,6 +57,8 @@ export async function action({ request }: { request: Request }) {
   console.log("Received request:", request.method, request.url);
   const formData = await request.formData();
   const schema = formData.get("schema") as string;
+  const npmUser = formData.get("npmUser") as string;
+  const npmApiKey = formData.get("npmApiKey") as string;
   console.log("Received schema:", schema?.slice(0, 100) + (schema?.length > 100 ? "..." : ""));
   if (!schema?.trim()) {
     return { error: "Schema required" };
@@ -63,6 +73,8 @@ export async function action({ request }: { request: Request }) {
   const res = await publishNpmPackage({
     openapiSchema: JSON.stringify(parsed),
     packageName,
+    npmUser,
+    npmApiKey,
   });
   console.log("publishNpmPackage result:", res);
 
@@ -106,6 +118,7 @@ export default function OpenAPIMCPLanding() {
   };
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showAccountModal, setShowAccountModal] = useState(false);
   const [generations, setGenerations] = useState<Generation[]>([
     {
       id: "1",
@@ -328,6 +341,95 @@ export default function OpenAPIMCPLanding() {
     return `${days} days ago`;
   };
 
+  const AccountModal = ({
+    isOpen,
+    onClose,
+    onSave,
+  }: {
+    isOpen: boolean;
+    onClose: () => void;
+    onSave: (npmUser: string, npmApiKey: string) => void;
+  }) => {
+    const [npmUser, setNpmUser] = useState("");
+    const [npmApiKey, setNpmApiKey] = useState("");
+
+    useEffect(() => {
+      if (isOpen) {
+        setNpmUser(localStorage.getItem("npmUser") || "");
+        setNpmApiKey(localStorage.getItem("npmApiKey") || "");
+      }
+    }, [isOpen]);
+
+    const handleSave = () => {
+      localStorage.setItem("npmUser", npmUser);
+      localStorage.setItem("npmApiKey", npmApiKey);
+      onSave(npmUser, npmApiKey);
+      onClose();
+    };
+
+    if (!isOpen) return null;
+
+    return (
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
+        <div className="p-8 border w-96 shadow-lg rounded-md bg-white">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-gray-900">Account Settings</h3>
+            <div className="mt-6 space-y-4">
+              <div>
+                <label
+                  htmlFor="npmUser"
+                  className="block text-sm font-medium text-gray-700 text-left mb-1"
+                >
+                  NPM Username
+                </label>
+                <input
+                  type="text"
+                  name="npmUser"
+                  id="npmUser"
+                  value={npmUser}
+                  onChange={(e) => setNpmUser(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+                  placeholder="your-npm-username"
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="npmApiKey"
+                  className="block text-sm font-medium text-gray-700 text-left mb-1"
+                >
+                  NPM API Key
+                </label>
+                <input
+                  type="password" /* Use password type for API keys */
+                  name="npmApiKey"
+                  id="npmApiKey"
+                  value={npmApiKey}
+                  onChange={(e) => setNpmApiKey(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black sm:text-sm"
+                  placeholder="your-npm-api-key"
+                />
+              </div>
+            </div>
+            <div className="mt-8 flex justify-end space-x-3">
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-colors"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-white text-gray-900 flex">
       {/* Sidebar */}
@@ -403,10 +505,43 @@ export default function OpenAPIMCPLanding() {
             ))}
           </div>
         </div>
+        {/* Account Button */}
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={() => setShowAccountModal(true)}
+            className="w-full p-3 text-left rounded-md border border-gray-200 hover:bg-white transition-colors flex items-center gap-3"
+          >
+            {/* You can replace this SVG with a more appropriate icon for "Account" */}
+            <svg
+              className="w-4 h-4 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            <span className="text-sm text-gray-600">Account</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
+        {/* Account Modal */}
+        <AccountModal
+          isOpen={showAccountModal}
+          onClose={() => setShowAccountModal(false)}
+          onSave={(npmUser, npmApiKey) => {
+            console.log("NPM User:", npmUser);
+            console.log("NPM API Key:", npmApiKey);
+            // Later, we will use these to update the README or other logic
+          }}
+        />
         {/* Toggle Sidebar Button */}
         <div className="p-4">
           <button
@@ -505,6 +640,8 @@ export default function OpenAPIMCPLanding() {
                            }, new Map())
                            )
                     })} />
+                    <input type="hidden" name="npmUser" value={localStorage.getItem("npmUser") || ""} />
+                    <input type="hidden" name="npmApiKey" value={localStorage.getItem("npmApiKey") || ""} />
                     <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-8">
                       <h3 className="text-lg font-semibold mb-4">Select tools to include</h3>
                       {/* Tag filter bar */}
